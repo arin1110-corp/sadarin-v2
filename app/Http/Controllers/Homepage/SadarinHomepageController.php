@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class SadarinHomepageController extends Controller
 {
+    public function index()
+    {
+        return view('UserPage.index', [
+            'userName' => 'Nama Pengguna',
+            'userRole' => 'Pegawai',
+        ]);
+    }
     /**
      * Menampilkan halaman login SADARIN.
      */

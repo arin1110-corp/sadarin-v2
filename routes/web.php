@@ -19,12 +19,15 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('sadarin')->name('sadarin.')->group(function () {
-    Route::get('/login', [SadarinHomepageController::class, 'showLogin'])->name('login');
+Route::prefix('sadarin')
+    ->name('sadarin.')
+    ->group(function () {
+        Route::get('/login', [SadarinHomepageController::class, 'showLogin'])->name('login');
 
     Route::post('/login/internal', [SadarinHomepageController::class, 'loginInternal'])->name('login.internal');
 
     Route::post('/login/public', [SadarinHomepageController::class, 'loginPublic'])->name('login.public');
 
     Route::post('/logout', [SadarinHomepageController::class, 'logout'])->name('logout');
-});
+    Route::get('/home', [SadarinHomepageController::class, 'index'])->name('home');
+    });

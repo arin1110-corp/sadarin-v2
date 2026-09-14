@@ -9,31 +9,101 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sadarin_archive', function (Blueprint $table) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | PRIMARY KEY
+            |--------------------------------------------------------------------------
+            */
             $table->id('archive_id');
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | IDENTITAS ARSIP
+            |--------------------------------------------------------------------------
+            */
             $table->uuid('archive_uid')
-                ->unique('archive_uid_unique');
+                ->unique('arch_uid_uq');
 
-            $table->string('archive_title', 255);
+            $table->string(
+                'archive_title',
+                255
+            );
 
-            $table->text('archive_description')->nullable();
+            $table->text(
+                'archive_description'
+            )->nullable();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | KLASIFIKASI
+            |--------------------------------------------------------------------------
+            |
+            | Unit
+            |   ├── Bidang
+            |   └── UPTD
+            |
+            | Program
+            |   └── Kegiatan
+            |         └── Sub Kegiatan
+            |
+            | Jenis Dokumen
+            |
+            */
+            $table->unsignedBigInteger(
+                'archive_unit_id'
+            )->nullable();
+
+            $table->unsignedBigInteger(
+                'archive_program_id'
+            )->nullable();
+
+            $table->unsignedBigInteger(
+                'archive_kegiatan_id'
+            )->nullable();
+
+            $table->unsignedBigInteger(
+                'archive_sub_kegiatan_id'
+            )->nullable();
 
             $table->unsignedBigInteger(
                 'archive_document_type_id'
             )->nullable();
 
-            $table->date('archive_date')->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | INFORMASI ARSIP
+            |--------------------------------------------------------------------------
+            */
+            $table->date(
+                'archive_date'
+            )->nullable();
 
             $table->unsignedSmallInteger(
                 'archive_year'
             )->nullable();
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAK AKSES
+            |--------------------------------------------------------------------------
+            */
             $table->enum('archive_access_level', [
                 'public',
                 'internal',
                 'restricted',
             ])->default('internal');
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | STATUS
+            |--------------------------------------------------------------------------
+            */
             $table->enum('archive_status', [
                 'draft',
                 'pending',
@@ -41,6 +111,12 @@ return new class extends Migration
                 'rejected',
             ])->default('draft');
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | USER
+            |--------------------------------------------------------------------------
+            */
             $table->unsignedBigInteger(
                 'archive_created_by'
             )->nullable();
@@ -49,33 +125,74 @@ return new class extends Migration
                 'archive_updated_by'
             )->nullable();
 
-            $table->timestamp('archive_created_at')->useCurrent();
-            $table->timestamp('archive_updated_at')->nullable();
-            $table->timestamp('archive_deleted_at')->nullable();
+
+            /*
+            |--------------------------------------------------------------------------
+            | TIMESTAMP
+            |--------------------------------------------------------------------------
+            */
+            $table->timestamp(
+                'archive_created_at'
+            )->useCurrent();
+
+            $table->timestamp(
+                'archive_updated_at'
+            )->nullable();
+
+            $table->timestamp(
+                'archive_deleted_at'
+            )->nullable();
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | INDEX
+            |--------------------------------------------------------------------------
+            */
+
+            $table->index(
+                'archive_unit_id',
+                'arch_unit_idx'
+            );
+
+            $table->index(
+                'archive_program_id',
+                'arch_prog_idx'
+            );
+
+            $table->index(
+                'archive_kegiatan_id',
+                'arch_keg_idx'
+            );
+
+            $table->index(
+                'archive_sub_kegiatan_id',
+                'arch_sub_keg_idx'
+            );
 
             $table->index(
                 'archive_document_type_id',
-                'archive_doc_type_idx'
+                'arch_doc_idx'
             );
 
             $table->index(
                 'archive_access_level',
-                'archive_access_idx'
+                'arch_access_idx'
             );
 
             $table->index(
                 'archive_status',
-                'archive_status_idx'
+                'arch_status_idx'
             );
 
             $table->index(
                 'archive_year',
-                'archive_year_idx'
+                'arch_year_idx'
             );
 
             $table->index(
                 'archive_created_by',
-                'archive_created_by_idx'
+                'arch_creator_idx'
             );
         });
     }
