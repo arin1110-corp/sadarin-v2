@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-    @include('UserPage.partials.head')
+    @include('partials.head')
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-700 antialiased">
@@ -11,7 +11,7 @@
 
     @yield('content')
 
-    @include('UserPage.partials.scripts')
+    @include('partials.scripts')
 
 </body>
 

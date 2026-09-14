@@ -34,5 +34,13 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'samperin' => [
+
+        'url' => env(
+            'SAMPERIN_API_URL',
+            'http://127.0.0.1:8000/api'
+        ),
+
+    ],
 
 ];

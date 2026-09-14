@@ -1,344 +1,133 @@
 @extends('LoginPage.layouts.app')
 
-@section('title', 'Masuk - SADARIN')
+@section('title', 'Login Pegawai - SADARIN')
 
 @section('content')
 
     <div class="min-h-screen bg-white">
-        <div class="flex min-h-screen flex-col lg:flex-row">
 
-            {{-- LEFT SIDE --}}
-            <section class="relative hidden min-h-screen overflow-hidden bg-white lg:flex lg:w-[40%] xl:w-[39%]">
+        <div class="grid min-h-screen lg:grid-cols-2">
 
-                {{-- FOTO BALI --}}
-                {{-- FOTO BALI --}}
-                <div class="absolute inset-x-0 bottom-0 h-[76%]">
+            {{-- =========================================================
+                 LEFT SIDE
+            ========================================================== --}}
+            <div class="relative hidden overflow-hidden bg-slate-950 lg:flex">
 
-                    <img src="{{ asset('assets/images/gedung-disbud.jpg') }}" alt="Arsitektur Bali"
-                        class="absolute inset-0 h-full w-full object-cover object-center">
+                {{-- Background Image --}}
+                <img src="{{ asset('assets/images/gedung-disbud.jpg') }}" alt="Gedung"
+                    class="absolute inset-0 h-full w-full object-cover">
 
-                    {{-- Putih dari atas --}}
-                    <div class="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-white via-white/75 to-transparent">
-                    </div>
+                {{-- Overlay --}}
+                <div class="absolute inset-0 bg-slate-950/65"></div>
 
-                    {{-- Putih dari kanan --}}
-                    <div class="absolute inset-y-0 right-0 w-[50%] bg-gradient-to-l from-white via-white/65 to-transparent">
-                    </div>
-
-                    {{-- Putih dari kiri bawah --}}
-                    <div class="absolute inset-0 bg-gradient-to-tr from-white/70 via-transparent to-transparent"></div>
-
-                    {{-- Putih tipis merata --}}
-                    <div class="absolute inset-0 bg-white/10"></div>
-
-                    {{-- Putih dari bawah --}}
-                    <div
-                        class="absolute inset-x-0 bottom-0 h-[20%] bg-gradient-to-t from-white via-white/45 to-transparent">
-                    </div>
-
+                {{-- Subtle Plum Glow --}}
+                <div class="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[oklch(29.3%_0.136_325.661)]/30 blur-3xl">
                 </div>
 
-                {{-- LEFT CONTENT --}}
-                <div class="relative z-10 flex min-h-screen w-full flex-col">
+                <div
+                    class="absolute -bottom-40 -right-20 h-96 w-96 rounded-full bg-[oklch(29.3%_0.136_325.661)]/25 blur-3xl">
+                </div>
 
-                    {{-- LOGO --}}
-                    <div class="px-12 pt-12 xl:px-16">
-                        <div class="flex items-start gap-4">
 
-                            {{-- ICON --}}
-                            <div class="relative h-[66px] w-[58px] shrink-0">
+                {{-- Content --}}
+                <div class="relative z-10 flex w-full flex-col justify-between p-10 xl:p-14">
 
-                                <div
-                                    class="absolute left-3 top-0 h-[54px] w-[42px] rounded-[6px] bg-gradient-to-br from-sky-400 to-blue-600 shadow-sm">
-                                    <div class="absolute right-0 top-0 h-[15px] w-[15px] bg-sky-200/80"
-                                        style="clip-path: polygon(0 0, 100% 100%, 100% 0);"></div>
-                                </div>
+                    {{-- Logo --}}
+                    <div>
 
-                                <div
-                                    class="absolute left-0 top-[28px] h-[54px] w-[44px] rounded-[6px] bg-gradient-to-br from-blue-500 to-blue-700 shadow-md">
-                                    <div
-                                        class="absolute left-[12px] top-[24px] h-[4px] w-[20px] rounded-full bg-blue-400/70">
-                                    </div>
-                                    <div
-                                        class="absolute left-[12px] top-[32px] h-[4px] w-[14px] rounded-full bg-blue-400/50">
-                                    </div>
-                                </div>
+                        <a href="{{ route('sadarin.home') }}"
+                            class="inline-flex rounded-xl bg-white/95 px-4 py-3 shadow-lg shadow-black/10">
 
-                            </div>
+                            <img src="{{ asset('assets/images/logo-sadarin-full.png') }}" alt="SADARIN"
+                                class="h-20 w-auto object-contain">
 
-                            {{-- BRAND --}}
-                            <div>
-                                <div class="text-[40px] font-extrabold leading-none tracking-[-2px] text-navy-900">
-                                    SADAR<span class="text-sadarin-500">IN</span>
-                                </div>
+                        </a>
 
-                                <div class="mt-2 text-[13px] leading-5 tracking-[0.6px] text-navy-500">
-                                    Sistem Arsip Data dan Berkas Internal
-                                    <br>
-                                    Dinas Kebudayaan Provinsi Bali
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
 
-                    {{-- HERO --}}
-                    <div class="px-12 pt-24 xl:px-16 xl:pt-28">
 
-                        <div class="mb-12 h-1 w-11 rounded-full bg-sadarin-500"></div>
+                    {{-- Hero Text --}}
+                    <div class="max-w-xl">
 
-                        <h1 class="text-[46px] font-light leading-[1.08] tracking-[-2px] text-navy-800 xl:text-[52px]">
-                            Arsip
-                            <br>
-                            untuk
-                            <br>
-                            Masa Depan
+                        <div
+                            class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 backdrop-blur">
+
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+
+                            <span class="text-xs font-medium tracking-wide text-white/80">
+                                SISTEM ARSIP DIGITAL
+                            </span>
+
+                        </div>
+
+
+                        <h1 class="text-4xl font-bold leading-tight tracking-tight text-white xl:text-5xl">
+                            Arsip untuk
+                            <span class="text-sadarin-400">
+                                Masa Depan.
+                            </span>
                         </h1>
 
-                        <p class="mt-7 max-w-[330px] text-[18px] leading-7 text-navy-500 rounded-lg bg-white/55 px-4 py-2 backdrop-blur-[2px]">
-                            Dokumen hari ini,
-                            <br>
-                            warisan untuk generasi mendatang.
+
+                        <p class="mt-5 max-w-lg text-base leading-7 text-white/70">
+                            Kelola, temukan, dan akses arsip secara lebih terstruktur
+                            dalam satu sistem informasi yang aman dan terintegrasi.
                         </p>
 
-                    </div>
 
-                    {{-- BUDAYA / IDENTITAS / KEBERLANJUTAN --}}
-                    <div class="absolute bottom-[105px] left-0 z-30 px-12 xl:px-16">
-                        <div class="ml-[185px] rounded-lg bg-white/55 px-4 py-2 backdrop-blur-[2px] xl:ml-[220px]">
-                            <div class="text-[10px] font-medium leading-7 tracking-[5px] text-navy-700">
-                                BUDAYA
-                            </div>
+                        {{-- Feature --}}
+                        <div class="mt-8 grid max-w-lg grid-cols-3 gap-3">
 
-                            <div class="text-[10px] font-medium leading-7 tracking-[5px] text-navy-700">
-                                IDENTITAS
-                            </div>
+                            <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur">
 
-                            <div class="text-[10px] font-medium leading-7 tracking-[5px] text-navy-700">
-                                KEBERLANJUTAN
-                            </div>
-                        </div>
-                    </div>
+                                <div
+                                    class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/20 text-blue-300">
+                                    <i class="bi bi-search"></i>
+                                </div>
 
-                    {{-- FOOTER LEFT --}}
-                    <footer class="absolute bottom-0 left-0 right-0 z-40 bg-white/90 px-12 py-7 backdrop-blur-sm xl:px-16">
-                        <div class="flex items-center gap-3 text-[13px] text-navy-500">
-                            <span>SADARIN</span>
-                            <span class="text-slate-300">|</span>
-                            <span>Dinas Kebudayaan Provinsi Bali</span>
-                        </div>
-                    </footer>
+                                <p class="text-xs font-semibold text-white">
+                                    Mudah Dicari
+                                </p>
 
-                </div>
-
-            </section>
-
-            {{-- RIGHT SIDE --}}
-            <section class="relative flex min-h-screen flex-1 flex-col bg-white">
-
-                {{-- TENTANG SADARIN --}}
-                <div class="absolute right-0 top-0 px-8 py-8 lg:px-12">
-                    <button type="button"
-                        class="group flex items-center gap-3 text-[15px] font-medium text-navy-500 transition hover:text-sadarin-600">
-                        <span
-                            class="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-navy-500 text-white">
-                            <i class="bi bi-info text-[13px]"></i>
-                        </span>
-
-                        <span>Tentang SADARIN</span>
-                    </button>
-                </div>
-
-                {{-- LOGIN WRAPPER --}}
-                <div class="flex flex-1 items-center justify-center px-5 pb-8 pt-20 sm:px-8">
-
-                    <div class="w-full max-w-[690px]">
-
-                        {{-- LOGIN CARD --}}
-                        <div
-                            class="rounded-[18px] border border-slate-200/80 bg-white px-7 py-9 shadow-panel sm:px-10 sm:py-11 lg:px-9">
-
-                            {{-- HEADING --}}
-                            <div class="text-center">
-
-                                <h2
-                                    class="text-[34px] font-bold leading-tight tracking-[-1.5px] text-navy-900 sm:text-[40px]">
-                                    Masuk ke
-                                    <span class="text-sadarin-500">SADARIN</span>
-                                </h2>
-
-                                <p class="mt-3 text-[16px] text-navy-500">
-                                    Pilih jenis akses untuk melanjutkan.
+                                <p class="mt-1 text-[11px] leading-4 text-white/50">
+                                    Temukan arsip dengan cepat
                                 </p>
 
                             </div>
 
-                            {{-- LOGIN TYPE --}}
-                            <div class="mt-8 grid grid-cols-2 gap-2">
 
-                                <button type="button" data-login-type="internal"
-                                    class="flex h-[60px] items-center justify-center gap-3 rounded-[10px] border border-transparent text-[16px] font-semibold transition-all">
-                                    <i class="bi bi-person-fill text-[23px]"></i>
-                                    <span>Pegawai</span>
-                                </button>
+                            <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur">
 
-                                <button type="button" data-login-type="public"
-                                    class="flex h-[60px] items-center justify-center gap-3 rounded-[10px] border border-slate-200 bg-white text-[16px] font-semibold text-navy-500 transition-all">
-                                    <i class="bi bi-globe2 text-[22px]"></i>
-                                    <span>Publik</span>
-                                </button>
+                                <div
+                                    class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-300">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+
+                                <p class="text-xs font-semibold text-white">
+                                    Lebih Aman
+                                </p>
+
+                                <p class="mt-1 text-[11px] leading-4 text-white/50">
+                                    Akses sesuai kewenangan
+                                </p>
 
                             </div>
 
-                            {{-- SUCCESS --}}
-                            @if (session('success'))
-                                <div
-                                    class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                                    <div class="flex gap-3">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                        <span>{{ session('success') }}</span>
-                                    </div>
-                                </div>
-                            @endif
 
-                            {{-- ERROR --}}
-                            @if (session('error'))
-                                <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                    <div class="flex gap-3">
-                                        <i class="bi bi-exclamation-circle-fill"></i>
-                                        <span>{{ session('error') }}</span>
-                                    </div>
-                                </div>
-                            @endif
-
-                            {{-- VALIDATION ERROR --}}
-                            @if ($errors->any())
-                                <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                    <div class="flex gap-3">
-                                        <i class="bi bi-exclamation-circle-fill"></i>
-
-                                        <div>
-                                            @foreach ($errors->all() as $error)
-                                                <div>{{ $error }}</div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-
-                            {{-- INTERNAL LOGIN --}}
-                            <form method="POST" action="{{ route('sadarin.login.internal') }}" data-login-form="internal"
-                                class="mt-8">
-
-                                @csrf
-
-                                {{-- IDENTIFIER --}}
-                                <div
-                                    class="flex h-[62px] overflow-hidden rounded-[10px] border border-slate-300 bg-white transition focus-within:border-sadarin-500 focus-within:ring-4 focus-within:ring-sadarin-500/10">
-
-                                    <div
-                                        class="flex w-[64px] shrink-0 items-center justify-center border-r border-slate-200 text-navy-400">
-                                        <i class="bi bi-person-fill text-[22px]"></i>
-                                    </div>
-
-                                    <input type="text" name="identifier" value="{{ old('identifier') }}"
-                                        placeholder="NIP, NIK, atau Email Dinas" autocomplete="username"
-                                        class="min-w-0 flex-1 bg-transparent px-5 text-[16px] text-navy-700 outline-none placeholder:text-navy-400">
-
-                                </div>
-
-                                {{-- OTP --}}
-                                <div
-                                    class="mt-5 flex h-[62px] overflow-hidden rounded-[10px] border border-slate-300 bg-white transition focus-within:border-sadarin-500 focus-within:ring-4 focus-within:ring-sadarin-500/10">
-
-                                    <div
-                                        class="flex w-[64px] shrink-0 items-center justify-center border-r border-slate-200 text-navy-400">
-                                        <i class="bi bi-lock-fill text-[21px]"></i>
-                                    </div>
-
-                                    <input type="text" name="otp" inputmode="numeric" maxlength="6"
-                                        placeholder="Kode OTP" autocomplete="one-time-code"
-                                        class="min-w-0 flex-1 bg-transparent px-5 text-[16px] text-navy-700 outline-none placeholder:text-navy-400">
-
-                                    <button type="button"
-                                        class="whitespace-nowrap px-5 font-semibold text-sadarin-600 transition hover:text-sadarin-700">
-                                        Kirim OTP
-                                    </button>
-
-                                </div>
-
-                                {{-- SUBMIT --}}
-                                <button type="submit"
-                                    class="mt-10 flex h-[61px] w-full items-center justify-center gap-4 rounded-[10px] bg-gradient-to-r from-sadarin-500 to-blue-600 text-[18px] font-semibold text-white shadow-sm transition hover:from-sadarin-600 hover:to-blue-700">
-                                    <span>Masuk</span>
-                                    <i class="bi bi-arrow-right text-[24px]"></i>
-                                </button>
-
-                            </form>
-
-                            {{-- PUBLIC LOGIN --}}
-                            <form method="POST" action="{{ route('sadarin.login.public') }}" data-login-form="public"
-                                class="mt-8 hidden">
-
-                                @csrf
-
-                                {{-- EMAIL --}}
-                                <div
-                                    class="flex h-[62px] overflow-hidden rounded-[10px] border border-slate-300 bg-white transition focus-within:border-sadarin-500 focus-within:ring-4 focus-within:ring-sadarin-500/10">
-
-                                    <div
-                                        class="flex w-[64px] shrink-0 items-center justify-center border-r border-slate-200 text-navy-400">
-                                        <i class="bi bi-envelope-fill text-[21px]"></i>
-                                    </div>
-
-                                    <input type="email" name="email" value="{{ old('email') }}"
-                                        placeholder="Alamat email" autocomplete="email"
-                                        class="min-w-0 flex-1 bg-transparent px-5 text-[16px] text-navy-700 outline-none placeholder:text-navy-400">
-
-                                </div>
-
-                                {{-- OTP --}}
-                                <div
-                                    class="mt-5 flex h-[62px] overflow-hidden rounded-[10px] border border-slate-300 bg-white transition focus-within:border-sadarin-500 focus-within:ring-4 focus-within:ring-sadarin-500/10">
-
-                                    <div
-                                        class="flex w-[64px] shrink-0 items-center justify-center border-r border-slate-200 text-navy-400">
-                                        <i class="bi bi-lock-fill text-[21px]"></i>
-                                    </div>
-
-                                    <input type="text" name="otp" inputmode="numeric" maxlength="6"
-                                        placeholder="Kode OTP" autocomplete="one-time-code"
-                                        class="min-w-0 flex-1 bg-transparent px-5 text-[16px] text-navy-700 outline-none placeholder:text-navy-400">
-
-                                    <button type="button"
-                                        class="whitespace-nowrap px-5 font-semibold text-sadarin-600 transition hover:text-sadarin-700">
-                                        Kirim OTP
-                                    </button>
-
-                                </div>
-
-                                {{-- SUBMIT --}}
-                                <button type="submit"
-                                    class="mt-10 flex h-[61px] w-full items-center justify-center gap-4 rounded-[10px] bg-gradient-to-r from-sadarin-500 to-blue-600 text-[18px] font-semibold text-white shadow-sm transition hover:from-sadarin-600 hover:to-blue-700">
-                                    <span>Masuk</span>
-                                    <i class="bi bi-arrow-right text-[24px]"></i>
-                                </button>
-
-                            </form>
-
-                            {{-- SECURITY INFO --}}
-                            <div class="mt-8 border-t border-slate-200 pt-6">
+                            <div class="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur">
 
                                 <div
-                                    class="flex items-start justify-center gap-3 text-center text-[13px] leading-5 text-navy-500">
-
-                                    <i class="bi bi-info-circle-fill shrink-0 text-[19px] text-navy-400"></i>
-
-                                    <p>
-                                        Kode OTP akan dikirim ke email yang terdaftar di SAMPERIN.
-                                    </p>
-
+                                    class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-amber-300">
+                                    <i class="bi bi-cloud-check"></i>
                                 </div>
+
+                                <p class="text-xs font-semibold text-white">
+                                    Terintegrasi
+                                </p>
+
+                                <p class="mt-1 text-[11px] leading-4 text-white/50">
+                                    Arsip tersimpan terpusat internal
+                                </p>
 
                             </div>
 
@@ -346,32 +135,309 @@
 
                     </div>
 
+
+                    {{-- Footer --}}
+                    <div class="flex items-center justify-between gap-4 text-xs text-white/40">
+
+                        <span>
+                            © {{ date('Y') }} SADARIN
+                        </span>
+
+                        <span>
+                            Sistem Arsip Data dan Berkas Internal
+                        </span>
+
+                    </div>
+
                 </div>
 
-                {{-- RIGHT FOOTER --}}
-                <footer class="px-6 pb-7 text-center">
+            </div>
 
-                    <p class="text-[13px] text-navy-500">
-                        © {{ date('Y') }} SADARIN
-                        <span class="mx-1 text-slate-300">—</span>
-                        Dinas Kebudayaan Provinsi Bali
-                    </p>
 
-                    <p class="mt-2 text-[13px] text-navy-500">
-                        Arsip
-                        <span class="mx-2 text-slate-300">•</span>
-                        Akses
-                        <span class="mx-2 text-slate-300">•</span>
-                        Pengetahuan
-                        <span class="mx-2 text-slate-300">•</span>
-                        Masa Depan
-                    </p>
+            {{-- =========================================================
+                 RIGHT SIDE
+            ========================================================== --}}
+            <div class="flex min-h-screen items-center justify-center bg-white px-5 py-10 sm:px-8 lg:px-12 xl:px-20">
 
-                </footer>
+                <div class="w-full max-w-md">
 
-            </section>
+
+                    {{-- Mobile Logo --}}
+                    <div class="mb-10 lg:hidden">
+
+                        <a href="{{ route('sadarin.home') }}" class="inline-flex">
+
+                            <img src="{{ asset('assets/images/logo-sadarin.png') }}" alt="SADARIN"
+                                class="h-14 w-auto object-contain">
+
+                        </a>
+
+                    </div>
+
+
+                    {{-- Heading --}}
+                    <div class="mb-8 text-center">
+
+                        {{-- Logo --}}
+                        <div class="mb-6 flex justify-center">
+                            <img src="{{ asset('assets/images/logo-sadarin.png') }}" alt="SADARIN"
+                                class="h-20 w-auto object-contain sm:h-24">
+                        </div>
+
+
+                        {{-- Brand --}}
+                        <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                            SADAR<span class="text-sadarin-500">IN</span>
+                        </h2>
+
+
+                        <p class="mt-3 text-sm leading-6 text-slate-500">
+                            Masuk untuk mengelola dan mengakses
+                            arsip internal Anda.
+                        </p>
+
+                    </div>
+
+                    {{-- Alert --}}
+                    @if (session('error'))
+                        <div class="mb-5 flex gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4">
+
+                            <div
+                                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+                                <i class="bi bi-exclamation-circle"></i>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-semibold text-rose-800">
+                                    Login gagal
+                                </p>
+
+                                <p class="mt-0.5 text-xs leading-5 text-rose-600">
+                                    {{ session('error') }}
+                                </p>
+                            </div>
+
+                        </div>
+                    @endif
+
+
+                    @if (session('success'))
+                        <div class="mb-5 flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+
+                            <div
+                                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-semibold text-emerald-800">
+                                    Berhasil
+                                </p>
+
+                                <p class="mt-0.5 text-xs leading-5 text-emerald-600">
+                                    {{ session('success') }}
+                                </p>
+                            </div>
+
+                        </div>
+                    @endif
+
+
+                    {{-- Login Form --}}
+                    <form action="{{ route('sadarin.login.internal') }}" method="POST" class="space-y-5">
+
+                        @csrf
+
+
+                        {{-- NIP --}}
+                        <div>
+
+                            <label for="nip" class="mb-2 block text-sm font-semibold text-slate-700">
+
+                                NIP/NIK
+
+                            </label>
+
+
+                            <div class="relative">
+
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+
+                                    <i class="bi bi-person-vcard"></i>
+
+                                </div>
+
+
+                                <input type="text" id="nip" name="nip" value="{{ old('nip') }}"
+                                    autocomplete="username" inputmode="numeric" placeholder="Masukkan NIP/NIK" required
+                                    class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[oklch(29.3%_0.136_325.661)] focus:bg-white focus:ring-4 focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+
+                            </div>
+
+
+                            @error('nip')
+                                <p class="mt-1.5 text-xs font-medium text-rose-600">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+
+                        </div>
+
+
+                        {{-- Password --}}
+                        <div>
+
+                            <div class="mb-2 flex items-center justify-between">
+
+                                <label for="password" class="block text-sm font-semibold text-slate-700">
+
+                                    Password
+
+                                </label>
+
+
+                                <a href="#"
+                                    class="text-xs font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
+
+                                    Lupa password?
+
+                                </a>
+
+                            </div>
+
+
+                            <div class="relative">
+
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+
+                                    <i class="bi bi-lock"></i>
+
+                                </div>
+
+
+                                <input type="password" id="password" name="password" autocomplete="current-password"
+                                    placeholder="Masukkan password" required
+                                    class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-12 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[oklch(29.3%_0.136_325.661)] focus:bg-white focus:ring-4 focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+
+
+                                <button type="button" onclick="togglePassword()"
+                                    class="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-slate-400 transition hover:text-slate-700"
+                                    aria-label="Tampilkan password">
+
+                                    <i id="passwordIcon" class="bi bi-eye"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            @error('password')
+                                <p class="mt-1.5 text-xs font-medium text-rose-600">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+
+                        </div>
+
+
+                        
+
+
+                        {{-- Button --}}
+                        <button type="submit"
+                            class="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[oklch(29.3%_0.136_325.661)] px-5 text-sm font-bold text-white shadow-lg shadow-[oklch(29.3%_0.136_325.661)]/15 transition hover:-translate-y-0.5 hover:opacity-95 focus:outline-none focus:ring-4 focus:ring-[oklch(29.3%_0.136_325.661)]/15">
+
+                            <span>
+                                Masuk ke SADARIN
+                            </span>
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </button>
+
+                    </form>
+
+
+                    {{-- Security Info --}}
+                    <div class="mt-8 rounded-xl border border-slate-100 bg-slate-50 p-4">
+
+                        <div class="flex gap-3">
+
+                            <div
+                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+
+                                <i class="bi bi-info-circle"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <p class="text-xs font-semibold text-slate-700">
+                                    Akses Pegawai
+                                </p>
+
+                                <p class="mt-1 text-xs leading-5 text-slate-500">
+                                    Gunakan NIP dan password SAMPERIN Anda.
+                                    Setelah login berhasil, sistem dapat meminta
+                                    verifikasi tambahan untuk keamanan akun.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Mobile Footer --}}
+                    <div class="mt-8 text-center lg:hidden">
+
+                        <p class="text-xs text-slate-400">
+                            © {{ date('Y') }} SADARIN
+                        </p>
+
+                        <p class="mt-1 text-[11px] text-slate-300">
+                            Sistem Arsip Data dan Berkas Internal
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
+
     </div>
+
+
+    @push('scripts')
+        <script>
+            function togglePassword() {
+
+                const password = document.getElementById('password');
+                const icon = document.getElementById('passwordIcon');
+
+                if (password.type === 'password') {
+
+                    password.type = 'text';
+
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+
+                } else {
+
+                    password.type = 'password';
+
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+
+                }
+            }
+        </script>
+    @endpush
 
 @endsection
