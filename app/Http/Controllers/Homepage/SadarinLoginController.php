@@ -621,7 +621,7 @@ class SadarinLoginController extends Controller
         $message = $nama ? 'Selamat datang, ' . $nama . '.' : null;
 
         return match ($roleName) {
-            'Administrator' => redirect()->route('sadarin.admin.dashboard')->with('success', $message),
+            'Administrator' => redirect()->route('sadarin.admin.dashboard.index')->with('success', $message),
 
             'Arsiparis' => redirect('/sadarin/arsiparis/dashboard')->with('success', $message),
 

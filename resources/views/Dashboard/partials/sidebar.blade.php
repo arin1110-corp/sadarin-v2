@@ -5,7 +5,8 @@
     <div class="flex h-20 shrink-0 items-center border-b border-slate-100 px-6">
 
         <a href="{{ route('sadarin.home') }}" class="flex items-center">
-            <img src="{{ asset('assets/images/logo-sadarin-full.png') }}" alt="SADARIN" class="h-16 w-auto object-contain">
+            <img src="{{ asset('assets/images/logo-sadarin-full.png') }}" alt="SADARIN"
+                class="h-16 w-auto object-contain">
         </a>
 
         {{-- Mobile Close --}}
@@ -28,11 +29,16 @@
         <nav class="space-y-1">
 
             {{-- Dashboard --}}
-            <a href="{{ route('sadarin.admin.dashboard') }}"
-                class="sidebar-link active flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium">
+            <a href="{{ route('sadarin.admin.dashboard.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.dashboard.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
-                    <i class="bi bi-grid-1x2-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.dashboard.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+                    <i class="bi bi-speedometer2 text-base"></i>
                 </span>
 
                 <span>Dashboard</span>
@@ -81,23 +87,38 @@
         <nav class="space-y-1">
 
             {{-- Unit --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.unit.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.unit.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.unit.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
                     <i class="bi bi-building-fill text-base"></i>
+
                 </span>
 
                 <span>Unit</span>
+
             </a>
 
 
             {{-- Program --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.program.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.program.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                    <i class="bi bi-diagram-3-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.program.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
+                    <i class="bi bi-diagram-3 text-base"></i>
+
                 </span>
 
                 <span>Program</span>
@@ -105,11 +126,18 @@
 
 
             {{-- Kegiatan --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.kegiatan.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.kegiatan.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-                    <i class="bi bi-list-check text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.kegiatan.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
+                    <i class="bi bi-diagram-2 text-base"></i>
+
                 </span>
 
                 <span>Kegiatan</span>
@@ -117,11 +145,18 @@
 
 
             {{-- Sub Kegiatan --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.sub-kegiatan.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
-                    <i class="bi bi-list-nested text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
+                    <i class="bi bi-diagram-3-fill text-base"></i>
+
                 </span>
 
                 <span>Sub Kegiatan</span>
@@ -129,11 +164,18 @@
 
 
             {{-- Jenis Dokumen --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.document-type.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.document-type.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-50 text-rose-600">
-                    <i class="bi bi-file-earmark-text-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.document-type.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
+                    <i class="bi bi-list-task text-base"></i>
+
                 </span>
 
                 <span>Jenis Dokumen</span>
@@ -141,11 +183,18 @@
 
 
             {{-- Tag --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.master.tag.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.master.tag.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                    <i class="bi bi-tags-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.master.tag.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
+                    <i class="bi bi-tags text-base"></i>
+
                 </span>
 
                 <span>Tag</span>
@@ -248,7 +297,7 @@
             <i class="bi bi-three-dots-vertical text-slate-400"></i>
 
         </div>
-        
+
 
     </div>
 

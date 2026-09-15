@@ -33,6 +33,10 @@ trait SadarinUid
             'sadarin_survey' => 'survey_uid',
             'sadarin_survey_response' => 'survey_response_uid',
             'sadarin_setting' => 'setting_uid',
+            'sadarin_unit' => 'unit_uid',
+            'sadarin_program' => 'program_uid',
+            'sadarin_kegiatan' => 'kegiatan_uid',
+            'sadarin_sub_kegiatan' => 'sub_kegiatan_uid',
         ];
 
         return $map[$this->getTable()] ?? null;

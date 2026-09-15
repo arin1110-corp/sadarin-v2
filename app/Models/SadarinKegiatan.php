@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\SadarinUid;
+use Illuminate\Database\Eloquent\Model;
+
+class SadarinKegiatan extends Model
+{
+    use SadarinUid;
+
+    protected $table = 'sadarin_kegiatan';
+
+    protected $primaryKey = 'kegiatan_id';
+
+    public $incrementing = true;
+
+    protected $keyType = 'int';
+
+    const CREATED_AT = 'kegiatan_created_at';
+    const UPDATED_AT = 'kegiatan_updated_at';
+
+    protected $fillable = ['kegiatan_uid', 'kegiatan_program_id', 'kegiatan_code', 'kegiatan_name', 'kegiatan_description', 'kegiatan_is_active'];
+
+    protected $casts = [
+        'kegiatan_is_active' => 'boolean',
+    ];
+}
