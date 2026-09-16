@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\SadarinDocumentType;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,6 +42,7 @@ class SadarinDocumentTypeController extends Controller
             ],
             [
                 'document_type_name.required' => 'Nama jenis dokumen wajib diisi.',
+
                 'document_type_name.max' => 'Nama jenis dokumen maksimal 150 karakter.',
             ],
         );
@@ -63,11 +65,19 @@ class SadarinDocumentTypeController extends Controller
                 ->withInput();
         }
 
-        SadarinDocumentType::create([
+        $documentType = SadarinDocumentType::create([
             'document_type_name' => $name,
             'document_type_description' => $request->document_type_description,
             'document_type_is_active' => true,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'document_type.create', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'document_type', objectId: $documentType->document_type_id);
 
         return redirect()->route('sadarin.admin.master.document-type.index')->with('success', 'Jenis dokumen berhasil ditambahkan.');
     }
@@ -91,6 +101,7 @@ class SadarinDocumentTypeController extends Controller
             ],
             [
                 'document_type_name.required' => 'Nama jenis dokumen wajib diisi.',
+
                 'document_type_name.max' => 'Nama jenis dokumen maksimal 150 karakter.',
             ],
         );
@@ -120,6 +131,14 @@ class SadarinDocumentTypeController extends Controller
             'document_type_is_active' => $request->boolean('document_type_is_active'),
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'document_type.update', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'document_type', objectId: $documentType->document_type_id);
+
         return redirect()->route('sadarin.admin.master.document-type.index')->with('success', 'Jenis dokumen berhasil diperbarui.');
     }
 
@@ -130,6 +149,14 @@ class SadarinDocumentTypeController extends Controller
         $documentType->update([
             'document_type_is_active' => false,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'document_type.delete', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'document_type', objectId: $documentType->document_type_id);
 
         return redirect()->route('sadarin.admin.master.document-type.index')->with('success', 'Jenis dokumen berhasil dinonaktifkan.');
     }

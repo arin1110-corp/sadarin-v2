@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SadarinOtp;
 use App\Models\SadarinUserRole;
 use Illuminate\Http\Client\ConnectionException;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -91,6 +92,8 @@ class SadarinLoginController extends Controller
         */
 
         if (!$response->successful()) {
+            SadarinAccessLogService::log(action: 'login.failed', userType: 'user');
+
             return back()->withInput($request->only('nip'))->with('error', 'NIP/NIK atau password salah.');
         }
 
@@ -422,6 +425,8 @@ class SadarinLoginController extends Controller
         */
 
         if (!Hash::check($request->otp, $otp->otp_code_hash)) {
+            SadarinAccessLogService::log(action: 'otp.failed', userType: 'user', samperinUserId: $pegawai['id'] ?? null);
+
             $remaining = max(0, $maxAttempts - $otp->otp_attempt_count);
 
             return back()->with('error', "Kode OTP salah. Sisa percobaan: {$remaining}.");
@@ -455,6 +460,8 @@ class SadarinLoginController extends Controller
             return redirect()->route('sadarin.login')->with('error', 'Data login tidak lengkap. Silakan login kembali.');
         }
 
+
+        SadarinAccessLogService::log(action: 'otp.success', userType: 'user', samperinUserId: $pegawai['id']);
         /*
         |--------------------------------------------------------------------------
         | ROLE AKTIF DEFAULT
@@ -516,7 +523,7 @@ class SadarinLoginController extends Controller
         | HAPUS PENDING LOGIN
         |--------------------------------------------------------------------------
         */
-
+        SadarinAccessLogService::log(action: 'login.success', userType: $activeRole['name'], samperinUserId: $pegawai['id']);
         session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
 
         /*
@@ -601,6 +608,8 @@ class SadarinLoginController extends Controller
             'sadarin_role_name' => $selectedRole['name'],
         ]);
 
+        SadarinAccessLogService::log(action: 'role.switch', userType: $selectedRole['name'], samperinUserId: session('sadarin_user_id'));
+
         /*
         |--------------------------------------------------------------------------
         | REDIRECT SESUAI ROLE
@@ -639,6 +648,8 @@ class SadarinLoginController extends Controller
 
     public function logout(Request $request)
     {
+        SadarinAccessLogService::log(action: 'logout', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'));
+
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();

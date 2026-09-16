@@ -14,15 +14,16 @@ return new class extends Migration
             $table->uuid('access_log_uid')
                 ->unique('access_log_uid_unique');
 
+
+            $table->string('access_log_object_type', 100)->nullable();
+
+            $table->unsignedBigInteger('access_log_object_id')->nullable();
+
             $table->unsignedBigInteger(
                 'access_log_archive_id'
             )->nullable();
 
-            $table->enum('access_log_user_type', [
-                'internal',
-                'public',
-                'guest',
-            ])->default('guest');
+            $table->string('access_log_user_type', 100)->nullable();
 
             $table->unsignedBigInteger(
                 'access_log_samperin_user_id'
@@ -32,16 +33,7 @@ return new class extends Migration
                 'access_log_guestbook_id'
             )->nullable();
 
-            $table->enum('access_log_action', [
-                'search',
-                'view',
-                'download',
-                'submit',
-                'verify',
-                'reject',
-                'login',
-                'logout',
-            ]);
+            $table->string('access_log_action', 100)->nullable();
 
             $table->string(
                 'access_log_ip_address',
@@ -79,6 +71,16 @@ return new class extends Migration
             $table->index(
                 'access_log_created_at',
                 'access_log_created_idx'
+            );
+
+            $table->index(
+                'access_log_object_type',
+                'access_log_object_type_idx'
+            );
+
+            $table->index(
+                'access_log_object_id',
+                'access_log_object_id_idx'
             );
         });
     }

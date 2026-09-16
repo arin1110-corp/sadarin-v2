@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use App\Models\SadarinKegiatan;
 use App\Models\SadarinProgram;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -131,7 +132,7 @@ class SadarinKegiatanController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        SadarinKegiatan::create([
+        $kegiatan = SadarinKegiatan::create([
             'kegiatan_program_id' => $request->kegiatan_program_id,
 
             'kegiatan_name' => trim($request->kegiatan_name),
@@ -142,6 +143,14 @@ class SadarinKegiatanController extends Controller
 
             'kegiatan_is_active' => true,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'kegiatan.create', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'kegiatan', objectId: $kegiatan->kegiatan_id);
 
         return redirect()->route('sadarin.admin.master.kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan.');
     }
@@ -258,6 +267,14 @@ class SadarinKegiatanController extends Controller
             'kegiatan_is_active' => $request->boolean('kegiatan_is_active'),
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'kegiatan.update', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'kegiatan', objectId: $kegiatan->kegiatan_id);
+
         return redirect()->route('sadarin.admin.master.kegiatan.index')->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
@@ -274,6 +291,14 @@ class SadarinKegiatanController extends Controller
         $kegiatan->update([
             'kegiatan_is_active' => false,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'kegiatan.delete', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'kegiatan', objectId: $kegiatan->kegiatan_id);
 
         return redirect()->route('sadarin.admin.master.kegiatan.index')->with('success', 'Kegiatan berhasil dinonaktifkan.');
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\SadarinTag;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -58,7 +59,7 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Cek Nama
+        | CEK NAMA
         |--------------------------------------------------------------------------
         */
 
@@ -76,7 +77,7 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Generate Slug
+        | GENERATE SLUG
         |--------------------------------------------------------------------------
         */
 
@@ -92,11 +93,11 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Create
+        | CREATE
         |--------------------------------------------------------------------------
         */
 
-        SadarinTag::create([
+        $tag = SadarinTag::create([
             'tag_name' => $name,
 
             'tag_slug' => $slug,
@@ -105,6 +106,14 @@ class SadarinTagController extends Controller
 
             'tag_is_active' => true,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'tag.create', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'tag', objectId: $tag->tag_id);
 
         return redirect()->route('sadarin.admin.master.tag.index')->with('success', 'Tag berhasil ditambahkan.');
     }
@@ -142,7 +151,7 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Cek Nama
+        | CEK NAMA
         |--------------------------------------------------------------------------
         */
 
@@ -161,7 +170,7 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Generate Slug
+        | GENERATE SLUG
         |--------------------------------------------------------------------------
         */
 
@@ -177,7 +186,7 @@ class SadarinTagController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Update
+        | UPDATE
         |--------------------------------------------------------------------------
         */
 
@@ -191,6 +200,14 @@ class SadarinTagController extends Controller
             'tag_is_active' => $request->boolean('tag_is_active'),
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'tag.update', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'tag', objectId: $tag->tag_id);
+
         return redirect()->route('sadarin.admin.master.tag.index')->with('success', 'Tag berhasil diperbarui.');
     }
 
@@ -201,6 +218,14 @@ class SadarinTagController extends Controller
         $tag->update([
             'tag_is_active' => false,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'tag.delete', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'tag', objectId: $tag->tag_id);
 
         return redirect()->route('sadarin.admin.master.tag.index')->with('success', 'Tag berhasil dinonaktifkan.');
     }

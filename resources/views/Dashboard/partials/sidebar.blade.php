@@ -89,13 +89,13 @@
             {{-- Unit --}}
             <a href="{{ route('sadarin.admin.master.unit.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.unit.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.unit.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.unit.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.unit.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
 
                     <i class="bi bi-building-fill text-base"></i>
 
@@ -109,95 +109,108 @@
             {{-- Program --}}
             <a href="{{ route('sadarin.admin.master.program.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.program.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.program.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.program.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.program.*')
+                ? 'bg-white/15 text-white'
+                : 'bg-indigo-50 text-indigo-600' }}">
 
                     <i class="bi bi-diagram-3 text-base"></i>
 
                 </span>
 
                 <span>Program</span>
+
             </a>
 
 
             {{-- Kegiatan --}}
             <a href="{{ route('sadarin.admin.master.kegiatan.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.kegiatan.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.kegiatan.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.kegiatan.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.kegiatan.*')
+                ? 'bg-white/15 text-white'
+                : 'bg-orange-50 text-orange-600' }}">
 
                     <i class="bi bi-diagram-2 text-base"></i>
 
                 </span>
 
                 <span>Kegiatan</span>
+
             </a>
 
 
             {{-- Sub Kegiatan --}}
             <a href="{{ route('sadarin.admin.master.sub-kegiatan.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.sub-kegiatan.*')
+                ? 'bg-white/15 text-white'
+                : 'bg-emerald-50 text-emerald-600' }}">
 
                     <i class="bi bi-diagram-3-fill text-base"></i>
 
                 </span>
 
                 <span>Sub Kegiatan</span>
+
             </a>
 
 
             {{-- Jenis Dokumen --}}
             <a href="{{ route('sadarin.admin.master.document-type.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.document-type.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.document-type.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.document-type.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.document-type.*')
+                ? 'bg-white/15 text-white'
+                : 'bg-violet-50 text-violet-600' }}">
 
-                    <i class="bi bi-list-task text-base"></i>
+                    <i class="bi bi-file-earmark-text-fill text-base"></i>
 
                 </span>
 
                 <span>Jenis Dokumen</span>
+
             </a>
 
 
             {{-- Tag --}}
             <a href="{{ route('sadarin.admin.master.tag.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.master.tag.*')
-        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
-        : 'text-slate-600 hover:bg-slate-100' }}">
+        {{ request()->routeIs('sadarin.admin.master.tag.*')
+            ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+            : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.master.tag.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+            {{ request()->routeIs('sadarin.admin.master.tag.*') ? 'bg-white/15 text-white' : 'bg-amber-50 text-amber-600' }}">
 
-                    <i class="bi bi-tags text-base"></i>
+                    <i class="bi bi-tags-fill text-base"></i>
 
                 </span>
 
                 <span>Tag</span>
+
             </a>
 
         </nav>
@@ -210,39 +223,81 @@
 
         <nav class="space-y-1">
 
-            {{-- Pengguna --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.pengguna.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.pengguna.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.pengguna.*') ? 'bg-white/15 text-white' : 'bg-violet-50 text-violet-600' }}">
+
                     <i class="bi bi-people-fill text-base"></i>
+
                 </span>
 
                 <span>Pengguna</span>
+
             </a>
 
 
             {{-- Role --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.role.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.role.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
-                    <i class="bi bi-person-badge-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.role.*') ? 'bg-white/15 text-white' : 'bg-amber-50 text-amber-600' }}">
+
+                    <i class="bi bi-people-fill text-base"></i>
+
                 </span>
 
-                <span>Role & Permission</span>
+                <span>Role</span>
+
+            </a>
+
+            {{-- Permission --}}
+            <a href="{{ route('sadarin.admin.permission.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.permission.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
+
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.permission.*') ? 'bg-white/15 text-white' : 'bg-amber-50 text-amber-600' }}">
+
+                    <i class="bi bi-people-fill text-base"></i>
+
+                </span>
+
+                <span>Permission</span>
+
             </a>
 
 
             {{-- Access Log --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.access-log.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.access-log.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                    <i class="bi bi-clock-history text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.access-log.*') ? 'bg-white/15 text-white' : 'bg-amber-50 text-amber-600' }}">
+
+                    <i class="bi bi-activity"></i>
+
                 </span>
 
-                <span>Access Log</span>
+                <span>Akses Log</span>
+
             </a>
 
 

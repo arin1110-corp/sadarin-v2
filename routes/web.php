@@ -9,6 +9,11 @@ use App\Http\Controllers\Master\SadarinKegiatanController;
 use App\Http\Controllers\Master\SadarinSubKegiatanController;
 use App\Http\Controllers\Master\SadarinDocumentTypeController;
 use App\Http\Controllers\Master\SadarinTagController;
+use App\Http\Controllers\Admin\SadarinUserController;
+use App\Http\Controllers\Admin\SadarinRoleController;
+use App\Http\Controllers\Admin\SadarinPermissionController;
+use App\Http\Controllers\Admin\SadarinRolePermissionController;
+use App\Http\Controllers\Admin\SadarinAccessLogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,128 +89,134 @@ Route::prefix('sadarin')
         ->group(function () {
             Route::get('/dashboard', [SadarinAdminController::class, 'index'])->name('dashboard.index');
 
-            /*
+        /*
+            |--------------------------------------------------------------------------
+            | PENGELOLAAN MASTER
+            |--------------------------------------------------------------------------
+            */
+
+        /*
             |--------------------------------------------------------------------------
             | MASTER UNIT
             |--------------------------------------------------------------------------
             */
 
-            Route::prefix('master/unit')
-                ->name('master.unit.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-                    Route::get('/', [SadarinUnitController::class, 'index'])->name('index');
+        Route::prefix('master/unit')
+            ->name('master.unit.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinUnitController::class, 'index'])->name('index');
 
-                    Route::get('/create', [SadarinUnitController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinUnitController::class, 'create'])->name('create');
 
-                    Route::post('/', [SadarinUnitController::class, 'store'])->name('store');
+            Route::post('/', [SadarinUnitController::class, 'store'])->name('store');
 
-                    Route::get('/{id}/edit', [SadarinUnitController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinUnitController::class, 'edit'])->name('edit');
 
-                    Route::put('/{id}', [SadarinUnitController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinUnitController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinUnitController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinUnitController::class, 'destroy'])->name('destroy');
+            });
 
-            /*
+        /*
             |--------------------------------------------------------------------------
             | MASTER PROGRAM
             |--------------------------------------------------------------------------
             */
-            Route::prefix('master/program')
-                ->name('master.program.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-                    Route::get('/', [SadarinProgramController::class, 'index'])->name('index');
+        Route::prefix('master/program')
+            ->name('master.program.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinProgramController::class, 'index'])->name('index');
 
-                    Route::get('/create', [SadarinProgramController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinProgramController::class, 'create'])->name('create');
 
-                    Route::post('/', [SadarinProgramController::class, 'store'])->name('store');
+            Route::post('/', [SadarinProgramController::class, 'store'])->name('store');
 
-                    Route::get('/{id}/edit', [SadarinProgramController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinProgramController::class, 'edit'])->name('edit');
 
-                    Route::put('/{id}', [SadarinProgramController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinProgramController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinProgramController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinProgramController::class, 'destroy'])->name('destroy');
+            });
 
-            /*
+        /*
             |--------------------------------------------------------------------------
             | MASTER KEGIATAN
             |--------------------------------------------------------------------------
             */
-            Route::prefix('master/kegiatan')
-                ->name('master.kegiatan.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-                    Route::get('/', [SadarinKegiatanController::class, 'index'])->name('index');
+        Route::prefix('master/kegiatan')
+            ->name('master.kegiatan.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinKegiatanController::class, 'index'])->name('index');
 
-                    Route::get('/create', [SadarinKegiatanController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinKegiatanController::class, 'create'])->name('create');
 
-                    Route::post('/', [SadarinKegiatanController::class, 'store'])->name('store');
+            Route::post('/', [SadarinKegiatanController::class, 'store'])->name('store');
 
-                    Route::get('/{id}/edit', [SadarinKegiatanController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinKegiatanController::class, 'edit'])->name('edit');
 
-                    Route::put('/{id}', [SadarinKegiatanController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinKegiatanController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinKegiatanController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinKegiatanController::class, 'destroy'])->name('destroy');
+            });
 
-            /*
+        /*
             |--------------------------------------------------------------------------
             | MASTER SUB KEGIATAN
             |--------------------------------------------------------------------------
             */
-            Route::prefix('master/sub-kegiatan')
-                ->name('master.sub-kegiatan.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-                    Route::get('/', [SadarinSubKegiatanController::class, 'index'])->name('index');
+        Route::prefix('master/sub-kegiatan')
+            ->name('master.sub-kegiatan.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinSubKegiatanController::class, 'index'])->name('index');
 
-                    Route::get('/create', [SadarinSubKegiatanController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinSubKegiatanController::class, 'create'])->name('create');
 
-                    Route::post('/', [SadarinSubKegiatanController::class, 'store'])->name('store');
+            Route::post('/', [SadarinSubKegiatanController::class, 'store'])->name('store');
 
-                    Route::get('/{id}/edit', [SadarinSubKegiatanController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinSubKegiatanController::class, 'edit'])->name('edit');
 
-                    Route::put('/{id}', [SadarinSubKegiatanController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinSubKegiatanController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinSubKegiatanController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinSubKegiatanController::class, 'destroy'])->name('destroy');
+            });
 
-            /*
+        /*
             |--------------------------------------------------------------------------
             | MASTER JENIS DOKUMEN
             |--------------------------------------------------------------------------
             */
-            Route::prefix('master/document-type')
-                ->name('master.document-type.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-                    Route::get('/', [SadarinDocumentTypeController::class, 'index'])->name('index');
+        Route::prefix('master/document-type')
+            ->name('master.document-type.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinDocumentTypeController::class, 'index'])->name('index');
 
-                    Route::get('/create', [SadarinDocumentTypeController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinDocumentTypeController::class, 'create'])->name('create');
 
-                    Route::post('/', [SadarinDocumentTypeController::class, 'store'])->name('store');
+            Route::post('/', [SadarinDocumentTypeController::class, 'store'])->name('store');
 
-                    Route::get('/{id}/edit', [SadarinDocumentTypeController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinDocumentTypeController::class, 'edit'])->name('edit');
 
-                    Route::put('/{id}', [SadarinDocumentTypeController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinDocumentTypeController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinDocumentTypeController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinDocumentTypeController::class, 'destroy'])->name('destroy');
+            });
 
-            /*
+        /*
             |--------------------------------------------------------------------------
             | MASTER TAG
             |--------------------------------------------------------------------------
             */
 
-            Route::prefix('master/tag')
-                ->name('master.tag.')
-                ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
-                ->group(function () {
-            Route::get('/', [SadarinTagController::class, 'index'])->name('index');
+        Route::prefix('master/tag')
+            ->name('master.tag.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinTagController::class, 'index'])->name('index');
 
             Route::get('/create', [SadarinTagController::class, 'create'])->name('create');
 
@@ -215,8 +226,94 @@ Route::prefix('sadarin')
 
             Route::put('/{id}', [SadarinTagController::class, 'update'])->name('update');
 
-                    Route::delete('/{id}', [SadarinTagController::class, 'destroy'])->name('destroy');
-                });
+                Route::delete('/{id}', [SadarinTagController::class, 'destroy'])->name('destroy');
+            });
+
+        /*
+                |--------------------------------------------------------------------------
+                | PENGELOLAAN PENGGUNA
+                |--------------------------------------------------------------------------
+                */
+        /*
+|--------------------------------------------------------------------------
+| ADMINISTRASI SISTEM - PENGGUNA
+|--------------------------------------------------------------------------
+*/
+
+        Route::prefix('pengguna')
+            ->name('pengguna.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinUserController::class, 'index'])->name('index');
+
+                Route::get('/{id}/edit', [SadarinUserController::class, 'edit'])->name('edit');
+
+                Route::put('/{id}', [SadarinUserController::class, 'update'])->name('update');
+            });
+
+        /*
+|--------------------------------------------------------------------------
+| ADMINISTRASI SISTEM - ROLE
+|--------------------------------------------------------------------------
+*/
+
+        Route::prefix('role')
+            ->name('role.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinRoleController::class, 'index'])->name('index');
+
+                Route::get('/create', [SadarinRoleController::class, 'create'])->name('create');
+
+                Route::post('/', [SadarinRoleController::class, 'store'])->name('store');
+
+                Route::get('/{id}/edit', [SadarinRoleController::class, 'edit'])->name('edit');
+
+                Route::put('/{id}', [SadarinRoleController::class, 'update'])->name('update');
+
+                Route::delete('/{id}', [SadarinRoleController::class, 'destroy'])->name('destroy');
+            });
+
+        /*
+|--------------------------------------------------------------------------
+| ADMINISTRASI SISTEM - PERMISSION
+|--------------------------------------------------------------------------
+*/
+
+        Route::prefix('permission')
+            ->name('permission.')
+            ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
+            ->group(function () {
+                Route::get('/', [SadarinPermissionController::class, 'index'])->name('index');
+
+                Route::get('/create', [SadarinPermissionController::class, 'create'])->name('create');
+
+                Route::post('/', [SadarinPermissionController::class, 'store'])->name('store');
+
+                Route::get('/{id}/edit', [SadarinPermissionController::class, 'edit'])->name('edit');
+
+                Route::put('/{id}', [SadarinPermissionController::class, 'update'])->name('update');
+
+                Route::delete('/{id}', [SadarinPermissionController::class, 'destroy'])->name('destroy');
+            });
+
+        /*
+                |--------------------------------------------------------------------------
+                | PENGELOLAAN ROLE & PERMISSION
+                |--------------------------------------------------------------------------
+                */
+
+        Route::get('/role/{roleId}/permission', [SadarinRolePermissionController::class, 'edit'])->name('role.permission.edit');
+
+        Route::put('/role/{roleId}/permission', [SadarinRolePermissionController::class, 'update'])->name('role.permission.update');
+
+        /*
+|--------------------------------------------------------------------------
+| ADMINISTRASI SISTEM - ACCESS LOG
+|--------------------------------------------------------------------------
+*/
+
+        Route::get('/access-log', [SadarinAccessLogController::class, 'index'])->name('access-log.index');
         });
 
     /*

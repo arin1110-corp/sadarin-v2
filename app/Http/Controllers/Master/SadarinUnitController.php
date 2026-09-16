@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\SadarinUnit;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -111,7 +112,7 @@ class SadarinUnitController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        SadarinUnit::create([
+        $unit = SadarinUnit::create([
             'unit_name' => trim($request->unit_name),
 
             'unit_code' => $request->filled('unit_code') ? trim($request->unit_code) : null,
@@ -122,6 +123,14 @@ class SadarinUnitController extends Controller
 
             'unit_is_active' => true,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'unit.create', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'unit', objectId: $unit->unit_id);
 
         return redirect()->route('sadarin.admin.master.unit.index')->with('success', 'Unit berhasil ditambahkan.');
     }
@@ -238,7 +247,15 @@ class SadarinUnitController extends Controller
             'unit_is_active' => $request->boolean('unit_is_active'),
         ]);
 
-        return redirect()->route('sadarin.master.unit.index')->with('success', 'Unit berhasil diperbarui.');
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'unit.update', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'unit', objectId: $unit->unit_id);
+
+        return redirect()->route('sadarin.admin.master.unit.index')->with('success', 'Unit berhasil diperbarui.');
     }
 
     /*
@@ -261,6 +278,14 @@ class SadarinUnitController extends Controller
             'unit_is_active' => false,
         ]);
 
-        return redirect()->route('sadarin.master.unit.index')->with('success', 'Unit berhasil dinonaktifkan.');
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'unit.delete', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'unit', objectId: $unit->unit_id);
+
+        return redirect()->route('sadarin.admin.master.unit.index')->with('success', 'Unit berhasil dinonaktifkan.');
     }
 }

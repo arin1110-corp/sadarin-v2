@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\SadarinProgram;
+use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -105,7 +106,7 @@ class SadarinProgramController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        SadarinProgram::create([
+        $program = SadarinProgram::create([
             'program_name' => trim($request->program_name),
 
             'program_code' => $request->filled('program_code') ? trim($request->program_code) : null,
@@ -114,6 +115,14 @@ class SadarinProgramController extends Controller
 
             'program_is_active' => true,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'program.create', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'program', objectId: $program->program_id);
 
         return redirect()->route('sadarin.admin.master.program.index')->with('success', 'Program berhasil ditambahkan.');
     }
@@ -209,6 +218,14 @@ class SadarinProgramController extends Controller
             'program_is_active' => $request->boolean('program_is_active'),
         ]);
 
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'program.update', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'program', objectId: $program->program_id);
+
         return redirect()->route('sadarin.admin.master.program.index')->with('success', 'Program berhasil diperbarui.');
     }
 
@@ -225,6 +242,14 @@ class SadarinProgramController extends Controller
         $program->update([
             'program_is_active' => false,
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACCESS LOG
+        |--------------------------------------------------------------------------
+        */
+
+        SadarinAccessLogService::log(action: 'program.delete', userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: 'program', objectId: $program->program_id);
 
         return redirect()->route('sadarin.admin.master.program.index')->with('success', 'Program berhasil dinonaktifkan.');
     }
