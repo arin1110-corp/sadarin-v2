@@ -25,4 +25,15 @@ class SadarinUnit extends Model
     protected $casts = [
         'unit_is_active' => 'boolean',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
+
+    public function archives()
+    {
+        return $this->hasMany(SadarinArchive::class, 'archive_unit_id', 'unit_id');
+    }
 }

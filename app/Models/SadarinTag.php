@@ -18,6 +18,7 @@ class SadarinTag extends Model
     protected $keyType = 'int';
 
     const CREATED_AT = 'tag_created_at';
+
     const UPDATED_AT = 'tag_updated_at';
 
     protected $fillable = ['tag_uid', 'tag_name', 'tag_slug', 'tag_description', 'tag_is_active'];
@@ -25,4 +26,15 @@ class SadarinTag extends Model
     protected $casts = [
         'tag_is_active' => 'boolean',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
+
+    public function archiveTags()
+    {
+        return $this->hasMany(SadarinArchiveTag::class, 'archive_tag_tag_id', 'tag_id');
+    }
 }

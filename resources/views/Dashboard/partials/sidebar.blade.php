@@ -46,18 +46,22 @@
 
 
             {{-- Arsip --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.archive.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.archive.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.archive.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+
                     <i class="bi bi-archive-fill text-base"></i>
+
                 </span>
 
                 <span class="flex-1">Arsip</span>
 
-                <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                    32
-                </span>
             </a>
 
 
@@ -302,14 +306,22 @@
 
 
             {{-- Survey --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.survey.index') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.survey.*')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-pink-50 text-pink-600">
-                    <i class="bi bi-bar-chart-fill text-base"></i>
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.survey.*') ? 'bg-white/15 text-white' : 'bg-amber-50 text-amber-600' }}">
+
+                    <i class="bi bi-clipboard-check"></i>
+
                 </span>
 
                 <span>Survey</span>
+
             </a>
 
 

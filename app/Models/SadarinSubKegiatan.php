@@ -18,6 +18,7 @@ class SadarinSubKegiatan extends Model
     protected $keyType = 'int';
 
     const CREATED_AT = 'sub_kegiatan_created_at';
+
     const UPDATED_AT = 'sub_kegiatan_updated_at';
 
     protected $fillable = ['sub_kegiatan_uid', 'sub_kegiatan_kegiatan_id', 'sub_kegiatan_code', 'sub_kegiatan_name', 'sub_kegiatan_description', 'sub_kegiatan_is_active'];
@@ -25,4 +26,20 @@ class SadarinSubKegiatan extends Model
     protected $casts = [
         'sub_kegiatan_is_active' => 'boolean',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONSHIPS
+    |--------------------------------------------------------------------------
+    */
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(SadarinKegiatan::class, 'sub_kegiatan_kegiatan_id', 'kegiatan_id');
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(SadarinArchive::class, 'archive_sub_kegiatan_id', 'sub_kegiatan_id');
+    }
 }

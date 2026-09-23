@@ -24,5 +24,12 @@ class SadarinSurveyResponse extends Model
 
     protected $casts = [
         'survey_response_rating' => 'integer',
+        'survey_response_created_at' => 'datetime',
+        'survey_response_updated_at' => 'datetime',
     ];
+
+    public function survey()
+    {
+        return $this->belongsTo(SadarinSurvey::class, 'survey_response_survey_id', 'survey_id');
+    }
 }

@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\SadarinRoleController;
 use App\Http\Controllers\Admin\SadarinPermissionController;
 use App\Http\Controllers\Admin\SadarinRolePermissionController;
 use App\Http\Controllers\Admin\SadarinAccessLogController;
+use App\Http\Controllers\Admin\SadarinSurveyController;
+use App\Http\Controllers\Admin\SadarinArchiveController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -246,7 +248,7 @@ Route::prefix('sadarin')
             ->group(function () {
                 Route::get('/', [SadarinUserController::class, 'index'])->name('index');
 
-                Route::get('/{id}/edit', [SadarinUserController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinUserController::class, 'edit'])->name('edit');
 
                 Route::put('/{id}', [SadarinUserController::class, 'update'])->name('update');
             });
@@ -263,13 +265,13 @@ Route::prefix('sadarin')
             ->group(function () {
                 Route::get('/', [SadarinRoleController::class, 'index'])->name('index');
 
-                Route::get('/create', [SadarinRoleController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinRoleController::class, 'create'])->name('create');
 
-                Route::post('/', [SadarinRoleController::class, 'store'])->name('store');
+            Route::post('/', [SadarinRoleController::class, 'store'])->name('store');
 
-                Route::get('/{id}/edit', [SadarinRoleController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinRoleController::class, 'edit'])->name('edit');
 
-                Route::put('/{id}', [SadarinRoleController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinRoleController::class, 'update'])->name('update');
 
                 Route::delete('/{id}', [SadarinRoleController::class, 'destroy'])->name('destroy');
             });
@@ -286,13 +288,13 @@ Route::prefix('sadarin')
             ->group(function () {
                 Route::get('/', [SadarinPermissionController::class, 'index'])->name('index');
 
-                Route::get('/create', [SadarinPermissionController::class, 'create'])->name('create');
+            Route::get('/create', [SadarinPermissionController::class, 'create'])->name('create');
 
-                Route::post('/', [SadarinPermissionController::class, 'store'])->name('store');
+            Route::post('/', [SadarinPermissionController::class, 'store'])->name('store');
 
-                Route::get('/{id}/edit', [SadarinPermissionController::class, 'edit'])->name('edit');
+            Route::get('/{id}/edit', [SadarinPermissionController::class, 'edit'])->name('edit');
 
-                Route::put('/{id}', [SadarinPermissionController::class, 'update'])->name('update');
+            Route::put('/{id}', [SadarinPermissionController::class, 'update'])->name('update');
 
                 Route::delete('/{id}', [SadarinPermissionController::class, 'destroy'])->name('destroy');
             });
@@ -314,6 +316,55 @@ Route::prefix('sadarin')
 */
 
         Route::get('/access-log', [SadarinAccessLogController::class, 'index'])->name('access-log.index');
+
+        /*
+            |--------------------------------------------------------------------------
+            | PENGELOLAAN SURVEY
+            |--------------------------------------------------------------------------
+            */
+
+        Route::resource('survey', SadarinSurveyController::class)->except(['show']);
+        Route::get('/survey/{id}/responses', [SadarinSurveyController::class, 'responses'])->name('survey.responses');
+
+        /*
+            |--------------------------------------------------------------------------
+            | PENGELOLAAN ARSIP
+            |--------------------------------------------------------------------------
+            */
+        Route::prefix('archive')
+            ->name('archive.')
+            ->controller(SadarinArchiveController::class)
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+
+                Route::get('/create', 'create')->name('create');
+
+                Route::post('/', 'store')->name('store');
+
+                /*
+        |--------------------------------------------------------------------------
+        | AJAX COMBOBOX
+        |--------------------------------------------------------------------------
+        */
+
+                Route::get('/kegiatan/{programId}', 'getKegiatan')->name('kegiatan');
+
+                Route::get('/sub-kegiatan/{kegiatanId}', 'getSubKegiatan')->name('sub-kegiatan');
+
+                /*
+        |--------------------------------------------------------------------------
+        | DETAIL
+        |--------------------------------------------------------------------------
+        */
+
+                Route::get('/{id}', 'show')->name('show');
+
+                Route::get('/{id}/edit', 'edit')->name('edit');
+
+                Route::put('/{id}', 'update')->name('update');
+
+                Route::delete('/{id}', 'destroy')->name('destroy');
+            });
         });
 
     /*

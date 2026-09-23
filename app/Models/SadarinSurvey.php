@@ -27,4 +27,13 @@ class SadarinSurvey extends Model
         'survey_started_at' => 'datetime',
         'survey_ended_at' => 'datetime',
     ];
+
+    public function responses()
+    {
+        return $this->hasMany(
+            SadarinSurveyResponse::class,
+            'survey_response_survey_id',
+            'survey_id'
+        );
+    }
 }
