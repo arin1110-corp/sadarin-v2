@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SadarinArchive;
 use App\Models\SadarinDocumentType;
 use App\Models\SadarinUnit;
+use App\Models\SadarinArchiveFile;
 use App\Models\SadarinProgram;
 use App\Models\SadarinKegiatan;
 use App\Models\SadarinSubKegiatan;
@@ -273,5 +274,115 @@ class SadarinArchiveController extends Controller
             ->get(['sub_kegiatan_id', 'sub_kegiatan_code', 'sub_kegiatan_name']);
 
         return response()->json($subKegiatans);
+    }
+
+    /*
+|--------------------------------------------------------------------------
+| FILE - CREATE
+|--------------------------------------------------------------------------
+*/
+
+    public function fileCreate(SadarinArchive $archive)
+    {
+        return view('admin.arsip.file-create', [
+            'archive' => $archive,
+        ]);
+    }
+
+    /*
+|--------------------------------------------------------------------------
+| FILE - STORE
+|--------------------------------------------------------------------------
+*/
+
+    public function fileStore(Request $request, SadarinArchive $archive)
+    {
+        $validated = $request->validate([
+            'archive_file_original_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'archive_file_drive_file_id' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'archive_file_drive_url' => [
+                'required',
+                'url',
+            ],
+
+            'archive_file_is_primary' => [
+                'nullable',
+                'boolean',
+            ],
+        ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Jika dijadikan primary,
+    | primary sebelumnya dinonaktifkan
+    |--------------------------------------------------------------------------
+    */
+
+        if ($request->boolean('archive_file_is_primary')) {
+            SadarinArchiveFile::where(
+                'archive_file_archive_id',
+                $archive->archive_id
+            )->update([
+                'archive_file_is_primary' => false,
+            ]);
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | SIMPAN
+    |--------------------------------------------------------------------------
+    */
+
+        SadarinArchiveFile::create([
+            'archive_file_archive_id' => $archive->archive_id,
+
+            'archive_file_original_name' =>
+            $validated['archive_file_original_name'],
+
+            'archive_file_drive_file_id' =>
+            $validated['archive_file_drive_file_id'],
+
+            'archive_file_drive_url' =>
+            $validated['archive_file_drive_url'],
+
+            'archive_file_is_primary' =>
+            $request->boolean('archive_file_is_primary'),
+        ]);
+
+        return redirect()
+            ->route('sadarin.admin.archive.show', $archive)
+            ->with('success', 'Berkas berhasil ditambahkan.');
+    }
+
+    /*
+|--------------------------------------------------------------------------
+| FILE - DESTROY
+|--------------------------------------------------------------------------
+*/
+
+    public function fileDestroy(
+        SadarinArchive $archive,
+        SadarinArchiveFile $file
+    ) {
+        abort_unless(
+            $file->archive_file_archive_id == $archive->archive_id,
+            404
+        );
+
+        $file->delete();
+
+        return redirect()
+            ->route('sadarin.admin.archive.show', $archive)
+            ->with('success', 'Berkas berhasil dihapus.');
     }
 }

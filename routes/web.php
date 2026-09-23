@@ -337,34 +337,46 @@ Route::prefix('sadarin')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
 
-                Route::get('/create', 'create')->name('create');
+            Route::get('/create', 'create')->name('create');
 
-                Route::post('/', 'store')->name('store');
+            Route::post('/', 'store')->name('store');
 
-                /*
+            /*
         |--------------------------------------------------------------------------
         | AJAX COMBOBOX
         |--------------------------------------------------------------------------
         */
 
-                Route::get('/kegiatan/{programId}', 'getKegiatan')->name('kegiatan');
+            Route::get('/kegiatan/{programId}', 'getKegiatan')->name('kegiatan');
 
-                Route::get('/sub-kegiatan/{kegiatanId}', 'getSubKegiatan')->name('sub-kegiatan');
+            Route::get('/sub-kegiatan/{kegiatanId}', 'getSubKegiatan')->name('sub-kegiatan');
 
-                /*
+            /*
+        |--------------------------------------------------------------------------
+        | FILE
+        |--------------------------------------------------------------------------
+        */
+
+            Route::get('/{archive}/file/create', 'fileCreate')->name('file.create');
+
+            Route::post('/{archive}/file', 'fileStore')->name('file.store');
+
+            Route::delete('/{archive}/file/{file}', 'fileDestroy')->name('file.destroy');
+
+            /*
         |--------------------------------------------------------------------------
         | DETAIL
         |--------------------------------------------------------------------------
         */
 
-                Route::get('/{id}', 'show')->name('show');
+            Route::get('/{id}', 'show')->name('show');
 
-                Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::get('/{id}/edit', 'edit')->name('edit');
 
-                Route::put('/{id}', 'update')->name('update');
+            Route::put('/{id}', 'update')->name('update');
 
-                Route::delete('/{id}', 'destroy')->name('destroy');
-            });
+                    Route::delete('/{id}', 'destroy')->name('destroy');
+                });
         });
 
     /*

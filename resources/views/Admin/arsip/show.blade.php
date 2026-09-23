@@ -51,7 +51,7 @@
                 </a>
 
 
-                <a href="{{ route('sadarin.admin.archive.edit', $archive->archive_id) }}"
+                <a href="{{ route('sadarin.admin.archive.edit', $archive) }}"
                     class="inline-flex items-center justify-center gap-2 rounded-xl
                            bg-[oklch(29.3%_0.136_325.661)] px-4 py-2.5
                            text-sm font-semibold text-white shadow-sm
@@ -93,16 +93,12 @@
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-            {{-- CARD HEADER --}}
-
             <div class="border-b border-slate-100 px-5 py-4">
 
                 <div class="flex items-center gap-3">
 
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-
                         <i class="bi bi-file-earmark-text-fill"></i>
-
                     </div>
 
                     <div>
@@ -122,15 +118,11 @@
             </div>
 
 
-            {{-- CONTENT --}}
-
             <div class="p-5">
 
                 <div class="space-y-5">
 
-
                     {{-- JUDUL --}}
-
                     <div>
 
                         <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -145,7 +137,6 @@
 
 
                     {{-- DESKRIPSI --}}
-
                     <div>
 
                         <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -153,16 +144,13 @@
                         </p>
 
                         <p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-600">
-
                             {{ $archive->archive_description ?: '-' }}
-
                         </p>
 
                     </div>
 
 
                     {{-- TANGGAL & TAHUN --}}
-
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 
                         <div>
@@ -191,15 +179,12 @@
                             </p>
 
                             <p class="mt-1 text-sm font-semibold text-slate-700">
-
                                 {{ $archive->archive_year ?: '-' }}
-
                             </p>
 
                         </div>
 
                     </div>
-
 
                 </div>
 
@@ -214,16 +199,12 @@
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-            {{-- HEADER --}}
-
             <div class="border-b border-slate-100 px-5 py-4">
 
                 <div class="flex items-center gap-3">
 
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
-
                         <i class="bi bi-diagram-3-fill"></i>
-
                     </div>
 
                     <div>
@@ -243,13 +224,9 @@
             </div>
 
 
-            {{-- CONTENT --}}
-
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
 
-
                 {{-- UNIT --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -257,16 +234,13 @@
                     </p>
 
                     <p class="mt-1 text-sm font-semibold text-slate-700">
-
                         {{ $archive->unit->unit_name ?? '-' }}
-
                     </p>
 
                 </div>
 
 
                 {{-- JENIS DOKUMEN --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -274,16 +248,13 @@
                     </p>
 
                     <p class="mt-1 text-sm font-semibold text-slate-700">
-
                         {{ $archive->documentType->document_type_name ?? '-' }}
-
                     </p>
 
                 </div>
 
 
                 {{-- PROGRAM --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -291,16 +262,13 @@
                     </p>
 
                     <p class="mt-1 text-sm font-semibold text-slate-700">
-
                         {{ $archive->program->program_name ?? '-' }}
-
                     </p>
 
                 </div>
 
 
                 {{-- KEGIATAN --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -308,16 +276,13 @@
                     </p>
 
                     <p class="mt-1 text-sm font-semibold text-slate-700">
-
                         {{ $archive->kegiatan->kegiatan_name ?? '-' }}
-
                     </p>
 
                 </div>
 
 
                 {{-- SUB KEGIATAN --}}
-
                 <div class="md:col-span-2">
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -325,9 +290,7 @@
                     </p>
 
                     <p class="mt-1 text-sm font-semibold text-slate-700">
-
                         {{ $archive->subKegiatan->sub_kegiatan_name ?? '-' }}
-
                     </p>
 
                 </div>
@@ -348,9 +311,7 @@
                 <div class="flex items-center gap-3">
 
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-
                         <i class="bi bi-shield-lock-fill"></i>
-
                     </div>
 
                     <div>
@@ -376,17 +337,13 @@
 
                     $accessClasses = [
                         'internal' => 'bg-blue-100 text-blue-700',
-
                         'public' => 'bg-emerald-100 text-emerald-700',
-
                         'restricted' => 'bg-amber-100 text-amber-700',
                     ];
 
                     $accessLabels = [
                         'internal' => 'Internal',
-
                         'public' => 'Publik',
-
                         'restricted' => 'Terbatas',
                     ];
 
@@ -404,7 +361,6 @@
                     @else
                         <i class="bi bi-building"></i>
                     @endif
-
 
                     {{ $accessLabels[$archive->archive_access_level] ?? ucfirst($archive->archive_access_level) }}
 
@@ -439,9 +395,7 @@
                 <div class="flex items-center gap-3">
 
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-
                         <i class="bi bi-info-circle-fill"></i>
-
                     </div>
 
                     <div>
@@ -467,12 +421,16 @@
 
                     $statusClasses = [
                         'draft' => 'bg-slate-100 text-slate-700',
-
                         'pending' => 'bg-amber-100 text-amber-700',
-
                         'verified' => 'bg-emerald-100 text-emerald-700',
-
                         'rejected' => 'bg-red-100 text-red-700',
+                    ];
+
+                    $statusLabels = [
+                        'draft' => 'Draft',
+                        'pending' => 'Menunggu Verifikasi',
+                        'verified' => 'Terverifikasi',
+                        'rejected' => 'Ditolak',
                     ];
 
                 @endphp
@@ -492,8 +450,7 @@
                         <i class="bi bi-pencil-fill"></i>
                     @endif
 
-
-                    {{ ucfirst($archive->archive_status) }}
+                    {{ $statusLabels[$archive->archive_status] ?? ucfirst($archive->archive_status) }}
 
                 </span>
 
@@ -509,7 +466,6 @@
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
             {{-- HEADER --}}
-
             <div class="border-b border-slate-100 px-5 py-4">
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -537,14 +493,30 @@
                     </div>
 
 
-                    {{-- JUMLAH BERKAS --}}
+                    <div class="flex items-center gap-2">
 
-                    <span
-                        class="inline-flex w-fit items-center rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">
+                        <span
+                            class="inline-flex items-center rounded-full
+               bg-slate-100 px-3 py-1.5
+               text-xs font-bold text-slate-600">
 
-                        {{ $archive->files->count() }} Berkas
+                            {{ $archive->files->count() }} Berkas
 
-                    </span>
+                        </span>
+
+                        <a href="{{ route('sadarin.admin.archive.file.create', $archive->archive_id) }}"
+                            class="inline-flex items-center justify-center gap-2 rounded-lg
+               bg-[oklch(29.3%_0.136_325.661)] px-3.5 py-2
+               text-xs font-semibold text-white
+               transition hover:opacity-90">
+
+                            <i class="bi bi-plus-lg"></i>
+
+                            Tambah Berkas
+
+                        </a>
+
+                    </div>
 
                 </div>
 
@@ -552,7 +524,6 @@
 
 
             {{-- FILE LIST --}}
-
             <div class="p-5">
 
                 @if ($archive->files->count() > 0)
@@ -560,46 +531,124 @@
                     <div class="space-y-3">
 
                         @foreach ($archive->files as $file)
+                            @php
+
+                                $extension = strtolower($file->archive_file_extension ?? '');
+
+                                $icon = 'bi-file-earmark-fill';
+                                $iconClass = 'text-slate-500';
+                                $iconBg = 'bg-slate-100';
+
+                                if (in_array($extension, ['pdf'])) {
+                                    $icon = 'bi-file-earmark-pdf-fill';
+                                    $iconClass = 'text-red-500';
+                                    $iconBg = 'bg-red-50';
+                                } elseif (in_array($extension, ['doc', 'docx'])) {
+                                    $icon = 'bi-file-earmark-word-fill';
+                                    $iconClass = 'text-blue-500';
+                                    $iconBg = 'bg-blue-50';
+                                } elseif (in_array($extension, ['xls', 'xlsx', 'csv'])) {
+                                    $icon = 'bi-file-earmark-excel-fill';
+                                    $iconClass = 'text-emerald-500';
+                                    $iconBg = 'bg-emerald-50';
+                                } elseif (in_array($extension, ['ppt', 'pptx'])) {
+                                    $icon = 'bi-file-earmark-ppt-fill';
+                                    $iconClass = 'text-orange-500';
+                                    $iconBg = 'bg-orange-50';
+                                } elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                    $icon = 'bi-file-earmark-image-fill';
+                                    $iconClass = 'text-purple-500';
+                                    $iconBg = 'bg-purple-50';
+                                } elseif (in_array($extension, ['zip', 'rar', '7z'])) {
+                                    $icon = 'bi-file-earmark-zip-fill';
+                                    $iconClass = 'text-amber-500';
+                                    $iconBg = 'bg-amber-50';
+                                }
+
+                            @endphp
+
+
                             <div
                                 class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4
                                        transition hover:border-slate-300 hover:bg-white
                                        sm:flex-row sm:items-center sm:justify-between">
 
+
+                                {{-- FILE INFO --}}
                                 <div class="flex min-w-0 items-center gap-3">
 
                                     {{-- ICON --}}
-
                                     <div
-                                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg
-                                               bg-white text-red-500 shadow-sm">
+                                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
+                                               {{ $iconBg }} {{ $iconClass }}">
 
-                                        <i class="bi bi-file-earmark-pdf-fill text-lg"></i>
+                                        <i class="bi {{ $icon }} text-xl"></i>
 
                                     </div>
 
 
-                                    {{-- INFO --}}
-
+                                    {{-- DETAIL --}}
                                     <div class="min-w-0">
 
-                                        <p class="truncate text-sm font-semibold text-slate-700">
+                                        <div class="flex flex-wrap items-center gap-2">
 
-                                            {{ $file->file_name ?? 'Berkas Arsip' }}
+                                            <p class="truncate text-sm font-semibold text-slate-700">
 
-                                        </p>
-
-                                        @if (!empty($file->file_description))
-                                            <p class="mt-0.5 truncate text-xs text-slate-400">
-
-                                                {{ $file->file_description }}
+                                                {{ $file->archive_file_original_name }}
 
                                             </p>
-                                        @endif
 
-                                        @if (!empty($file->file_url))
+
+                                            {{-- PRIMARY --}}
+                                            @if ($file->archive_file_is_primary)
+                                                <span
+                                                    class="inline-flex shrink-0 items-center gap-1 rounded-full
+                                                           bg-blue-100 px-2 py-0.5
+                                                           text-[10px] font-bold text-blue-700">
+
+                                                    <i class="bi bi-star-fill"></i>
+
+                                                    Utama
+
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+
+                                        {{-- META --}}
+                                        <div
+                                            class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
+
+                                            @if ($extension)
+                                                <span class="uppercase">
+                                                    {{ $extension }}
+                                                </span>
+                                            @endif
+
+
+                                            @if ($file->archive_file_size)
+                                                <span>
+                                                    {{ number_format($file->archive_file_size / 1024, 0, ',', '.') }} KB
+                                                </span>
+                                            @endif
+
+
+                                            @if ($file->archive_file_mime_type)
+                                                <span class="hidden sm:inline">
+                                                    {{ $file->archive_file_mime_type }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+
+                                        {{-- DRIVE FILE ID --}}
+                                        @if ($file->archive_file_drive_file_id)
                                             <p class="mt-1 truncate text-xs text-slate-400">
 
-                                                {{ $file->file_url }}
+                                                ID Drive:
+                                                {{ $file->archive_file_drive_file_id }}
 
                                             </p>
                                         @endif
@@ -609,32 +658,36 @@
                                 </div>
 
 
-                                {{-- OPEN LINK --}}
+                                {{-- ACTION --}}
+                                <div class="flex shrink-0 items-center gap-2">
 
-                                @if (!empty($file->file_url))
-                                    <a href="{{ $file->file_url }}" target="_blank" rel="noopener noreferrer"
-                                        class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg
-                                               bg-[oklch(29.3%_0.136_325.661)] px-3.5 py-2
-                                               text-xs font-semibold text-white
-                                               transition hover:opacity-90">
+                                    @if ($file->archive_file_drive_url)
+                                        <a href="{{ $file->archive_file_drive_url }}" target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex items-center justify-center gap-2 rounded-lg
+                                                   bg-[oklch(29.3%_0.136_325.661)] px-3.5 py-2
+                                                   text-xs font-semibold text-white
+                                                   transition hover:opacity-90">
 
-                                        <i class="bi bi-box-arrow-up-right"></i>
+                                            <i class="bi bi-box-arrow-up-right"></i>
 
-                                        Buka Berkas
+                                            Buka Berkas
 
-                                    </a>
-                                @else
-                                    <span
-                                        class="inline-flex shrink-0 items-center gap-2 rounded-lg
-                                               bg-slate-200 px-3.5 py-2
-                                               text-xs font-semibold text-slate-500">
+                                        </a>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center gap-2 rounded-lg
+                                                   bg-slate-200 px-3.5 py-2
+                                                   text-xs font-semibold text-slate-500">
 
-                                        <i class="bi bi-link-45deg"></i>
+                                            <i class="bi bi-link-45deg"></i>
 
-                                        Link Tidak Tersedia
+                                            Link Tidak Tersedia
 
-                                    </span>
-                                @endif
+                                        </span>
+                                    @endif
+
+                                </div>
 
                             </div>
                         @endforeach
@@ -643,26 +696,24 @@
                 @else
                     {{-- EMPTY STATE --}}
 
-                    <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
+                    <div
+                        class="rounded-xl border border-dashed border-slate-300 bg-slate-50
+                               px-5 py-10 text-center">
 
                         <div
-                            class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl
-                                   bg-white text-slate-400 shadow-sm">
+                            class="mx-auto flex h-12 w-12 items-center justify-center
+                                   rounded-xl bg-white text-slate-400 shadow-sm">
 
                             <i class="bi bi-folder2-open text-xl"></i>
 
                         </div>
 
                         <h3 class="mt-3 text-sm font-bold text-slate-700">
-
                             Belum Ada Berkas
-
                         </h3>
 
                         <p class="mt-1 text-xs text-slate-400">
-
                             Belum ada berkas yang terhubung dengan arsip ini.
-
                         </p>
 
                     </div>
@@ -709,9 +760,7 @@
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
 
-
                 {{-- CREATED --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -732,7 +781,6 @@
 
 
                 {{-- UPDATED --}}
-
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -750,7 +798,6 @@
                     </p>
 
                 </div>
-
 
             </div>
 
@@ -776,7 +823,7 @@
             </a>
 
 
-            <a href="{{ route('sadarin.admin.archive.edit', $archive->archive_id) }}"
+            <a href="{{ route('sadarin.admin.archive.edit', $archive) }}"
                 class="inline-flex items-center justify-center gap-2 rounded-xl
                        bg-[oklch(29.3%_0.136_325.661)] px-5 py-2.5
                        text-sm font-semibold text-white shadow-sm
