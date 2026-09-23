@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Homepage\SadarinHomepageController;
 use App\Http\Controllers\Homepage\SadarinLoginController;
-use App\Http\Controllers\Dashboard\SadarinAdminController;
 use App\Http\Controllers\Master\SadarinUnitController;
 use App\Http\Controllers\Master\SadarinProgramController;
 use App\Http\Controllers\Master\SadarinKegiatanController;
@@ -16,6 +15,7 @@ use App\Http\Controllers\Admin\SadarinRolePermissionController;
 use App\Http\Controllers\Admin\SadarinAccessLogController;
 use App\Http\Controllers\Admin\SadarinSurveyController;
 use App\Http\Controllers\Admin\SadarinArchiveController;
+use App\Http\Controllers\Admin\SadarinAdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -393,22 +393,38 @@ Route::prefix('sadarin')
                 return view('dashboard-arsiparis.dashboard');
             })->name('dashboard');
         });
+    });
 
-    /*
+/*
         |--------------------------------------------------------------------------
         | PENGGUNA INTERNAL
         |--------------------------------------------------------------------------
         */
+Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal'])
+    ->prefix('user')
+    ->name('sadarin.user.')
+    ->group(function () {
+        /*
+    |--------------------------------------------------------------------------
+    | HOMEPAGE
+    |--------------------------------------------------------------------------
+    */
 
-    Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal'])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('UserPage.index');
-        })->name('dashboard');
-    });
-    });
+        Route::get('/dashboard', [SadarinHomepageController::class, 'index'])->name('dashboard');
 
-/*
-|--------------------------------------------------------------------------
-| MASTER UNIT
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | SEMUA ARSIP
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/arsip', [SadarinHomepageController::class, 'archives'])->name('archives');
+
+    /*
+    |--------------------------------------------------------------------------
+    | DETAIL ARSIP
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/arsip/{id}', [SadarinHomepageController::class, 'showArchive'])->name('archive.show');
+    });

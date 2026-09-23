@@ -33,12 +33,17 @@ class SadarinArchiveFile extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | RELATIONSHIP
+    | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
 
     public function archive()
     {
         return $this->belongsTo(SadarinArchive::class, 'archive_file_archive_id', 'archive_id');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(SadarinArchiveFileTag::class, 'archive_file_tag_archive_file_id', 'archive_file_id');
     }
 }

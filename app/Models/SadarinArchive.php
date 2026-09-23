@@ -68,11 +68,6 @@ class SadarinArchive extends Model
         return $this->hasMany(SadarinArchiveFile::class, 'archive_file_archive_id', 'archive_id');
     }
 
-    public function tags()
-    {
-        return $this->hasMany(SadarinArchiveTag::class, 'archive_tag_archive_id', 'archive_id');
-    }
-
     public function unit()
     {
         return $this->belongsTo(SadarinUnit::class, 'archive_unit_id', 'unit_id');

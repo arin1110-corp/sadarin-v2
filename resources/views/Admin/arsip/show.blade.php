@@ -16,8 +16,12 @@
 
             <div class="flex items-center gap-3">
 
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <div
+                    class="flex h-11 w-11 items-center justify-center
+                           rounded-xl bg-blue-50 text-blue-600">
+
                     <i class="bi bi-file-earmark-text-fill text-xl"></i>
+
                 </div>
 
                 <div>
@@ -35,14 +39,13 @@
             </div>
 
 
-            {{-- ACTION HEADER --}}
             <div class="flex flex-wrap items-center gap-2">
 
                 <a href="{{ route('sadarin.admin.archive.index') }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl
-                           border border-slate-200 bg-white px-4 py-2.5
-                           text-sm font-semibold text-slate-600 shadow-sm
-                           transition hover:bg-slate-50">
+                    class="inline-flex items-center justify-center gap-2
+                           rounded-xl border border-slate-200 bg-white
+                           px-4 py-2.5 text-sm font-semibold text-slate-600
+                           shadow-sm transition hover:bg-slate-50">
 
                     <i class="bi bi-arrow-left"></i>
 
@@ -51,11 +54,11 @@
                 </a>
 
 
-                <a href="{{ route('sadarin.admin.archive.edit', $archive) }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl
-                           bg-[oklch(29.3%_0.136_325.661)] px-4 py-2.5
-                           text-sm font-semibold text-white shadow-sm
-                           transition hover:opacity-90">
+                <a href="{{ route('sadarin.admin.archive.edit', $archive->archive_id) }}"
+                    class="inline-flex items-center justify-center gap-2
+                           rounded-xl bg-[oklch(29.3%_0.136_325.661)]
+                           px-4 py-2.5 text-sm font-semibold text-white
+                           shadow-sm transition hover:opacity-90">
 
                     <i class="bi bi-pencil-square"></i>
 
@@ -69,7 +72,7 @@
 
 
         {{-- ========================================================= --}}
-        {{-- SUCCESS MESSAGE --}}
+        {{-- SUCCESS --}}
         {{-- ========================================================= --}}
 
         @if (session('success'))
@@ -97,8 +100,12 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center
+                               rounded-lg bg-blue-50 text-blue-600">
+
                         <i class="bi bi-file-earmark-text-fill"></i>
+
                     </div>
 
                     <div>
@@ -162,7 +169,7 @@
                             <p class="mt-1 text-sm font-semibold text-slate-700">
 
                                 @if ($archive->archive_date)
-                                    {{ \Carbon\Carbon::parse($archive->archive_date)->translatedFormat('d F Y') }}
+                                    {{ $archive->archive_date->translatedFormat('d F Y') }}
                                 @else
                                     -
                                 @endif
@@ -203,8 +210,12 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center
+                               rounded-lg bg-indigo-50 text-indigo-600">
+
                         <i class="bi bi-diagram-3-fill"></i>
+
                     </div>
 
                     <div>
@@ -310,8 +321,12 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center
+                               rounded-lg bg-amber-50 text-amber-600">
+
                         <i class="bi bi-shield-lock-fill"></i>
+
                     </div>
 
                     <div>
@@ -351,8 +366,9 @@
 
 
                 <span
-                    class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold
-                    {{ $accessClasses[$archive->archive_access_level] ?? 'bg-slate-100 text-slate-700' }}">
+                    class="inline-flex items-center gap-2 rounded-full
+                           px-3 py-1.5 text-xs font-bold
+                           {{ $accessClasses[$archive->archive_access_level] ?? 'bg-slate-100 text-slate-700' }}">
 
                     @if ($archive->archive_access_level === 'public')
                         <i class="bi bi-globe2"></i>
@@ -394,8 +410,12 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center
+                               rounded-lg bg-slate-100 text-slate-600">
+
                         <i class="bi bi-info-circle-fill"></i>
+
                     </div>
 
                     <div>
@@ -437,8 +457,9 @@
 
 
                 <span
-                    class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold
-                    {{ $statusClasses[$archive->archive_status] ?? 'bg-slate-100 text-slate-700' }}">
+                    class="inline-flex items-center gap-2 rounded-full
+                           px-3 py-1.5 text-xs font-bold
+                           {{ $statusClasses[$archive->archive_status] ?? 'bg-slate-100 text-slate-700' }}">
 
                     @if ($archive->archive_status === 'verified')
                         <i class="bi bi-check-circle-fill"></i>
@@ -465,14 +486,15 @@
 
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-            {{-- HEADER --}}
             <div class="border-b border-slate-100 px-5 py-4">
 
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                     <div class="flex items-center gap-3">
 
-                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                        <div
+                            class="flex h-9 w-9 items-center justify-center
+                                   rounded-lg bg-emerald-50 text-emerald-600">
 
                             <i class="bi bi-paperclip"></i>
 
@@ -485,7 +507,7 @@
                             </h2>
 
                             <p class="text-xs text-slate-400">
-                                Daftar berkas yang terhubung dengan arsip ini.
+                                Berkas yang terhubung dengan arsip ini.
                             </p>
 
                         </div>
@@ -497,18 +519,20 @@
 
                         <span
                             class="inline-flex items-center rounded-full
-               bg-slate-100 px-3 py-1.5
-               text-xs font-bold text-slate-600">
+                                   bg-slate-100 px-3 py-1.5
+                                   text-xs font-bold text-slate-600">
 
                             {{ $archive->files->count() }} Berkas
 
                         </span>
 
+
+                        {{-- TAMBAH BERKAS --}}
                         <a href="{{ route('sadarin.admin.archive.file.create', $archive->archive_id) }}"
-                            class="inline-flex items-center justify-center gap-2 rounded-lg
-               bg-[oklch(29.3%_0.136_325.661)] px-3.5 py-2
-               text-xs font-semibold text-white
-               transition hover:opacity-90">
+                            class="inline-flex items-center gap-2 rounded-lg
+                                   bg-[oklch(29.3%_0.136_325.661)]
+                                   px-3 py-1.5 text-xs font-semibold text-white
+                                   transition hover:opacity-90">
 
                             <i class="bi bi-plus-lg"></i>
 
@@ -523,169 +547,184 @@
             </div>
 
 
-            {{-- FILE LIST --}}
             <div class="p-5">
 
                 @if ($archive->files->count() > 0)
 
-                    <div class="space-y-3">
+                    <div class="space-y-4">
 
                         @foreach ($archive->files as $file)
-                            @php
-
-                                $extension = strtolower($file->archive_file_extension ?? '');
-
-                                $icon = 'bi-file-earmark-fill';
-                                $iconClass = 'text-slate-500';
-                                $iconBg = 'bg-slate-100';
-
-                                if (in_array($extension, ['pdf'])) {
-                                    $icon = 'bi-file-earmark-pdf-fill';
-                                    $iconClass = 'text-red-500';
-                                    $iconBg = 'bg-red-50';
-                                } elseif (in_array($extension, ['doc', 'docx'])) {
-                                    $icon = 'bi-file-earmark-word-fill';
-                                    $iconClass = 'text-blue-500';
-                                    $iconBg = 'bg-blue-50';
-                                } elseif (in_array($extension, ['xls', 'xlsx', 'csv'])) {
-                                    $icon = 'bi-file-earmark-excel-fill';
-                                    $iconClass = 'text-emerald-500';
-                                    $iconBg = 'bg-emerald-50';
-                                } elseif (in_array($extension, ['ppt', 'pptx'])) {
-                                    $icon = 'bi-file-earmark-ppt-fill';
-                                    $iconClass = 'text-orange-500';
-                                    $iconBg = 'bg-orange-50';
-                                } elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                    $icon = 'bi-file-earmark-image-fill';
-                                    $iconClass = 'text-purple-500';
-                                    $iconBg = 'bg-purple-50';
-                                } elseif (in_array($extension, ['zip', 'rar', '7z'])) {
-                                    $icon = 'bi-file-earmark-zip-fill';
-                                    $iconClass = 'text-amber-500';
-                                    $iconBg = 'bg-amber-50';
-                                }
-
-                            @endphp
-
-
                             <div
-                                class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4
-                                       transition hover:border-slate-300 hover:bg-white
-                                       sm:flex-row sm:items-center sm:justify-between">
+                                class="rounded-xl border border-slate-200
+                                       bg-slate-50 p-4
+                                       transition hover:border-slate-300
+                                       hover:bg-white">
+
+                                <div
+                                    class="flex flex-col gap-4
+                                           lg:flex-row lg:items-start
+                                           lg:justify-between">
+
+                                    {{-- INFO FILE --}}
+                                    <div class="flex min-w-0 items-start gap-3">
+
+                                        <div
+                                            class="flex h-11 w-11 shrink-0
+                                                   items-center justify-center
+                                                   rounded-lg bg-white
+                                                   text-red-500 shadow-sm">
+
+                                            @php
+                                                $extension = strtolower($file->archive_file_extension ?? '');
+                                            @endphp
+
+                                            @if ($extension === 'pdf')
+                                                <i class="bi bi-file-earmark-pdf-fill text-xl"></i>
+                                            @elseif (in_array($extension, ['doc', 'docx']))
+                                                <i class="bi bi-file-earmark-word-fill text-xl"></i>
+                                            @elseif (in_array($extension, ['xls', 'xlsx']))
+                                                <i class="bi bi-file-earmark-excel-fill text-xl"></i>
+                                            @elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                                <i class="bi bi-file-earmark-image-fill text-xl"></i>
+                                            @else
+                                                <i class="bi bi-file-earmark-fill text-xl"></i>
+                                            @endif
+
+                                        </div>
 
 
-                                {{-- FILE INFO --}}
-                                <div class="flex min-w-0 items-center gap-3">
+                                        <div class="min-w-0">
 
-                                    {{-- ICON --}}
-                                    <div
-                                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg
-                                               {{ $iconBg }} {{ $iconClass }}">
+                                            <div class="flex flex-wrap items-center gap-2">
 
-                                        <i class="bi {{ $icon }} text-xl"></i>
+                                                <p class="break-all text-sm font-semibold text-slate-700">
+
+                                                    {{ $file->archive_file_original_name }}
+
+                                                </p>
+
+
+                                                @if ($file->archive_file_is_primary)
+                                                    <span
+                                                        class="inline-flex items-center gap-1
+                                                               rounded-full bg-emerald-100
+                                                               px-2 py-0.5
+                                                               text-[10px] font-bold
+                                                               text-emerald-700">
+
+                                                        <i class="bi bi-star-fill"></i>
+
+                                                        Utama
+
+                                                    </span>
+                                                @endif
+
+                                            </div>
+
+
+                                            {{-- FILE META --}}
+                                            <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400">
+
+                                                @if ($file->archive_file_extension)
+                                                    <span>
+                                                        .{{ strtoupper($file->archive_file_extension) }}
+                                                    </span>
+                                                @endif
+
+
+                                                @if ($file->archive_file_size)
+                                                    <span>
+                                                        {{ number_format($file->archive_file_size / 1024 / 1024, 2) }}
+                                                        MB
+                                                    </span>
+                                                @endif
+
+                                            </div>
+
+
+                                            {{-- ================================================= --}}
+                                            {{-- TAG BERKAS --}}
+                                            {{-- ================================================= --}}
+
+                                            @if ($file->tags && $file->tags->count() > 0)
+                                                <div class="mt-3 flex flex-wrap gap-1.5">
+
+                                                    @foreach ($file->tags as $fileTag)
+                                                        @if ($fileTag->tag)
+                                                            <span
+                                                                class="inline-flex items-center gap-1
+                                                                       rounded-full bg-violet-50
+                                                                       px-2.5 py-1
+                                                                       text-[11px] font-semibold
+                                                                       text-violet-700">
+
+                                                                <i class="bi bi-tag-fill"></i>
+
+                                                                {{ $fileTag->tag->tag_name }}
+
+                                                            </span>
+                                                        @endif
+                                                    @endforeach
+
+                                                </div>
+                                            @else
+                                                <p class="mt-2 text-xs text-slate-400">
+                                                    Belum ada tag.
+                                                </p>
+                                            @endif
+
+                                        </div>
 
                                     </div>
 
 
-                                    {{-- DETAIL --}}
-                                    <div class="min-w-0">
+                                    {{-- ACTION --}}
+                                    <div class="flex shrink-0 items-center gap-2">
 
-                                        <div class="flex flex-wrap items-center gap-2">
+                                        @if ($file->archive_file_drive_url)
+                                            <a href="{{ $file->archive_file_drive_url }}" target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="inline-flex items-center gap-2
+                                                       rounded-lg
+                                                       bg-[oklch(29.3%_0.136_325.661)]
+                                                       px-3.5 py-2
+                                                       text-xs font-semibold
+                                                       text-white
+                                                       transition hover:opacity-90">
 
-                                            <p class="truncate text-sm font-semibold text-slate-700">
+                                                <i class="bi bi-box-arrow-up-right"></i>
 
-                                                {{ $file->archive_file_original_name }}
+                                                Buka
 
-                                            </p>
-
-
-                                            {{-- PRIMARY --}}
-                                            @if ($file->archive_file_is_primary)
-                                                <span
-                                                    class="inline-flex shrink-0 items-center gap-1 rounded-full
-                                                           bg-blue-100 px-2 py-0.5
-                                                           text-[10px] font-bold text-blue-700">
-
-                                                    <i class="bi bi-star-fill"></i>
-
-                                                    Utama
-
-                                                </span>
-                                            @endif
-
-                                        </div>
-
-
-                                        {{-- META --}}
-                                        <div
-                                            class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400">
-
-                                            @if ($extension)
-                                                <span class="uppercase">
-                                                    {{ $extension }}
-                                                </span>
-                                            @endif
-
-
-                                            @if ($file->archive_file_size)
-                                                <span>
-                                                    {{ number_format($file->archive_file_size / 1024, 0, ',', '.') }} KB
-                                                </span>
-                                            @endif
-
-
-                                            @if ($file->archive_file_mime_type)
-                                                <span class="hidden sm:inline">
-                                                    {{ $file->archive_file_mime_type }}
-                                                </span>
-                                            @endif
-
-                                        </div>
-
-
-                                        {{-- DRIVE FILE ID --}}
-                                        @if ($file->archive_file_drive_file_id)
-                                            <p class="mt-1 truncate text-xs text-slate-400">
-
-                                                ID Drive:
-                                                {{ $file->archive_file_drive_file_id }}
-
-                                            </p>
+                                            </a>
                                         @endif
 
+
+                                        <form
+                                            action="{{ route('sadarin.admin.archive.file.destroy', [
+                                                'archive' => $archive->archive_id,
+                                                'file' => $file->archive_file_id,
+                                            ]) }}"
+                                            method="POST" onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
+
+                                            @csrf
+
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                class="inline-flex h-9 w-9
+                                                       items-center justify-center
+                                                       rounded-lg text-red-600
+                                                       transition hover:bg-red-50"
+                                                title="Hapus Berkas">
+
+                                                <i class="bi bi-trash-fill"></i>
+
+                                            </button>
+
+                                        </form>
+
                                     </div>
-
-                                </div>
-
-
-                                {{-- ACTION --}}
-                                <div class="flex shrink-0 items-center gap-2">
-
-                                    @if ($file->archive_file_drive_url)
-                                        <a href="{{ $file->archive_file_drive_url }}" target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="inline-flex items-center justify-center gap-2 rounded-lg
-                                                   bg-[oklch(29.3%_0.136_325.661)] px-3.5 py-2
-                                                   text-xs font-semibold text-white
-                                                   transition hover:opacity-90">
-
-                                            <i class="bi bi-box-arrow-up-right"></i>
-
-                                            Buka Berkas
-
-                                        </a>
-                                    @else
-                                        <span
-                                            class="inline-flex items-center gap-2 rounded-lg
-                                                   bg-slate-200 px-3.5 py-2
-                                                   text-xs font-semibold text-slate-500">
-
-                                            <i class="bi bi-link-45deg"></i>
-
-                                            Link Tidak Tersedia
-
-                                        </span>
-                                    @endif
 
                                 </div>
 
@@ -694,15 +733,16 @@
 
                     </div>
                 @else
-                    {{-- EMPTY STATE --}}
-
                     <div
-                        class="rounded-xl border border-dashed border-slate-300 bg-slate-50
+                        class="rounded-xl border border-dashed
+                               border-slate-300 bg-slate-50
                                px-5 py-10 text-center">
 
                         <div
-                            class="mx-auto flex h-12 w-12 items-center justify-center
-                                   rounded-xl bg-white text-slate-400 shadow-sm">
+                            class="mx-auto flex h-12 w-12
+                                   items-center justify-center
+                                   rounded-xl bg-white
+                                   text-slate-400 shadow-sm">
 
                             <i class="bi bi-folder2-open text-xl"></i>
 
@@ -715,6 +755,20 @@
                         <p class="mt-1 text-xs text-slate-400">
                             Belum ada berkas yang terhubung dengan arsip ini.
                         </p>
+
+
+                        <a href="{{ route('sadarin.admin.archive.file.create', $archive->archive_id) }}"
+                            class="mt-4 inline-flex items-center gap-2
+                                   rounded-xl
+                                   bg-[oklch(29.3%_0.136_325.661)]
+                                   px-4 py-2 text-xs font-semibold
+                                   text-white hover:opacity-90">
+
+                            <i class="bi bi-plus-lg"></i>
+
+                            Tambah Berkas
+
+                        </a>
 
                     </div>
 
@@ -735,7 +789,9 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center
+                               rounded-lg bg-slate-100 text-slate-600">
 
                         <i class="bi bi-clock-history"></i>
 
@@ -760,7 +816,6 @@
 
             <div class="grid grid-cols-1 gap-5 p-5 md:grid-cols-2">
 
-                {{-- CREATED --}}
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -780,7 +835,6 @@
                 </div>
 
 
-                {{-- UPDATED --}}
                 <div>
 
                     <p class="text-xs font-semibold uppercase tracking-wide text-slate-400">
@@ -811,10 +865,10 @@
         <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
 
             <a href="{{ route('sadarin.admin.archive.index') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl
-                       border border-slate-200 bg-white px-5 py-2.5
-                       text-sm font-semibold text-slate-600
-                       transition hover:bg-slate-50">
+                class="inline-flex items-center justify-center gap-2
+                       rounded-xl border border-slate-200 bg-white
+                       px-5 py-2.5 text-sm font-semibold
+                       text-slate-600 transition hover:bg-slate-50">
 
                 <i class="bi bi-arrow-left"></i>
 
@@ -823,11 +877,12 @@
             </a>
 
 
-            <a href="{{ route('sadarin.admin.archive.edit', $archive) }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl
-                       bg-[oklch(29.3%_0.136_325.661)] px-5 py-2.5
-                       text-sm font-semibold text-white shadow-sm
-                       transition hover:opacity-90">
+            <a href="{{ route('sadarin.admin.archive.edit', $archive->archive_id) }}"
+                class="inline-flex items-center justify-center gap-2
+                       rounded-xl
+                       bg-[oklch(29.3%_0.136_325.661)]
+                       px-5 py-2.5 text-sm font-semibold
+                       text-white shadow-sm transition hover:opacity-90">
 
                 <i class="bi bi-pencil-square"></i>
 

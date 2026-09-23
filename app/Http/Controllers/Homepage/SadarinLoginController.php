@@ -634,7 +634,7 @@ class SadarinLoginController extends Controller
 
             'Arsiparis' => redirect('/sadarin/arsiparis/dashboard')->with('success', $message),
 
-            'Pengguna Internal' => redirect('/sadarin/dashboard')->with('success', $message),
+            'Pengguna Internal' => redirect()->route('sadarin.user.dashboard')->with('success', $message),
 
             default => redirect()->route('sadarin.login')->with('error', 'Role akun tidak dikenali.'),
         };

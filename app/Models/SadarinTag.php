@@ -33,8 +33,8 @@ class SadarinTag extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function archiveTags()
+    public function archiveFileTags()
     {
-        return $this->hasMany(SadarinArchiveTag::class, 'archive_tag_tag_id', 'tag_id');
+        return $this->hasMany(SadarinArchiveFileTag::class, 'archive_file_tag_tag_id', 'tag_id');
     }
 }

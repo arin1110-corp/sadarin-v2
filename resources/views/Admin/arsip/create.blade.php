@@ -27,19 +27,19 @@
                     </h1>
 
                     <p class="mt-0.5 text-sm text-slate-500">
-                        Tambahkan data arsip baru ke dalam SADARIN.
+                        Tambahkan arsip baru ke dalam SADARIN.
                     </p>
 
                 </div>
 
             </div>
 
-
             <a href="{{ route('sadarin.admin.archive.index') }}"
-                class="inline-flex items-center justify-center gap-2 rounded-xl
-                       border border-slate-200 bg-white px-4 py-2.5
-                       text-sm font-semibold text-slate-600 shadow-sm
-                       transition hover:bg-slate-50">
+                class="inline-flex items-center justify-center gap-2
+                       rounded-xl border border-slate-200 bg-white
+                       px-4 py-2.5 text-sm font-semibold
+                       text-slate-600 shadow-sm transition
+                       hover:bg-slate-50">
 
                 <i class="bi bi-arrow-left"></i>
 
@@ -51,27 +51,25 @@
 
 
         {{-- ========================================================= --}}
-        {{-- VALIDATION ERROR --}}
+        {{-- ERROR --}}
         {{-- ========================================================= --}}
 
         @if ($errors->any())
 
-            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
 
-                <div class="flex items-center gap-2 text-sm font-semibold text-red-700">
+                <div class="flex items-center gap-2 font-semibold">
 
                     <i class="bi bi-exclamation-triangle-fill"></i>
 
-                    Terdapat kesalahan pada data.
+                    Terjadi kesalahan.
 
                 </div>
 
-                <ul class="mt-2 list-inside list-disc space-y-1 text-xs text-red-600">
+                <ul class="mt-2 list-inside list-disc text-xs">
 
                     @foreach ($errors->all() as $error)
-                        <li>
-                            {{ $error }}
-                        </li>
+                        <li>{{ $error }}</li>
                     @endforeach
 
                 </ul>
@@ -85,7 +83,7 @@
         {{-- FORM --}}
         {{-- ========================================================= --}}
 
-        <form action="{{ route('sadarin.admin.archive.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('sadarin.admin.archive.store') }}" method="POST">
 
             @csrf
 
@@ -96,15 +94,11 @@
 
             <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                {{-- HEADER CARD --}}
-
                 <div class="border-b border-slate-100 px-5 py-4">
 
                     <div class="flex items-center gap-3">
 
-                        <div
-                            class="flex h-9 w-9 items-center justify-center rounded-lg
-                                   bg-blue-50 text-blue-600">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
 
                             <i class="bi bi-file-earmark-text-fill"></i>
 
@@ -127,9 +121,7 @@
                 </div>
 
 
-                {{-- BODY CARD --}}
-
-                <div class="grid grid-cols-1 gap-5 p-5">
+                <div class="space-y-5 p-5">
 
 
                     {{-- JUDUL --}}
@@ -144,14 +136,14 @@
 
                         </label>
 
-
                         <input type="text" id="archive_title" name="archive_title" value="{{ old('archive_title') }}"
-                            required maxlength="255" placeholder="Masukkan judul arsip"
+                            placeholder="Contoh: Surat Keputusan Kepala Dinas" required
                             class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
-                                   placeholder:text-slate-400
+                                   bg-slate-50 px-4 py-2.5
+                                   text-sm text-slate-700 outline-none
+                                   transition
                                    focus:border-[oklch(29.3%_0.136_325.661)]
+                                   focus:bg-white
                                    focus:ring-2
                                    focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
@@ -168,14 +160,14 @@
 
                         </label>
 
-
                         <textarea id="archive_description" name="archive_description" rows="4"
-                            placeholder="Masukkan deskripsi arsip jika diperlukan"
-                            class="w-full resize-y rounded-xl border border-slate-200
-                                   bg-white px-4 py-3 text-sm text-slate-700
-                                   outline-none transition
-                                   placeholder:text-slate-400
+                            placeholder="Masukkan deskripsi arsip jika diperlukan..."
+                            class="w-full rounded-xl border border-slate-200
+                                   bg-slate-50 px-4 py-3
+                                   text-sm text-slate-700 outline-none
+                                   transition
                                    focus:border-[oklch(29.3%_0.136_325.661)]
+                                   focus:bg-white
                                    focus:ring-2
                                    focus:ring-[oklch(29.3%_0.136_325.661)]/10">{{ old('archive_description') }}</textarea>
 
@@ -186,9 +178,6 @@
 
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-
-                        {{-- TANGGAL --}}
-
                         <div>
 
                             <label for="archive_date" class="mb-1.5 block text-sm font-semibold text-slate-700">
@@ -197,19 +186,18 @@
 
                             </label>
 
-
                             <input type="date" id="archive_date" name="archive_date" value="{{ old('archive_date') }}"
                                 class="w-full rounded-xl border border-slate-200
-                                       bg-white px-4 py-2.5 text-sm text-slate-700
-                                       outline-none transition
+                                       bg-slate-50 px-4 py-2.5
+                                       text-sm text-slate-700 outline-none
+                                       transition
                                        focus:border-[oklch(29.3%_0.136_325.661)]
+                                       focus:bg-white
                                        focus:ring-2
                                        focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
                         </div>
 
-
-                        {{-- TAHUN --}}
 
                         <div>
 
@@ -219,14 +207,14 @@
 
                             </label>
 
-
                             <input type="number" id="archive_year" name="archive_year" value="{{ old('archive_year') }}"
                                 min="1900" max="2100" placeholder="Contoh: 2026"
                                 class="w-full rounded-xl border border-slate-200
-                                       bg-white px-4 py-2.5 text-sm text-slate-700
-                                       outline-none transition
-                                       placeholder:text-slate-400
+                                       bg-slate-50 px-4 py-2.5
+                                       text-sm text-slate-700 outline-none
+                                       transition
                                        focus:border-[oklch(29.3%_0.136_325.661)]
+                                       focus:bg-white
                                        focus:ring-2
                                        focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
@@ -243,23 +231,17 @@
             {{-- KLASIFIKASI --}}
             {{-- ========================================================= --}}
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-
-
-                {{-- HEADER --}}
+            <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                 <div class="border-b border-slate-100 px-5 py-4">
 
                     <div class="flex items-center gap-3">
 
-                        <div
-                            class="flex h-9 w-9 items-center justify-center rounded-lg
-                                   bg-indigo-50 text-indigo-600">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
 
                             <i class="bi bi-diagram-3-fill"></i>
 
                         </div>
-
 
                         <div>
 
@@ -268,7 +250,7 @@
                             </h2>
 
                             <p class="text-xs text-slate-400">
-                                Tentukan klasifikasi arsip.
+                                Unit dan jenis dokumen wajib. Program dan kegiatan bersifat opsional.
                             </p>
 
                         </div>
@@ -278,9 +260,7 @@
                 </div>
 
 
-                {{-- BODY --}}
-
-                <div class="grid grid-cols-1 gap-5 p-5">
+                <div class="space-y-5 p-5">
 
 
                     {{-- ================================================= --}}
@@ -293,14 +273,17 @@
 
                             Unit
 
+                            <span class="text-red-500">*</span>
+
                         </label>
 
-
-                        <select id="archive_unit_id" name="archive_unit_id"
+                        <select id="archive_unit_id" name="archive_unit_id" required
                             class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
+                                   bg-slate-50 px-4 py-2.5
+                                   text-sm text-slate-700 outline-none
+                                   transition
                                    focus:border-[oklch(29.3%_0.136_325.661)]
+                                   focus:bg-white
                                    focus:ring-2
                                    focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
@@ -308,9 +291,9 @@
                                 -- Pilih Unit --
                             </option>
 
-
                             @foreach ($units as $unit)
-                                <option value="{{ $unit->unit_id }}" @selected(old('archive_unit_id') == $unit->unit_id)>
+                                <option value="{{ $unit->unit_id }}"
+                                    {{ old('archive_unit_id') == $unit->unit_id ? 'selected' : '' }}>
 
                                     {{ $unit->unit_name }}
 
@@ -318,13 +301,6 @@
                             @endforeach
 
                         </select>
-
-
-                        <p class="mt-1 text-xs text-slate-400">
-
-                            Pilih unit yang terkait dengan arsip.
-
-                        </p>
 
                     </div>
 
@@ -339,14 +315,17 @@
 
                             Jenis Dokumen
 
+                            <span class="text-red-500">*</span>
+
                         </label>
 
-
-                        <select id="archive_document_type_id" name="archive_document_type_id"
+                        <select id="archive_document_type_id" name="archive_document_type_id" required
                             class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
+                                   bg-slate-50 px-4 py-2.5
+                                   text-sm text-slate-700 outline-none
+                                   transition
                                    focus:border-[oklch(29.3%_0.136_325.661)]
+                                   focus:bg-white
                                    focus:ring-2
                                    focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
@@ -354,9 +333,9 @@
                                 -- Pilih Jenis Dokumen --
                             </option>
 
-
                             @foreach ($documentTypes as $documentType)
-                                <option value="{{ $documentType->document_type_id }}" @selected(old('archive_document_type_id') == $documentType->document_type_id)>
+                                <option value="{{ $documentType->document_type_id }}"
+                                    {{ old('archive_document_type_id') == $documentType->document_type_id ? 'selected' : '' }}>
 
                                     {{ $documentType->document_type_name }}
 
@@ -369,110 +348,157 @@
 
 
                     {{-- ================================================= --}}
-                    {{-- PROGRAM --}}
+                    {{-- PILIH PROGRAM --}}
                     {{-- ================================================= --}}
 
-                    <div>
+                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
 
-                        <label for="archive_program_id" class="mb-1.5 block text-sm font-semibold text-slate-700">
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                            Program
+                            <div>
 
-                        </label>
+                                <p class="text-sm font-semibold text-slate-700">
+                                    Gunakan Program / Kegiatan
+                                </p>
 
+                                <p class="mt-1 text-xs leading-5 text-slate-400">
+                                    Aktifkan jika arsip ini berkaitan dengan program,
+                                    kegiatan atau sub kegiatan tertentu.
+                                </p>
 
-                        <select id="archive_program_id" name="archive_program_id"
-                            class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
-                                   focus:border-[oklch(29.3%_0.136_325.661)]
-                                   focus:ring-2
-                                   focus:ring-[oklch(29.3%_0.136_325.661)]/10">
-
-                            <option value="">
-                                -- Pilih Program --
-                            </option>
+                            </div>
 
 
-                            @foreach ($programs as $program)
-                                <option value="{{ $program->program_id }}" @selected(old('archive_program_id') == $program->program_id)>
+                            <div class="flex shrink-0 gap-2">
 
-                                    @if ($program->program_code)
-                                        {{ $program->program_code }} -
-                                    @endif
+                                <button type="button" id="programNo"
+                                    class="rounded-lg bg-[oklch(29.3%_0.136_325.661)]
+                                           px-4 py-2 text-xs font-semibold text-white">
 
-                                    {{ $program->program_name }}
+                                    Tidak
 
+                                </button>
+
+
+                                <button type="button" id="programYes"
+                                    class="rounded-lg border border-slate-200
+                                           bg-white px-4 py-2 text-xs
+                                           font-semibold text-slate-600
+                                           transition hover:bg-slate-100">
+
+                                    Ya
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- ================================================= --}}
+                    {{-- PROGRAM SECTION --}}
+                    {{-- ================================================= --}}
+
+                    <div id="programSection" class="hidden space-y-5">
+
+
+                        {{-- PROGRAM --}}
+
+                        <div>
+
+                            <label for="archive_program_id" class="mb-1.5 block text-sm font-semibold text-slate-700">
+
+                                Program
+
+                            </label>
+
+                            <select id="archive_program_id" name="archive_program_id"
+                                class="w-full rounded-xl border border-slate-200
+                                       bg-slate-50 px-4 py-2.5
+                                       text-sm text-slate-700 outline-none
+                                       transition
+                                       focus:border-[oklch(29.3%_0.136_325.661)]
+                                       focus:bg-white
+                                       focus:ring-2
+                                       focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+
+                                <option value="">
+                                    -- Pilih Program --
                                 </option>
-                            @endforeach
 
-                        </select>
+                                @foreach ($programs as $program)
+                                    <option value="{{ $program->program_id }}"
+                                        {{ old('archive_program_id') == $program->program_id ? 'selected' : '' }}>
 
-                    </div>
+                                        {{ $program->program_name }}
 
+                                    </option>
+                                @endforeach
 
-                    {{-- ================================================= --}}
-                    {{-- KEGIATAN --}}
-                    {{-- ================================================= --}}
+                            </select>
 
-                    <div>
-
-                        <label for="archive_kegiatan_id" class="mb-1.5 block text-sm font-semibold text-slate-700">
-
-                            Kegiatan
-
-                        </label>
+                        </div>
 
 
-                        <select id="archive_kegiatan_id" name="archive_kegiatan_id" disabled
-                            class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
-                                   disabled:cursor-not-allowed
-                                   disabled:bg-slate-50
-                                   disabled:text-slate-400
-                                   focus:border-[oklch(29.3%_0.136_325.661)]
-                                   focus:ring-2
-                                   focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+                        {{-- KEGIATAN --}}
 
-                            <option value="">
-                                -- Pilih Program Dahulu --
-                            </option>
+                        <div id="kegiatanWrapper" class="hidden">
 
-                        </select>
+                            <label for="archive_kegiatan_id" class="mb-1.5 block text-sm font-semibold text-slate-700">
 
-                    </div>
+                                Kegiatan
 
+                            </label>
 
-                    {{-- ================================================= --}}
-                    {{-- SUB KEGIATAN --}}
-                    {{-- ================================================= --}}
+                            <select id="archive_kegiatan_id" name="archive_kegiatan_id"
+                                class="w-full rounded-xl border border-slate-200
+                                       bg-slate-50 px-4 py-2.5
+                                       text-sm text-slate-700 outline-none
+                                       transition
+                                       focus:border-[oklch(29.3%_0.136_325.661)]
+                                       focus:bg-white
+                                       focus:ring-2
+                                       focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
-                    <div class="md:col-span-2">
+                                <option value="">
+                                    -- Pilih Kegiatan --
+                                </option>
 
-                        <label for="archive_sub_kegiatan_id" class="mb-1.5 block text-sm font-semibold text-slate-700">
+                            </select>
 
-                            Sub Kegiatan
-
-                        </label>
+                        </div>
 
 
-                        <select id="archive_sub_kegiatan_id" name="archive_sub_kegiatan_id" disabled
-                            class="w-full rounded-xl border border-slate-200
-                                   bg-white px-4 py-2.5 text-sm text-slate-700
-                                   outline-none transition
-                                   disabled:cursor-not-allowed
-                                   disabled:bg-slate-50
-                                   disabled:text-slate-400
-                                   focus:border-[oklch(29.3%_0.136_325.661)]
-                                   focus:ring-2
-                                   focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+                        {{-- SUB KEGIATAN --}}
 
-                            <option value="">
-                                -- Pilih Kegiatan Dahulu --
-                            </option>
+                        <div id="subKegiatanWrapper" class="hidden">
 
-                        </select>
+                            <label for="archive_sub_kegiatan_id"
+                                class="mb-1.5 block text-sm font-semibold text-slate-700">
+
+                                Sub Kegiatan
+
+                            </label>
+
+                            <select id="archive_sub_kegiatan_id" name="archive_sub_kegiatan_id"
+                                class="w-full rounded-xl border border-slate-200
+                                       bg-slate-50 px-4 py-2.5
+                                       text-sm text-slate-700 outline-none
+                                       transition
+                                       focus:border-[oklch(29.3%_0.136_325.661)]
+                                       focus:bg-white
+                                       focus:ring-2
+                                       focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+
+                                <option value="">
+                                    -- Pilih Sub Kegiatan --
+                                </option>
+
+                            </select>
+
+                        </div>
 
                     </div>
 
@@ -485,23 +511,17 @@
             {{-- HAK AKSES --}}
             {{-- ========================================================= --}}
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-
-
-                {{-- HEADER --}}
+            <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
                 <div class="border-b border-slate-100 px-5 py-4">
 
                     <div class="flex items-center gap-3">
 
-                        <div
-                            class="flex h-9 w-9 items-center justify-center rounded-lg
-                                   bg-amber-50 text-amber-600">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
 
                             <i class="bi bi-shield-lock-fill"></i>
 
                         </div>
-
 
                         <div>
 
@@ -510,7 +530,7 @@
                             </h2>
 
                             <p class="text-xs text-slate-400">
-                                Tentukan siapa yang dapat mengakses arsip.
+                                Tentukan tingkat akses arsip.
                             </p>
 
                         </div>
@@ -519,8 +539,6 @@
 
                 </div>
 
-
-                {{-- BODY --}}
 
                 <div class="p-5">
 
@@ -532,67 +550,30 @@
 
                     </label>
 
-
                     <select id="archive_access_level" name="archive_access_level" required
                         class="w-full rounded-xl border border-slate-200
-                               bg-white px-4 py-2.5 text-sm text-slate-700
-                               outline-none transition
+                               bg-slate-50 px-4 py-2.5
+                               text-sm text-slate-700 outline-none
+                               transition
                                focus:border-[oklch(29.3%_0.136_325.661)]
+                               focus:bg-white
                                focus:ring-2
                                focus:ring-[oklch(29.3%_0.136_325.661)]/10">
 
-                        <option value="internal" @selected(old('archive_access_level', 'internal') === 'internal')>
-
+                        <option value="internal"
+                            {{ old('archive_access_level', 'internal') === 'internal' ? 'selected' : '' }}>
                             Internal
-
                         </option>
 
-
-                        <option value="public" @selected(old('archive_access_level') === 'public')>
-
+                        <option value="public" {{ old('archive_access_level') === 'public' ? 'selected' : '' }}>
                             Publik
-
                         </option>
 
-
-                        <option value="restricted" @selected(old('archive_access_level') === 'restricted')>
-
+                        <option value="restricted" {{ old('archive_access_level') === 'restricted' ? 'selected' : '' }}>
                             Terbatas
-
                         </option>
 
                     </select>
-
-
-                    <p class="mt-2 text-xs text-slate-400">
-
-                        <span class="font-semibold text-slate-500">
-                            Internal
-                        </span>
-
-                        hanya untuk pengguna internal.
-
-                        <span class="mx-1">
-                            •
-                        </span>
-
-                        <span class="font-semibold text-slate-500">
-                            Publik
-                        </span>
-
-                        dapat diakses publik.
-
-                        <span class="mx-1">
-                            •
-                        </span>
-
-                        <span class="font-semibold text-slate-500">
-                            Terbatas
-                        </span>
-
-                        membutuhkan hak akses khusus.
-
-                    </p>
 
                 </div>
 
@@ -600,19 +581,16 @@
 
 
             {{-- ========================================================= --}}
-            {{-- ACTION --}}
+            {{-- FOOTER --}}
             {{-- ========================================================= --}}
 
-            <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-
-
-                {{-- BATAL --}}
+            <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
 
                 <a href="{{ route('sadarin.admin.archive.index') }}"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl
-                           border border-slate-200 bg-white px-5 py-2.5
-                           text-sm font-semibold text-slate-600
-                           transition hover:bg-slate-50">
+                    class="inline-flex items-center justify-center gap-2
+                           rounded-xl border border-slate-200 bg-white
+                           px-5 py-2.5 text-sm font-semibold
+                           text-slate-600 transition hover:bg-slate-50">
 
                     <i class="bi bi-x-lg"></i>
 
@@ -621,12 +599,12 @@
                 </a>
 
 
-                {{-- SIMPAN --}}
-
                 <button type="submit"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl
-                           bg-[oklch(29.3%_0.136_325.661)] px-5 py-2.5
-                           text-sm font-semibold text-white shadow-sm
+                    class="inline-flex items-center justify-center gap-2
+                           rounded-xl
+                           bg-[oklch(29.3%_0.136_325.661)]
+                           px-5 py-2.5 text-sm font-semibold
+                           text-white shadow-sm
                            transition hover:opacity-90">
 
                     <i class="bi bi-check-lg"></i>
@@ -637,329 +615,284 @@
 
             </div>
 
-
         </form>
 
     </div>
 
-@endsection
 
+    {{-- ========================================================= --}}
+    {{-- JAVASCRIPT --}}
+    {{-- ========================================================= --}}
 
-{{-- ========================================================= --}}
-{{-- JAVASCRIPT --}}
-{{-- ========================================================= --}}
-
-@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            const programYes = document.getElementById('programYes');
+            const programNo = document.getElementById('programNo');
+
+            const programSection = document.getElementById('programSection');
+
+            const programSelect = document.getElementById('archive_program_id');
+
+            const kegiatanWrapper = document.getElementById('kegiatanWrapper');
+            const kegiatanSelect = document.getElementById('archive_kegiatan_id');
+
+            const subKegiatanWrapper = document.getElementById('subKegiatanWrapper');
+            const subKegiatanSelect = document.getElementById('archive_sub_kegiatan_id');
+
+
             /*
             |--------------------------------------------------------------------------
-            | ELEMENT
+            | BUTTON STYLE
             |--------------------------------------------------------------------------
             */
 
-            const programSelect = document.getElementById(
-                'archive_program_id'
-            );
+            function setProgramButton(active) {
 
-            const kegiatanSelect = document.getElementById(
-                'archive_kegiatan_id'
-            );
+                if (active) {
 
-            const subKegiatanSelect = document.getElementById(
-                'archive_sub_kegiatan_id'
-            );
+                    programYes.className =
+                        'rounded-lg bg-[oklch(29.3%_0.136_325.661)] px-4 py-2 text-xs font-semibold text-white';
+
+                    programNo.className =
+                        'rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100';
+
+                } else {
+
+                    programNo.className =
+                        'rounded-lg bg-[oklch(29.3%_0.136_325.661)] px-4 py-2 text-xs font-semibold text-white';
+
+                    programYes.className =
+                        'rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100';
+
+                }
+
+            }
 
 
             /*
             |--------------------------------------------------------------------------
-            | PROGRAM → KEGIATAN
+            | RESET
+            |--------------------------------------------------------------------------
+            */
+
+            function resetKegiatan() {
+
+                kegiatanSelect.innerHTML = `
+                    <option value="">-- Pilih Kegiatan --</option>
+                `;
+
+                kegiatanWrapper.classList.add('hidden');
+
+                resetSubKegiatan();
+
+            }
+
+
+            function resetSubKegiatan() {
+
+                subKegiatanSelect.innerHTML = `
+                    <option value="">-- Pilih Sub Kegiatan --</option>
+                `;
+
+                subKegiatanWrapper.classList.add('hidden');
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOAD KEGIATAN
+            |--------------------------------------------------------------------------
+            */
+
+            async function loadKegiatan(programId) {
+
+                resetKegiatan();
+
+                if (!programId) {
+                    return;
+                }
+
+                kegiatanWrapper.classList.remove('hidden');
+
+                const url =
+                    "{{ route('sadarin.admin.archive.kegiatan', ':programId') }}"
+                    .replace(':programId', programId);
+
+                try {
+
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        throw new Error('Gagal memuat kegiatan.');
+                    }
+
+                    const data = await response.json();
+
+                    kegiatanSelect.innerHTML = `
+                        <option value="">-- Pilih Kegiatan --</option>
+                    `;
+
+                    data.forEach(function(item) {
+
+                        const option = document.createElement('option');
+
+                        option.value = item.kegiatan_id;
+
+                        option.textContent =
+                            item.kegiatan_code ?
+                            item.kegiatan_code + ' - ' + item.kegiatan_name :
+                            item.kegiatan_name;
+
+                        kegiatanSelect.appendChild(option);
+
+                    });
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    kegiatanSelect.innerHTML = `
+                        <option value="">Gagal memuat kegiatan</option>
+                    `;
+
+                }
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOAD SUB KEGIATAN
+            |--------------------------------------------------------------------------
+            */
+
+            async function loadSubKegiatan(kegiatanId) {
+
+                resetSubKegiatan();
+
+                if (!kegiatanId) {
+                    return;
+                }
+
+                subKegiatanWrapper.classList.remove('hidden');
+
+                const url =
+                    "{{ route('sadarin.admin.archive.sub-kegiatan', ':kegiatanId') }}"
+                    .replace(':kegiatanId', kegiatanId);
+
+                try {
+
+                    const response = await fetch(url);
+
+                    if (!response.ok) {
+                        throw new Error('Gagal memuat sub kegiatan.');
+                    }
+
+                    const data = await response.json();
+
+                    subKegiatanSelect.innerHTML = `
+                        <option value="">-- Pilih Sub Kegiatan --</option>
+                    `;
+
+                    data.forEach(function(item) {
+
+                        const option = document.createElement('option');
+
+                        option.value = item.sub_kegiatan_id;
+
+                        option.textContent =
+                            item.sub_kegiatan_code ?
+                            item.sub_kegiatan_code + ' - ' + item.sub_kegiatan_name :
+                            item.sub_kegiatan_name;
+
+                        subKegiatanSelect.appendChild(option);
+
+                    });
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    subKegiatanSelect.innerHTML = `
+                        <option value="">Gagal memuat sub kegiatan</option>
+                    `;
+
+                }
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | YA
+            |--------------------------------------------------------------------------
+            */
+
+            programYes.addEventListener('click', function() {
+
+                programSection.classList.remove('hidden');
+
+                setProgramButton(true);
+
+            });
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | TIDAK
+            |--------------------------------------------------------------------------
+            */
+
+            programNo.addEventListener('click', function() {
+
+                programSection.classList.add('hidden');
+
+                programSelect.value = '';
+
+                resetKegiatan();
+
+                setProgramButton(false);
+
+            });
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | PROGRAM BERUBAH
             |--------------------------------------------------------------------------
             */
 
             programSelect.addEventListener('change', function() {
 
-                const programId = this.value;
-
-
-                /*
-                | Reset kegiatan
-                */
-
-                kegiatanSelect.innerHTML = `
-            <option value="">
-                -- Memuat Kegiatan --
-            </option>
-        `;
-
-                kegiatanSelect.disabled = true;
-
-
-                /*
-                | Reset sub kegiatan
-                */
-
-                subKegiatanSelect.innerHTML = `
-            <option value="">
-                -- Pilih Kegiatan Dahulu --
-            </option>
-        `;
-
-                subKegiatanSelect.disabled = true;
-
-
-                /*
-                | Jika program dikosongkan
-                */
-
-                if (!programId) {
-
-                    kegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Pilih Program Dahulu --
-                </option>
-            `;
-
-                    return;
-                }
-
-
-                /*
-                | URL Laravel
-                */
-
-                const url = `{{ route('sadarin.admin.archive.kegiatan', ':id') }}`
-                    .replace(':id', programId);
-
-
-                /*
-                | Request
-                */
-
-                fetch(url, {
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-
-                    .then(response => {
-
-                        if (!response.ok) {
-
-                            throw new Error(
-                                'Gagal mengambil data kegiatan.'
-                            );
-
-                        }
-
-                        return response.json();
-
-                    })
-
-                    .then(data => {
-
-
-                        /*
-                        | Reset option
-                        */
-
-                        kegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Pilih Kegiatan --
-                </option>
-            `;
-
-
-                        /*
-                        | Isi kegiatan
-                        */
-
-                        data.forEach(item => {
-
-                            const option =
-                                document.createElement('option');
-
-
-                            option.value =
-                                item.kegiatan_id;
-
-
-                            option.textContent =
-                                item.kegiatan_code ?
-                                `${item.kegiatan_code} - ${item.kegiatan_name}` :
-                                item.kegiatan_name;
-
-
-                            kegiatanSelect.appendChild(option);
-
-                        });
-
-
-                        /*
-                        | Aktifkan
-                        */
-
-                        kegiatanSelect.disabled = false;
-
-                    })
-
-                    .catch(error => {
-
-                        console.error(error);
-
-
-                        kegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Gagal Memuat Kegiatan --
-                </option>
-            `;
-
-                        kegiatanSelect.disabled = true;
-
-                    });
+                loadKegiatan(this.value);
 
             });
 
 
             /*
             |--------------------------------------------------------------------------
-            | KEGIATAN → SUB KEGIATAN
+            | KEGIATAN BERUBAH
             |--------------------------------------------------------------------------
             */
 
             kegiatanSelect.addEventListener('change', function() {
 
-                const kegiatanId = this.value;
-
-
-                /*
-                | Reset
-                */
-
-                subKegiatanSelect.innerHTML = `
-            <option value="">
-                -- Memuat Sub Kegiatan --
-            </option>
-        `;
-
-                subKegiatanSelect.disabled = true;
-
-
-                /*
-                | Jika kosong
-                */
-
-                if (!kegiatanId) {
-
-                    subKegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Pilih Kegiatan Dahulu --
-                </option>
-            `;
-
-                    return;
-                }
-
-
-                /*
-                | URL Laravel
-                */
-
-                const url = `{{ route('sadarin.admin.archive.sub-kegiatan', ':id') }}`
-                    .replace(':id', kegiatanId);
-
-
-                /*
-                | Request
-                */
-
-                fetch(url, {
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-
-                    .then(response => {
-
-                        if (!response.ok) {
-
-                            throw new Error(
-                                'Gagal mengambil data sub kegiatan.'
-                            );
-
-                        }
-
-                        return response.json();
-
-                    })
-
-                    .then(data => {
-
-
-                        /*
-                        | Reset option
-                        */
-
-                        subKegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Pilih Sub Kegiatan --
-                </option>
-            `;
-
-
-                        /*
-                        | Isi sub kegiatan
-                        */
-
-                        data.forEach(item => {
-
-                            const option =
-                                document.createElement('option');
-
-
-                            option.value =
-                                item.sub_kegiatan_id;
-
-
-                            option.textContent =
-                                item.sub_kegiatan_code ?
-                                `${item.sub_kegiatan_code} - ${item.sub_kegiatan_name}` :
-                                item.sub_kegiatan_name;
-
-
-                            subKegiatanSelect.appendChild(option);
-
-                        });
-
-
-                        /*
-                        | Aktifkan
-                        */
-
-                        subKegiatanSelect.disabled = false;
-
-                    })
-
-                    .catch(error => {
-
-                        console.error(error);
-
-
-                        subKegiatanSelect.innerHTML = `
-                <option value="">
-                    -- Gagal Memuat Sub Kegiatan --
-                </option>
-            `;
-
-                        subKegiatanSelect.disabled = true;
-
-                    });
+                loadSubKegiatan(this.value);
 
             });
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | INITIAL
+            |--------------------------------------------------------------------------
+            */
+
+            setProgramButton(false);
+
         });
     </script>
-@endpush
+
+@endsection
