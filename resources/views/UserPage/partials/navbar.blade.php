@@ -1,6 +1,6 @@
 <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
 
-    <div class="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+    <div class="mx-auto flex h-[72px] w-full max-w-[1600px] items-center justify-between px-5 sm:px-8">
 
         {{-- ============================================================
             BRAND

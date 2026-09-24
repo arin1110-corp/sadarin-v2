@@ -11,23 +11,334 @@
     <div class="min-h-screen bg-slate-50">
 
         {{-- ============================================================
-            PAGE
+            MAIN
         ============================================================= --}}
 
-        <main class="mx-auto max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8">
+        <main class="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 lg:px-8">
+
+
+            {{-- ========================================================
+                MOBILE FILTER
+            ========================================================= --}}
+
+            <div class="mb-4 lg:hidden">
+
+                <details class="group">
+
+                    <summary
+                        class="flex cursor-pointer list-none items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm transition hover:border-sadarin-200 hover:bg-sadarin-50/30">
+
+                        <div class="flex items-center gap-3">
+
+                            <div
+                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sadarin-50 text-sadarin-600">
+                                <i class="bi bi-funnel"></i>
+                            </div>
+
+                            <div class="text-left">
+
+                                <p class="text-sm font-semibold text-slate-800">
+                                    Filter Arsip
+                                </p>
+
+                                <p class="text-[11px] text-slate-400">
+                                    Pilih klasifikasi arsip
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <i
+                            class="bi bi-chevron-down text-sm text-slate-400 transition duration-200 group-open:rotate-180"></i>
+
+                    </summary>
+
+
+                    {{-- MOBILE FILTER CONTENT --}}
+                    <div class="mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+
+                        {{-- =================================================
+                            SEMUA ARSIP
+                        ================================================== --}}
+
+                        <a href="{{ request()->url() }}"
+                            class="mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition
+                            {{ !request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag', 'q'])
+                                ? 'bg-sadarin-50 text-sadarin-700'
+                                : 'text-slate-600 hover:bg-slate-50' }}">
+
+                            <span
+                                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
+                                {{ !request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag', 'q'])
+                                    ? 'bg-white text-sadarin-600'
+                                    : 'bg-slate-100 text-slate-500' }}">
+
+                                <i class="bi bi-archive"></i>
+
+                            </span>
+
+                            <span class="flex-1">
+                                Semua Arsip
+                            </span>
+
+                        </a>
+
+
+                        {{-- =================================================
+                            UNIT
+                        ================================================== --}}
+
+                        @if (($units ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Unit
+                                </p>
+
+                                @foreach ($units as $unit)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'unit' => $unit->unit_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('unit') === (string) $unit->unit_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-building text-sm
+                                            {{ (string) request('unit') === (string) $unit->unit_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ $unit->unit_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- =================================================
+                            PROGRAM
+                        ================================================== --}}
+
+                        @if (($programs ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Program
+                                </p>
+
+                                @foreach ($programs as $program)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'program' => $program->program_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('program') === (string) $program->program_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-diagram-3 text-sm
+                                            {{ (string) request('program') === (string) $program->program_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ $program->program_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- =================================================
+                            KEGIATAN
+                        ================================================== --}}
+
+                        @if (($kegiatans ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Kegiatan
+                                </p>
+
+                                @foreach ($kegiatans as $kegiatan)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'kegiatan' => $kegiatan->kegiatan_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-diagram-2 text-sm
+                                            {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ $kegiatan->kegiatan_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- =================================================
+                            SUB KEGIATAN
+                        ================================================== --}}
+
+                        @if (($subKegiatans ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Sub Kegiatan
+                                </p>
+
+                                @foreach ($subKegiatans as $subKegiatan)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'sub_kegiatan' => $subKegiatan->sub_kegiatan_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-diagram-3-fill text-sm
+                                            {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
+                                                ? 'text-sadarin-500'
+                                                : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ $subKegiatan->sub_kegiatan_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- =================================================
+                            JENIS DOKUMEN
+                        ================================================== --}}
+
+                        @if (($documentTypes ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Jenis Dokumen
+                                </p>
+
+                                @foreach ($documentTypes as $documentType)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'document_type' => $documentType->document_type_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('document_type') === (string) $documentType->document_type_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-file-earmark-text text-sm
+                                            {{ (string) request('document_type') === (string) $documentType->document_type_id
+                                                ? 'text-sadarin-500'
+                                                : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ $documentType->document_type_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- =================================================
+                            TAG
+                        ================================================== --}}
+
+                        @if (($tags ?? collect())->count() > 0)
+
+                            <div class="mt-3">
+
+                                <p class="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Tag
+                                </p>
+
+                                @foreach ($tags as $tag)
+                                    <a href="{{ request()->fullUrlWithQuery([
+                                        'tag' => $tag->tag_id,
+                                        'page' => null,
+                                    ]) }}"
+                                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
+                                        {{ (string) request('tag') === (string) $tag->tag_id
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
+                                            : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                        <i
+                                            class="bi bi-tag text-sm
+                                            {{ (string) request('tag') === (string) $tag->tag_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            #{{ $tag->tag_name }}
+                                        </span>
+
+                                    </a>
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+                    </div>
+
+                </details>
+
+            </div>
+
+
+            {{-- ========================================================
+                DESKTOP GRID
+            ========================================================= --}}
 
             <div class="grid gap-5 lg:grid-cols-[250px_minmax(0,1fr)]">
 
 
                 {{-- ====================================================
-                    SIDEBAR FILTER
+                    SIDEBAR DESKTOP
                 ===================================================== --}}
 
-                <aside class="lg:sticky lg:top-[84px] lg:h-[calc(100vh-104px)]">
+                <aside class="hidden lg:sticky lg:top-[84px] lg:block lg:h-[calc(100vh-104px)]">
 
                     <div class="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white">
 
-                        {{-- SIDEBAR HEADER --}}
+                        {{-- HEADER --}}
                         <div class="border-b border-slate-100 px-4 py-4">
 
                             <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -41,7 +352,7 @@
                         </div>
 
 
-                        {{-- SIDEBAR CONTENT --}}
+                        {{-- CONTENT --}}
                         <div class="flex-1 overflow-y-auto p-2">
 
                             {{-- =================================================
@@ -51,13 +362,13 @@
                             <a href="{{ request()->url() }}"
                                 class="mb-1 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition
                                 {{ !request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag', 'q'])
-                                    ? 'bg-purple-50 text-purple-700'
+                                    ? 'bg-sadarin-50 text-sadarin-700'
                                     : 'text-slate-600 hover:bg-slate-50' }}">
 
                                 <span
                                     class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
                                     {{ !request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag', 'q'])
-                                        ? 'bg-white text-purple-600'
+                                        ? 'bg-white text-sadarin-600'
                                         : 'bg-slate-100 text-slate-500' }}">
 
                                     <i class="bi bi-archive"></i>
@@ -88,13 +399,12 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('unit') === (string) $unit->unit_id
-                                            ? 'bg-blue-50 font-semibold text-blue-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-building text-sm
-                                            {{ (string) request('unit') === (string) $unit->unit_id ? 'text-blue-500' : 'text-slate-400' }}">
-                                        </i>
+                                            {{ (string) request('unit') === (string) $unit->unit_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
                                             {{ $unit->unit_name }}
@@ -129,13 +439,12 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('program') === (string) $program->program_id
-                                            ? 'bg-emerald-50 font-semibold text-emerald-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-diagram-3 text-sm
-                                            {{ (string) request('program') === (string) $program->program_id ? 'text-emerald-500' : 'text-slate-400' }}">
-                                        </i>
+                                            {{ (string) request('program') === (string) $program->program_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
                                             {{ $program->program_name }}
@@ -170,13 +479,12 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id
-                                            ? 'bg-indigo-50 font-semibold text-indigo-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-diagram-2 text-sm
-                                            {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id ? 'text-indigo-500' : 'text-slate-400' }}">
-                                        </i>
+                                            {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
                                             {{ $kegiatan->kegiatan_name }}
@@ -211,15 +519,14 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
-                                            ? 'bg-orange-50 font-semibold text-orange-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-diagram-3-fill text-sm
                                             {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
-                                                ? 'text-orange-500'
-                                                : 'text-slate-400' }}">
-                                        </i>
+                                                ? 'text-sadarin-500'
+                                                : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
                                             {{ $subKegiatan->sub_kegiatan_name }}
@@ -254,15 +561,14 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('document_type') === (string) $documentType->document_type_id
-                                            ? 'bg-red-50 font-semibold text-red-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-file-earmark-text text-sm
                                             {{ (string) request('document_type') === (string) $documentType->document_type_id
-                                                ? 'text-red-500'
-                                                : 'text-slate-400' }}">
-                                        </i>
+                                                ? 'text-sadarin-500'
+                                                : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
                                             {{ $documentType->document_type_name }}
@@ -297,16 +603,15 @@
                                     ]) }}"
                                         class="mb-0.5 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition
                                         {{ (string) request('tag') === (string) $tag->tag_id
-                                            ? 'bg-amber-50 font-semibold text-amber-700'
+                                            ? 'bg-sadarin-50 font-semibold text-sadarin-700'
                                             : 'text-slate-600 hover:bg-slate-50' }}">
 
                                         <i
                                             class="bi bi-tag text-sm
-                                            {{ (string) request('tag') === (string) $tag->tag_id ? 'text-amber-500' : 'text-slate-400' }}">
-                                        </i>
+                                            {{ (string) request('tag') === (string) $tag->tag_id ? 'text-sadarin-500' : 'text-slate-400' }}"></i>
 
                                         <span class="min-w-0 flex-1 truncate">
-                                            {{ $tag->tag_name }}
+                                            #{{ $tag->tag_name }}
                                         </span>
 
                                     </a>
@@ -340,13 +645,13 @@
 
                     <div class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                        <div>
+                        <div class="min-w-0">
 
-                            <p class="text-[10px] font-bold uppercase tracking-wider text-purple-600">
+                            <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-600">
                                 Arsip
                             </p>
 
-                            <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+                            <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
 
                                 @if (request('unit') && isset($selectedUnit))
                                     {{ $selectedUnit->unit_name }}
@@ -373,10 +678,10 @@
                         </div>
 
 
-                        {{-- RESET FILTER --}}
+                        {{-- RESET --}}
                         @if (request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag', 'q']))
                             <a href="{{ request()->url() }}"
-                                class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-purple-200 hover:bg-purple-50 hover:text-purple-700">
+                                class="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700 sm:w-auto">
 
                                 <i class="bi bi-x-circle"></i>
 
@@ -394,7 +699,7 @@
 
                     <form action="{{ request()->url() }}" method="GET" class="mb-5">
 
-                        {{-- PERTAHANKAN FILTER AKTIF --}}
+                        {{-- PERTAHANKAN FILTER --}}
                         @foreach (request()->except(['q', 'page']) as $key => $value)
                             @if (!is_array($value))
                                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
@@ -405,12 +710,11 @@
                         <div class="relative">
 
                             <i
-                                class="bi bi-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-slate-400">
-                            </i>
+                                class="bi bi-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-slate-400 sm:left-5"></i>
 
                             <input type="text" name="q" value="{{ request('q') }}"
                                 placeholder="Cari judul arsip, unit, program, jenis dokumen, atau kata kunci..."
-                                class="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-purple-300 focus:ring-4 focus:ring-purple-500/10">
+                                class="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-11 pr-4 text-sm text-slate-700 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-sadarin-300 focus:ring-4 focus:ring-sadarin-500/10 sm:py-3.5 sm:pl-12">
 
                         </div>
 
@@ -418,19 +722,12 @@
 
 
                     {{-- =================================================
-    ACTIVE FILTER
-================================================== --}}
+                        ACTIVE FILTER
+                    ================================================== --}}
 
                     @if (request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag']))
 
                         @php
-                            /*
-        |--------------------------------------------------------------------------
-        | URL UNTUK MENGHAPUS SATU FILTER
-        |--------------------------------------------------------------------------
-        | Filter lain tetap dipertahankan.
-        | Page dihapus supaya kembali ke halaman 1.
-        */
 
                             $removeFilterUrl = function ($filter) {
                                 $query = request()->except([$filter, 'page']);
@@ -442,202 +739,141 @@
 
                         <div class="mb-5 flex flex-wrap items-center gap-2">
 
-                            {{-- LABEL --}}
                             <span class="mr-1 text-xs text-slate-400">
                                 Filter aktif:
                             </span>
 
 
-                            {{-- =====================================================
-            UNIT
-        ====================================================== --}}
-
+                            {{-- UNIT --}}
                             @if (request('unit') && isset($selectedUnit))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700">
 
                                     <i class="bi bi-building text-blue-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         {{ $selectedUnit->unit_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('unit') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-blue-500 transition
-                           hover:bg-blue-200 hover:text-blue-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-blue-500 transition hover:bg-blue-200 hover:text-blue-800"
                                         title="Hapus filter unit" aria-label="Hapus filter unit">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            PROGRAM
-        ====================================================== --}}
-
+                            {{-- PROGRAM --}}
                             @if (request('program') && isset($selectedProgram))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
 
                                     <i class="bi bi-diagram-3 text-emerald-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         {{ $selectedProgram->program_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('program') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-emerald-500 transition
-                           hover:bg-emerald-200 hover:text-emerald-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-emerald-500 transition hover:bg-emerald-200 hover:text-emerald-800"
                                         title="Hapus filter program" aria-label="Hapus filter program">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            KEGIATAN
-        ====================================================== --}}
-
+                            {{-- KEGIATAN --}}
                             @if (request('kegiatan') && isset($selectedKegiatan))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700">
 
                                     <i class="bi bi-diagram-2 text-indigo-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         {{ $selectedKegiatan->kegiatan_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('kegiatan') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-indigo-500 transition
-                           hover:bg-indigo-200 hover:text-indigo-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-indigo-500 transition hover:bg-indigo-200 hover:text-indigo-800"
                                         title="Hapus filter kegiatan" aria-label="Hapus filter kegiatan">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            SUB KEGIATAN
-        ====================================================== --}}
-
+                            {{-- SUB KEGIATAN --}}
                             @if (request('sub_kegiatan') && isset($selectedSubKegiatan))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-orange-50 px-3 py-1.5 text-xs font-medium text-orange-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-orange-50 px-3 py-1.5 text-xs font-medium text-orange-700">
 
                                     <i class="bi bi-diagram-3-fill text-orange-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         {{ $selectedSubKegiatan->sub_kegiatan_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('sub_kegiatan') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-orange-500 transition
-                           hover:bg-orange-200 hover:text-orange-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-orange-500 transition hover:bg-orange-200 hover:text-orange-800"
                                         title="Hapus filter sub kegiatan" aria-label="Hapus filter sub kegiatan">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            JENIS DOKUMEN
-        ====================================================== --}}
-
+                            {{-- JENIS DOKUMEN --}}
                             @if (request('document_type') && isset($selectedDocumentType))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700">
 
                                     <i class="bi bi-file-earmark-text text-red-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         {{ $selectedDocumentType->document_type_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('document_type') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-red-500 transition
-                           hover:bg-red-200 hover:text-red-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-red-500 transition hover:bg-red-200 hover:text-red-800"
                                         title="Hapus filter jenis dokumen" aria-label="Hapus filter jenis dokumen">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            TAG
-        ====================================================== --}}
-
+                            {{-- TAG --}}
                             @if (request('tag') && isset($selectedTag))
                                 <div
-                                    class="inline-flex max-w-full items-center gap-2 rounded-full
-                       bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700">
+                                    class="inline-flex max-w-full items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-700">
 
                                     <i class="bi bi-tag text-amber-500"></i>
 
-                                    <span class="max-w-[320px] truncate">
+                                    <span class="max-w-[240px] truncate sm:max-w-[320px]">
                                         #{{ $selectedTag->tag_name }}
                                     </span>
 
-                                    {{-- X --}}
                                     <a href="{{ $removeFilterUrl('tag') }}"
-                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center
-                           rounded-full text-amber-500 transition
-                           hover:bg-amber-200 hover:text-amber-800"
+                                        class="ml-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-amber-500 transition hover:bg-amber-200 hover:text-amber-800"
                                         title="Hapus filter tag" aria-label="Hapus filter tag">
-
                                         <i class="bi bi-x text-sm"></i>
-
                                     </a>
 
                                 </div>
                             @endif
 
 
-                            {{-- =====================================================
-            RESET SEMUA
-        ====================================================== --}}
-
+                            {{-- RESET SEMUA --}}
                             @if (request()->hasAny(['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag']))
                                 <a href="{{ request()->url() }}"
-                                    class="ml-1 inline-flex items-center gap-1.5 rounded-full
-                       border border-slate-200 bg-white px-3 py-1.5
-                       text-xs font-semibold text-slate-500 transition
-                       hover:border-red-200 hover:bg-red-50 hover:text-red-600">
+                                    class="ml-1 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-500 transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700">
 
                                     <i class="bi bi-x-circle"></i>
 
@@ -686,23 +922,22 @@
 
                     @if ($archives->count() > 0)
 
-                        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
 
                             @foreach ($archives as $archive)
                                 <article
-                                    class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition duration-200 hover:-translate-y-0.5 hover:border-purple-200 hover:shadow-lg">
-
+                                    class="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition duration-200 hover:-translate-y-0.5 hover:border-sadarin-200 hover:shadow-lg">
 
                                     {{-- =================================================
                                         CARD BODY
                                     ================================================== --}}
 
-                                    <div class="p-5">
+                                    <div class="p-4 sm:p-5">
 
                                         {{-- TOP --}}
                                         <div class="flex items-start justify-between gap-3">
 
-                                            {{-- ICON + JUDUL BERKAS --}}
+                                            {{-- ICON + FILE --}}
                                             <div class="flex min-w-0 items-center gap-3">
 
                                                 <div
@@ -712,15 +947,17 @@
 
                                                 </div>
 
+
                                                 @php
                                                     $firstFile = $archive->files->first();
                                                 @endphp
+
 
                                                 @if ($firstFile)
                                                     <div class="min-w-0">
 
                                                         <p
-                                                            class="text-xs font-semibold leading-5 text-slate-700 line-clamp-2">
+                                                            class="line-clamp-2 text-xs font-semibold leading-5 text-slate-700">
                                                             {{ $firstFile->archive_file_original_name ?? 'Berkas' }}
                                                         </p>
 
@@ -733,7 +970,7 @@
                                             {{-- ACCESS --}}
                                             <span
                                                 class="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold
-        {{ $archive->archive_is_public ?? false ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500' }}">
+                                                {{ $archive->archive_is_public ?? false ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-500' }}">
 
                                                 {{ $archive->archive_is_public ?? false ? 'Publik' : 'Internal' }}
 
@@ -744,7 +981,7 @@
 
                                         {{-- TITLE --}}
                                         <h2
-                                            class="mt-5 line-clamp-2 text-base font-bold leading-6 text-slate-900 transition group-hover:text-purple-700">
+                                            class="mt-5 line-clamp-2 text-base font-bold leading-6 text-slate-900 transition group-hover:text-sadarin-700">
 
                                             {{ $archive->archive_title }}
 
@@ -833,7 +1070,6 @@
 
                                         {{-- =================================================
                                             TAG
-                                            TAG BERASAL DARI FILE
                                         ================================================== --}}
 
                                         @php
@@ -876,19 +1112,22 @@
                                         CARD FOOTER
                                     ================================================== --}}
 
-                                    <div class="mt-auto border-t border-slate-100 px-5 py-4">
+                                    <div class="mt-auto border-t border-slate-100 px-4 py-3.5 sm:px-5 sm:py-4">
 
-                                        <div class="flex items-center justify-between gap-3">
-
+                                        <div class="flex items-center justify-between gap-2">
 
                                             {{-- FILE COUNT --}}
-                                            <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                                            <div class="flex min-w-0 items-center gap-1.5 text-[11px] text-slate-400">
 
                                                 <i class="bi bi-paperclip"></i>
 
-                                                {{ $archive->files?->count() ?? 0 }}
+                                                <span>
+                                                    {{ $archive->files?->count() ?? 0 }}
+                                                </span>
 
-                                                berkas
+                                                <span>
+                                                    berkas
+                                                </span>
 
                                             </div>
 
@@ -896,11 +1135,13 @@
                                             {{-- DETAIL --}}
                                             @if ($archive->archive_id)
                                                 <a href="{{ route('sadarin.user.archive.files', $archive->archive_id) }}"
-                                                    class="inline-flex items-center gap-2 rounded-xl bg-sadarin-700 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-sadarin-800">
+                                                    class="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-sadarin-700 px-3 py-2.5 text-[11px] font-semibold text-white transition hover:bg-sadarin-800 sm:gap-2 sm:px-4 sm:text-xs">
 
                                                     <i class="bi bi-folder2-open"></i>
 
-                                                    Lihat Berkas
+                                                    <span>
+                                                        Lihat Berkas
+                                                    </span>
 
                                                     <i class="bi bi-arrow-right"></i>
 
@@ -922,7 +1163,7 @@
                         ================================================== --}}
 
                         @if (method_exists($archives, 'links'))
-                            <div class="mt-8">
+                            <div class="mt-8 overflow-x-auto">
 
                                 {{ $archives->withQueryString()->links() }}
 
@@ -933,7 +1174,8 @@
                             EMPTY
                         ================================================== --}}
 
-                        <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+                        <div
+                            class="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-14 text-center sm:px-6 sm:py-16">
 
                             <div
                                 class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
@@ -944,9 +1186,7 @@
 
 
                             <h2 class="mt-5 text-base font-bold text-slate-800">
-
                                 Arsip tidak ditemukan
-
                             </h2>
 
 
@@ -959,7 +1199,7 @@
 
 
                             <a href="{{ request()->url() }}"
-                                class="mt-5 inline-flex items-center gap-2 rounded-xl bg-purple-700 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-purple-800">
+                                class="mt-5 inline-flex items-center gap-2 rounded-xl bg-sadarin-700 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-sadarin-800">
 
                                 <i class="bi bi-arrow-counterclockwise"></i>
 
@@ -985,7 +1225,7 @@
         <footer class="border-t border-slate-200 bg-white">
 
             <div
-                class="mx-auto flex max-w-[1600px] flex-col gap-2 px-5 py-6 text-xs text-slate-400 sm:px-8 md:flex-row md:items-center md:justify-between">
+                class="mx-auto flex w-full max-w-[1600px] flex-col gap-2 px-4 py-6 text-xs text-slate-400 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
 
                 <span>
                     © {{ date('Y') }} SADARIN
