@@ -4,7 +4,7 @@
     {{-- Logo --}}
     <div class="flex h-20 shrink-0 items-center border-b border-slate-100 px-6">
 
-        <a href="{{ route('sadarin.home') }}" class="flex items-center">
+        <a href="{{ route('sadarin.user.archive.index') }}" class="flex items-center">
             <img src="{{ asset('assets/images/logo-sadarin-full.png') }}" alt="SADARIN"
                 class="h-16 w-auto object-contain">
         </a>

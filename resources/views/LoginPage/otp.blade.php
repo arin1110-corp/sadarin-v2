@@ -12,7 +12,7 @@
 
                 {{-- Logo --}}
                 <div class="mb-8 flex justify-center">
-                    <a href="{{ route('sadarin.home') }}">
+                    <a href="{{ route('sadarin.user.archive.index') }}">
                         <img src="{{ asset('assets/images/logo-sadarin.png') }}" alt="SADARIN"
                             class="h-20 w-auto object-contain sm:h-24">
                     </a>

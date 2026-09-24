@@ -6,10 +6,16 @@ use App\Models\SadarinAccessLog;
 
 class SadarinAccessLogService
 {
-    public static function log(string $action, ?int $archiveId = null, ?string $userType = null, ?int $samperinUserId = null, ?int $guestbookId = null, ?string $objectType = null, ?int $objectId = null): SadarinAccessLog
+    /**
+     * ================================================================
+     * LOG ACCESS
+     * ================================================================
+     */
+    public static function log(string $action, ?int $archiveId = null, ?string $userType = null, ?int $samperinUserId = null, ?int $guestbookId = null, ?string $objectType = null, ?string $objectId = null): SadarinAccessLog
     {
         return SadarinAccessLog::create([
             'access_log_object_type' => $objectType,
+
             'access_log_object_id' => $objectId,
 
             'access_log_archive_id' => $archiveId,
@@ -31,7 +37,9 @@ class SadarinAccessLogService
     }
 
     /**
-     * Normalisasi tipe pengguna
+     * ================================================================
+     * NORMALISASI USER TYPE
+     * ================================================================
      */
     private static function normalizeUserType(?string $userType): ?string
     {
@@ -53,18 +61,46 @@ class SadarinAccessLogService
     }
 
     /**
-     * Log aktivitas pengguna internal
+     * ================================================================
+     * LOG USER INTERNAL
+     * ================================================================
      */
-    public static function user(string $action, ?int $archiveId = null, ?string $objectType = null, ?int $objectId = null): SadarinAccessLog
+    public static function user(string $action, ?int $archiveId = null, ?string $objectType = null, ?string $objectId = null): SadarinAccessLog
     {
-        return self::log(action: $action, archiveId: $archiveId, userType: session('sadarin_role_name'), samperinUserId: session('sadarin_user_id'), objectType: $objectType, objectId: $objectId);
+        return self::log(
+            action: $action,
+
+            archiveId: $archiveId,
+
+            userType: session('sadarin_role_name'),
+
+            samperinUserId: session('sadarin_user_id'),
+
+            objectType: $objectType,
+
+            objectId: $objectId,
+        );
     }
 
     /**
-     * Log aktivitas guest
+     * ================================================================
+     * LOG GUEST
+     * ================================================================
      */
-    public static function guest(string $action, ?int $guestbookId = null, ?int $archiveId = null, ?string $objectType = null, ?int $objectId = null): SadarinAccessLog
+    public static function guest(string $action, ?int $guestbookId = null, ?int $archiveId = null, ?string $objectType = null, ?string $objectId = null): SadarinAccessLog
     {
-        return self::log(action: $action, archiveId: $archiveId, userType: 'guest', guestbookId: $guestbookId, objectType: $objectType, objectId: $objectId);
+        return self::log(
+            action: $action,
+
+            archiveId: $archiveId,
+
+            userType: 'guest',
+
+            guestbookId: $guestbookId,
+
+            objectType: $objectType,
+
+            objectId: $objectId,
+        );
     }
 }

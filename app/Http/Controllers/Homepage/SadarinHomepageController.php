@@ -11,198 +11,18 @@ use App\Models\SadarinSubKegiatan;
 use App\Models\SadarinTag;
 use App\Models\SadarinUnit;
 use Illuminate\Http\Request;
+use App\Services\SadarinAccessLogService;
 
 class SadarinHomepageController extends Controller
 {
     /**
      * ================================================================
-     * HOMEPAGE SADARIN
+     * HOMEPAGE / DAFTAR ARSIP SADARIN
      * ================================================================
-     */
-    public function index(Request $request)
-    {
-        $search = trim($request->input('q', ''));
-
-        /*
-        |--------------------------------------------------------------------------
-        | KLASIFIKASI
-        |--------------------------------------------------------------------------
-        | Semua data dikirim ke homepage agar popup dapat menampilkan
-        | seluruh data yang tersedia dari database.
-        */
-
-        $units = SadarinUnit::query()->orderBy('unit_name')->get();
-
-        $programs = SadarinProgram::query()->orderBy('program_name')->get();
-
-        $kegiatans = SadarinKegiatan::query()->orderBy('kegiatan_name')->get();
-
-        $subKegiatans = SadarinSubKegiatan::query()->orderBy('sub_kegiatan_name')->get();
-
-        $documentTypes = SadarinDocumentType::query()->where('document_type_is_active', true)->orderBy('document_type_name')->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | TAG
-        |--------------------------------------------------------------------------
-        | Tag berada pada BERKAS/FILE, bukan langsung pada archive.
-        |
-        | Karena itu kita ambil tag melalui relasi file.
-        |--------------------------------------------------------------------------
-        */
-
-        $tags = SadarinTag::query()->orderBy('tag_name')->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | ARSIP TERBARU
-        |--------------------------------------------------------------------------
-        |
-        | JANGAN menggunakan archive_is_active karena field tersebut
-        | tidak ada di tabel sadarin_archive.
-        |
-        | Soft delete tetap otomatis ditangani oleh Model SadarinArchive
-        | melalui archive_deleted_at.
-        |--------------------------------------------------------------------------
-        */
-
-        $latestArchives = SadarinArchive::query()
-            ->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags'])
-            ->orderByDesc('archive_created_at')
-            ->limit(6)
-            ->get();
-
-        /*
-        |--------------------------------------------------------------------------
-        | HASIL PENCARIAN
-        |--------------------------------------------------------------------------
-        */
-
-        $searchResults = collect();
-
-        if ($search !== '') {
-            $searchResults = SadarinArchive::query()
-                ->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags'])
-                ->where(function ($query) use ($search) {
-                    /*
-                    |--------------------------------------------------------------------------
-                    | JUDUL ARSIP
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->where('archive_title', 'like', '%' . $search . '%');
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | TAHUN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhere('archive_year', 'like', '%' . $search . '%');
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | UNIT
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('unit', function ($q) use ($search) {
-                        $q->where('unit_name', 'like', '%' . $search . '%');
-                    });
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | PROGRAM
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('program', function ($q) use ($search) {
-                        $q->where('program_name', 'like', '%' . $search . '%');
-                    });
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | KEGIATAN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('kegiatan', function ($q) use ($search) {
-                        $q->where('kegiatan_name', 'like', '%' . $search . '%');
-                    });
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | SUB KEGIATAN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('subKegiatan', function ($q) use ($search) {
-                        $q->where('sub_kegiatan_name', 'like', '%' . $search . '%');
-                    });
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | JENIS DOKUMEN
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('documentType', function ($q) use ($search) {
-                        $q->where('document_type_name', 'like', '%' . $search . '%');
-                    });
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | TAG
-                    |--------------------------------------------------------------------------
-                    |
-                    | TAG berada pada FILE.
-                    |--------------------------------------------------------------------------
-                    */
-
-                    $query->orWhereHas('files.tags', function ($q) use ($search) {
-                        $q->where('tag_name', 'like', '%' . $search . '%');
-                    });
-                })
-                ->orderByDesc('archive_created_at')
-                ->limit(30)
-                ->get();
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | RETURN HOMEPAGE
-        |--------------------------------------------------------------------------
-        */
-
-        return view('UserPage.index', [
-            'userName' => 'Nama Pengguna',
-
-            'userRole' => 'Pegawai',
-
-            'search' => $search,
-
-            'searchResults' => $searchResults,
-
-            'latestArchives' => $latestArchives,
-
-            'units' => $units,
-
-            'programs' => $programs,
-
-            'kegiatans' => $kegiatans,
-
-            'subKegiatans' => $subKegiatans,
-
-            'documentTypes' => $documentTypes,
-
-            'tags' => $tags,
-        ]);
-    }
-
-    /**
-     * Menampilkan daftar arsip SADARIN.
      *
-     * Mendukung filter:
+     * Semua daftar arsip sekarang menggunakan method index().
+     *
+     * Filter:
      * - unit
      * - program
      * - kegiatan
@@ -211,243 +31,308 @@ class SadarinHomepageController extends Controller
      * - tag
      * - q
      */
-    public function showArchive(Request $request)
+    public function index(Request $request)
     {
-        $query = SadarinArchive::query()
-            ->with([
-                'unit',
-                'program',
-                'kegiatan',
-                'subKegiatan',
-                'documentType',
-                'files.tags',
-            ]);
+        /*
+        |--------------------------------------------------------------------------
+        | SEARCH
+        |--------------------------------------------------------------------------
+        */
+
+        $search = trim($request->input('q', ''));
 
         /*
-    |--------------------------------------------------------------------------
-    | SEARCH
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | QUERY ARSIP
+        |--------------------------------------------------------------------------
+        */
 
-        if ($request->filled('q')) {
+        $query = SadarinArchive::query()->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags']);
 
-            $search = trim($request->q);
+        /*
+        |--------------------------------------------------------------------------
+        | SEARCH
+        |--------------------------------------------------------------------------
+        */
 
+        if ($search !== '') {
             $query->where(function ($q) use ($search) {
+                /*
+                |--------------------------------------------------------------------------
+                | JUDUL
+                |--------------------------------------------------------------------------
+                */
 
-                $q->where(
-                    'archive_title',
-                    'like',
-                    '%' . $search . '%'
-                )
+                $q->where('archive_title', 'like', '%' . $search . '%');
 
-                    ->orWhere(
-                        'archive_year',
-                        'like',
-                        '%' . $search . '%'
-                    )
+                /*
+                |--------------------------------------------------------------------------
+                | TAHUN
+                |--------------------------------------------------------------------------
+                */
 
-                    ->orWhereHas('unit', function ($q) use ($search) {
-                        $q->where(
-                            'unit_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    })
+                $q->orWhere('archive_year', 'like', '%' . $search . '%');
 
-                    ->orWhereHas('program', function ($q) use ($search) {
-                        $q->where(
-                            'program_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    })
+                /*
+                |--------------------------------------------------------------------------
+                | UNIT
+                |--------------------------------------------------------------------------
+                */
 
-                    ->orWhereHas('kegiatan', function ($q) use ($search) {
-                        $q->where(
-                            'kegiatan_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    })
+                $q->orWhereHas('unit', function ($q) use ($search) {
+                    $q->where('unit_name', 'like', '%' . $search . '%');
+                });
 
-                    ->orWhereHas('subKegiatan', function ($q) use ($search) {
-                        $q->where(
-                            'sub_kegiatan_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    })
+                /*
+                |--------------------------------------------------------------------------
+                | PROGRAM
+                |--------------------------------------------------------------------------
+                */
 
-                    ->orWhereHas('documentType', function ($q) use ($search) {
-                        $q->where(
-                            'document_type_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    })
+                $q->orWhereHas('program', function ($q) use ($search) {
+                    $q->where('program_name', 'like', '%' . $search . '%');
+                });
 
-                    /*
-            |--------------------------------------------------------------------------
-            | TAG ADA DI FILE
-            |--------------------------------------------------------------------------
-            */
+                /*
+                |--------------------------------------------------------------------------
+                | KEGIATAN
+                |--------------------------------------------------------------------------
+                */
 
-                    ->orWhereHas('files.tags', function ($q) use ($search) {
-                        $q->where(
-                            'tag_name',
-                            'like',
-                            '%' . $search . '%'
-                        );
-                    });
+                $q->orWhereHas('kegiatan', function ($q) use ($search) {
+                    $q->where('kegiatan_name', 'like', '%' . $search . '%');
+                });
+
+                /*
+                |--------------------------------------------------------------------------
+                | SUB KEGIATAN
+                |--------------------------------------------------------------------------
+                */
+
+                $q->orWhereHas('subKegiatan', function ($q) use ($search) {
+                    $q->where('sub_kegiatan_name', 'like', '%' . $search . '%');
+                });
+
+                /*
+                |--------------------------------------------------------------------------
+                | JENIS DOKUMEN
+                |--------------------------------------------------------------------------
+                */
+
+                $q->orWhereHas('documentType', function ($q) use ($search) {
+                    $q->where('document_type_name', 'like', '%' . $search . '%');
+                });
+
+                /*
+                |--------------------------------------------------------------------------
+                | TAG
+                |--------------------------------------------------------------------------
+                |
+                | Tag berada di file.
+                |
+                */
+
+                $q->orWhereHas('files.tags', function ($q) use ($search) {
+                    $q->where('tag_name', 'like', '%' . $search . '%');
+                });
             });
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER UNIT
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | FILTER UNIT
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('unit')) {
-
-            $query->where(
-                'archive_unit_id',
-                $request->unit
-            );
+            $query->where('archive_unit_id', $request->input('unit'));
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER PROGRAM
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | FILTER PROGRAM
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('program')) {
-
-            $query->where(
-                'archive_program_id',
-                $request->program
-            );
+            $query->where('archive_program_id', $request->input('program'));
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER KEGIATAN
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | FILTER KEGIATAN
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('kegiatan')) {
-
-            $query->where(
-                'archive_kegiatan_id',
-                $request->kegiatan
-            );
+            $query->where('archive_kegiatan_id', $request->input('kegiatan'));
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER SUB KEGIATAN
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | FILTER SUB KEGIATAN
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('sub_kegiatan')) {
-
-            $query->where(
-                'archive_sub_kegiatan_id',
-                $request->sub_kegiatan
-            );
+            $query->where('archive_sub_kegiatan_id', $request->input('sub_kegiatan'));
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER JENIS DOKUMEN
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | FILTER JENIS DOKUMEN
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('document_type')) {
-
-            $query->where(
-                'archive_document_type_id',
-                $request->document_type
-            );
+            $query->where('archive_document_type_id', $request->input('document_type'));
         }
 
-
         /*
-    |--------------------------------------------------------------------------
-    | FILTER TAG
-    |--------------------------------------------------------------------------
-    |
-    | Tag berada di file.
-    |
-    */
+        |--------------------------------------------------------------------------
+        | FILTER TAG
+        |--------------------------------------------------------------------------
+        |
+        | Tag berada di file.
+        |
+        */
 
         if ($request->filled('tag')) {
-
-            $tagId = $request->tag;
+            $tagId = $request->input('tag');
 
             $query->whereHas('files.tags', function ($q) use ($tagId) {
-
-                $q->where(
-                    'tag_id',
-                    $tagId
-                );
+                $q->where('tag_id', $tagId);
             });
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | DATA ARSIP
+        |--------------------------------------------------------------------------
+        |
+        | Tidak menggunakan archive_is_active.
+        |
+        | Soft delete menggunakan archive_deleted_at
+        | melalui model SadarinArchive.
+        |
+        */
+
+        $archives = $query->orderByDesc('archive_created_at')->paginate(12)->withQueryString();
 
         /*
-    |--------------------------------------------------------------------------
-    | DATA ARSIP
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| ACCESS LOG - USER MEMBUKA DAFTAR ARSIP
+|--------------------------------------------------------------------------
+*/
 
-        $archives = $query
-            ->orderByDesc('archive_created_at')
-            ->paginate(12)
-            ->withQueryString();
+        SadarinAccessLogService::user(action: 'archive.index');
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - UNIT
+        |--------------------------------------------------------------------------
+        */
 
+        $units = SadarinUnit::query()->orderBy('unit_name')->get();
 
         /*
-    |--------------------------------------------------------------------------
-    | DATA SIDEBAR
-    |--------------------------------------------------------------------------
-    */
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - PROGRAM
+        |--------------------------------------------------------------------------
+        */
 
-        $units = SadarinUnit::query()
-            ->orderBy('unit_name')
-            ->get();
+        $programs = SadarinProgram::query()->orderBy('program_name')->get();
 
-        $programs = SadarinProgram::query()
-            ->orderBy('program_name')
-            ->get();
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - KEGIATAN
+        |--------------------------------------------------------------------------
+        */
 
-        $kegiatans = SadarinKegiatan::query()
-            ->orderBy('kegiatan_name')
-            ->get();
+        $kegiatans = SadarinKegiatan::query()->orderBy('kegiatan_name')->get();
 
-        $subKegiatans = SadarinSubKegiatan::query()
-            ->orderBy('sub_kegiatan_name')
-            ->get();
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - SUB KEGIATAN
+        |--------------------------------------------------------------------------
+        */
 
-        $documentTypes = SadarinDocumentType::query()
-            ->where('document_type_is_active', true)
-            ->orderBy('document_type_name')
-            ->get();
+        $subKegiatans = SadarinSubKegiatan::query()->orderBy('sub_kegiatan_name')->get();
 
-        $tags = SadarinTag::query()
-            ->orderBy('tag_name')
-            ->get();
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - JENIS DOKUMEN
+        |--------------------------------------------------------------------------
+        */
 
+        $documentTypes = SadarinDocumentType::query()->where('document_type_is_active', true)->orderBy('document_type_name')->get();
 
-        return view('UserPage.archive-show', [
+        /*
+        |--------------------------------------------------------------------------
+        | DATA SIDEBAR - TAG
+        |--------------------------------------------------------------------------
+        */
 
+        $tags = SadarinTag::query()->orderBy('tag_name')->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | SELECTED FILTER
+        |--------------------------------------------------------------------------
+        |
+        | Digunakan Blade untuk menampilkan:
+        | - judul filter aktif
+        | - badge filter aktif
+        |
+        */
+
+        $selectedUnit = null;
+
+        if ($request->filled('unit')) {
+            $selectedUnit = SadarinUnit::find($request->input('unit'));
+        }
+
+        $selectedProgram = null;
+
+        if ($request->filled('program')) {
+            $selectedProgram = SadarinProgram::find($request->input('program'));
+        }
+
+        $selectedKegiatan = null;
+
+        if ($request->filled('kegiatan')) {
+            $selectedKegiatan = SadarinKegiatan::find($request->input('kegiatan'));
+        }
+
+        $selectedSubKegiatan = null;
+
+        if ($request->filled('sub_kegiatan')) {
+            $selectedSubKegiatan = SadarinSubKegiatan::find($request->input('sub_kegiatan'));
+        }
+
+        $selectedDocumentType = null;
+
+        if ($request->filled('document_type')) {
+            $selectedDocumentType = SadarinDocumentType::find($request->input('document_type'));
+        }
+
+        $selectedTag = null;
+
+        if ($request->filled('tag')) {
+            $selectedTag = SadarinTag::find($request->input('tag'));
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | RETURN VIEW
+        |--------------------------------------------------------------------------
+        |
+        | SEKARANG SEMUA DAFTAR ARSIP LANGSUNG KE:
+        |
+        | resources/views/UserPage/index.blade.php
+        |
+        */
+
+        return view('UserPage.index', [
             'archives' => $archives,
 
             'units' => $units,
@@ -462,50 +347,19 @@ class SadarinHomepageController extends Controller
 
             'tags' => $tags,
 
+            'selectedUnit' => $selectedUnit,
+
+            'selectedProgram' => $selectedProgram,
+
+            'selectedKegiatan' => $selectedKegiatan,
+
+            'selectedSubKegiatan' => $selectedSubKegiatan,
+
+            'selectedDocumentType' => $selectedDocumentType,
+
+            'selectedTag' => $selectedTag,
+
+            'search' => $search,
         ]);
-    }
-
-    /**
-     * ================================================================
-     * HALAMAN LOGIN
-     * ================================================================
-     */
-    public function showLogin()
-    {
-        return view('LoginPage.index');
-    }
-
-    /**
-     * ================================================================
-     * LOGIN INTERNAL
-     * ================================================================
-     *
-     * Placeholder sementara.
-     */
-    public function loginInternal(Request $request)
-    {
-        return back()->with('error', 'Proses login pegawai belum tersedia.');
-    }
-
-    /**
-     * ================================================================
-     * LOGIN PUBLIK
-     * ================================================================
-     *
-     * Placeholder sementara.
-     */
-    public function loginPublic(Request $request)
-    {
-        return back()->with('error', 'Proses login publik belum tersedia.');
-    }
-
-    /**
-     * ================================================================
-     * LOGOUT
-     * ================================================================
-     */
-    public function logout(Request $request)
-    {
-        return redirect()->route('sadarin.login')->with('success', 'Anda telah keluar dari SADARIN.');
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->string('access_log_object_type', 100)->nullable();
 
-            $table->unsignedBigInteger('access_log_object_id')->nullable();
+            $table->string('access_log_object_id', 255)->nullable();
 
             $table->unsignedBigInteger(
                 'access_log_archive_id'

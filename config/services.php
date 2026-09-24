@@ -42,5 +42,15 @@ return [
         ),
 
     ],
+    'google_drive' => [
+
+        'credentials' => storage_path(
+            'app/' . env(
+                'GOOGLE_DRIVE_CREDENTIALS',
+                'google/sadarin-drive.json'
+            )
+        ),
+
+    ],
 
 ];

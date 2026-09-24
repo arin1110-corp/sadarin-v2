@@ -28,10 +28,11 @@ class SadarinArchiveController extends Controller
         $search = trim($request->search);
 
         $archives = SadarinArchive::query()
-            ->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags.tag'])
+            ->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('archive_title', 'like', "%{$search}%")->orWhere('archive_description', 'like', "%{$search}%");
+                $q->where('archive_title', 'like', "%{$search}%")
+                    ->orWhere('archive_description', 'like', "%{$search}%");
                 });
             })
             ->orderByDesc('archive_created_at')
@@ -144,16 +145,22 @@ class SadarinArchiveController extends Controller
                 'subKegiatan',
                 'documentType',
 
-                /*
+            /*
                 |--------------------------------------------------------------------------
                 | BERKAS
                 |--------------------------------------------------------------------------
                 |
-                | Setiap berkas mempunyai tag.
+                | tags langsung menghasilkan SadarinTag.
+                |
+                | JANGAN:
+                | files.tags.tag
+                |
+                | Gunakan:
+                | files.tags
                 |
                 */
 
-                'files.tags.tag',
+            'files.tags',
             ])
             ->findOrFail($id);
 
@@ -302,7 +309,7 @@ class SadarinArchiveController extends Controller
     {
         /*
         |--------------------------------------------------------------------------
-        | AMBIL MASTER TAG
+        | MASTER TAG
         |--------------------------------------------------------------------------
         |
         | Tag dipilih ketika membuat BERKAS.
@@ -380,19 +387,8 @@ class SadarinArchiveController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | SIMPAN TAG
+            | SIMPAN TAG BERKAS
             |--------------------------------------------------------------------------
-            |
-            | PENTING:
-            |
-            | Database kamu menggunakan:
-            |
-            | archive_file_tag_archive_file_id
-            |
-            | bukan:
-            |
-            | archive_file_tag_file_id
-            |
             */
 
             if (!empty($validated['tag_ids'])) {
@@ -421,18 +417,18 @@ class SadarinArchiveController extends Controller
 
         DB::transaction(function () use ($file) {
             /*
-            |--------------------------------------------------------------------------
-            | HAPUS TAG BERKAS
-            |--------------------------------------------------------------------------
-            */
+                |--------------------------------------------------------------------------
+                | HAPUS TAG BERKAS
+                |--------------------------------------------------------------------------
+                */
 
             SadarinArchiveFileTag::query()->where('archive_file_tag_archive_file_id', $file->archive_file_id)->delete();
 
             /*
-            |--------------------------------------------------------------------------
-            | HAPUS BERKAS
-            |--------------------------------------------------------------------------
-            */
+                |--------------------------------------------------------------------------
+                | HAPUS BERKAS
+                |--------------------------------------------------------------------------
+                */
 
             $file->delete();
         });

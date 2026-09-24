@@ -8,7 +8,7 @@
 
         <div class="flex items-center">
 
-            <a href="{{ route('sadarin.home') }}" class="flex items-center">
+            <a href="{{ route('sadarin.user.archive.index') }}" class="flex items-center">
 
                 <img
                     src="{{ asset('assets/images/logo-sadarin-full.png') }}"
@@ -28,7 +28,7 @@
         <nav class="hidden items-center gap-7 md:flex">
 
             <a
-                href="{{ route('sadarin.home') }}"
+                href="{{ route('sadarin.user.archive.index') }}"
                 class="text-sm font-semibold text-sadarin-600 transition hover:text-sadarin-700"
             >
                 Beranda
@@ -408,7 +408,7 @@
 
             {{-- BERANDA --}}
             <a
-                href="{{ route('sadarin.home') }}"
+                href="{{ route('sadarin.user.archive.index') }}"
                 class="block rounded-lg bg-sadarin-50 px-4 py-3 text-sm font-semibold text-sadarin-600"
             >
 

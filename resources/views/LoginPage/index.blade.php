@@ -35,7 +35,7 @@
                     {{-- Logo --}}
                     <div>
 
-                        <a href="{{ route('sadarin.home') }}"
+                        <a href="{{ route('sadarin.user.archive.index') }}"
                             class="inline-flex rounded-xl bg-white/95 px-4 py-3 shadow-lg shadow-black/10">
 
                             <img src="{{ asset('assets/images/logo-sadarin-full.png') }}" alt="SADARIN"
@@ -165,7 +165,7 @@
                     {{-- Mobile Logo --}}
                     <div class="mb-10 lg:hidden">
 
-                        <a href="{{ route('sadarin.home') }}" class="inline-flex">
+                        <a href="{{ route('sadarin.user.archive.index') }}" class="inline-flex">
 
                             <img src="{{ asset('assets/images/logo-sadarin.png') }}" alt="SADARIN"
                                 class="h-14 w-auto object-contain">

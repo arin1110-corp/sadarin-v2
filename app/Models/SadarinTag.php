@@ -2,39 +2,25 @@
 
 namespace App\Models;
 
-use App\Traits\SadarinUid;
 use Illuminate\Database\Eloquent\Model;
 
 class SadarinTag extends Model
 {
-    use SadarinUid;
-
     protected $table = 'sadarin_tag';
 
     protected $primaryKey = 'tag_id';
 
-    public $incrementing = true;
+    public $timestamps = false;
 
-    protected $keyType = 'int';
+    protected $fillable = ['tag_name'];
 
-    const CREATED_AT = 'tag_created_at';
-
-    const UPDATED_AT = 'tag_updated_at';
-
-    protected $fillable = ['tag_uid', 'tag_name', 'tag_slug', 'tag_description', 'tag_is_active'];
-
-    protected $casts = [
-        'tag_is_active' => 'boolean',
-    ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONSHIPS
-    |--------------------------------------------------------------------------
-    */
-
-    public function archiveFileTags()
+    /**
+     * ============================================================
+     * FILE YANG MENGGUNAKAN TAG INI
+     * ============================================================
+     */
+    public function files()
     {
-        return $this->hasMany(SadarinArchiveFileTag::class, 'archive_file_tag_tag_id', 'tag_id');
+        return $this->belongsToMany(SadarinArchiveFile::class, 'sadarin_archive_file_tag', 'archive_file_tag_tag_id', 'archive_file_id', 'tag_id', 'archive_file_id');
     }
 }

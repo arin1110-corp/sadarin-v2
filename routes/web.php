@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Homepage\SadarinHomepageController;
 use App\Http\Controllers\Homepage\SadarinLoginController;
+use App\Http\Controllers\Homepage\SadarinDriveController;
 use App\Http\Controllers\Master\SadarinUnitController;
 use App\Http\Controllers\Master\SadarinProgramController;
 use App\Http\Controllers\Master\SadarinKegiatanController;
@@ -37,19 +38,11 @@ Route::prefix('sadarin')
     ->group(function () {
     /*
         |--------------------------------------------------------------------------
-        | HOMEPAGE
-        |--------------------------------------------------------------------------
-        */
-
-    Route::get('/home', [SadarinHomepageController::class, 'index'])->name('home');
-
-    /*
-        |--------------------------------------------------------------------------
         | LOGIN
         |--------------------------------------------------------------------------
         */
 
-    Route::get('/login', [SadarinHomepageController::class, 'showLogin'])->name('login');
+    Route::get('/login', [SadarinLoginController::class, 'index'])->name('login');
 
     Route::post('/login/internal', [SadarinLoginController::class, 'login'])->name('login.internal');
 
@@ -404,13 +397,13 @@ Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal'])
     ->prefix('user')
     ->name('sadarin.user.')
     ->group(function () {
-        /*
+    /*
     |--------------------------------------------------------------------------
     | HOMEPAGE
     |--------------------------------------------------------------------------
     */
 
-        Route::get('/dashboard', [SadarinHomepageController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [SadarinHomepageController::class, 'index'])->name('archive.index');
 
     /*
     |--------------------------------------------------------------------------
@@ -427,4 +420,8 @@ Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal'])
     */
 
     Route::get('/arsip/{id}', [SadarinHomepageController::class, 'showArchive'])->name('archive.show');
+
+    Route::get('archive/{archiveId}/files', [SadarinDriveController::class, 'index'])->name('archive.files');
+
+    Route::get('/archive/{archiveId}/drive/open', [SadarinDriveController::class, 'openDrive'])->name('archive.drive.open');
     });

@@ -634,7 +634,7 @@ class SadarinLoginController extends Controller
 
             'Arsiparis' => redirect('/sadarin/arsiparis/dashboard')->with('success', $message),
 
-            'Pengguna Internal' => redirect()->route('sadarin.user.dashboard')->with('success', $message),
+            'Pengguna Internal' => redirect()->route('sadarin.user.archive.index')->with('success', $message),
 
             default => redirect()->route('sadarin.login')->with('error', 'Role akun tidak dikenali.'),
         };
@@ -654,6 +654,6 @@ class SadarinLoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('sadarin.login')->with('success', 'Anda telah keluar dari SADARIN.');
+        return redirect()->route('homepage')->with('success', 'Anda telah keluar dari SADARIN.');
     }
 }

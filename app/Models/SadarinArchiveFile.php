@@ -44,6 +44,6 @@ class SadarinArchiveFile extends Model
 
     public function tags()
     {
-        return $this->hasMany(SadarinArchiveFileTag::class, 'archive_file_tag_archive_file_id', 'archive_file_id');
+        return $this->belongsToMany(SadarinTag::class, 'sadarin_archive_file_tag', 'archive_file_tag_archive_file_id', 'archive_file_tag_tag_id', 'archive_file_id', 'tag_id');
     }
 }
