@@ -421,7 +421,7 @@ Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal'])
 
     Route::get('/arsip/{id}', [SadarinHomepageController::class, 'showArchive'])->name('archive.show');
 
-    Route::get('archive/{archiveId}/files', [SadarinDriveController::class, 'index'])->name('archive.files');
+    Route::get('archive/{archiveId}/files', [SadarinHomepageController::class, 'showArchive'])->name('archive.files');
 
-    Route::get('/archive/{archiveId}/drive/open', [SadarinDriveController::class, 'openDrive'])->name('archive.drive.open');
+    Route::get('/archive/{archiveId}/drive/open', [SadarinHomepageControllers::class, 'openDrive'])->name('archive.drive.open');
     });

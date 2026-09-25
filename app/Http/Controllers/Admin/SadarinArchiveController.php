@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SadarinArchive;
-use App\Models\SadarinArchiveFile;
-use App\Models\SadarinArchiveFileTag;
 use App\Models\SadarinDocumentType;
 use App\Models\SadarinUnit;
 use App\Models\SadarinProgram;
@@ -28,11 +26,10 @@ class SadarinArchiveController extends Controller
         $search = trim($request->search);
 
         $archives = SadarinArchive::query()
-            ->with(['unit', 'program', 'kegiatan', 'subKegiatan', 'documentType', 'files.tags'])
+            ->with(['unit', 'subKegiatan', 'documentType', 'tags'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
-                $q->where('archive_title', 'like', "%{$search}%")
-                    ->orWhere('archive_description', 'like', "%{$search}%");
+                $q->where('archive_title', 'like', "%{$search}%")->orWhere('archive_description', 'like', "%{$search}%");
                 });
             })
             ->orderByDesc('archive_created_at')
@@ -53,16 +50,49 @@ class SadarinArchiveController extends Controller
 
     public function create()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | UNIT
+        |--------------------------------------------------------------------------
+        */
+
         $units = SadarinUnit::query()->where('unit_is_active', true)->orderBy('unit_name')->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | PROGRAM
+        |--------------------------------------------------------------------------
+        |
+        | Program hanya digunakan sebagai master pilihan
+        | untuk menentukan kegiatan dan sub kegiatan.
+        |
+        | Program tidak disimpan langsung ke sadarin_archive.
+        |
+        */
 
         $programs = SadarinProgram::query()->where('program_is_active', true)->orderBy('program_name')->get();
 
+        /*
+        |--------------------------------------------------------------------------
+        | JENIS DOKUMEN
+        |--------------------------------------------------------------------------
+        */
+
         $documentTypes = SadarinDocumentType::query()->where('document_type_is_active', true)->orderBy('document_type_name')->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAG
+        |--------------------------------------------------------------------------
+        */
+
+        $tags = SadarinTag::query()->where('tag_is_active', true)->orderBy('tag_name')->get();
 
         return view('admin.arsip.create', [
             'units' => $units,
             'programs' => $programs,
             'documentTypes' => $documentTypes,
+            'tags' => $tags,
         ]);
     }
 
@@ -75,30 +105,70 @@ class SadarinArchiveController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            /*
+            |--------------------------------------------------------------------------
+            | INFORMASI ARSIP
+            |--------------------------------------------------------------------------
+            */
+
             'archive_title' => ['required', 'string', 'max:255'],
 
             'archive_description' => ['nullable', 'string'],
 
-            'archive_unit_id' => ['nullable', 'integer'],
-
-            'archive_program_id' => ['nullable', 'integer'],
-
-            'archive_kegiatan_id' => ['nullable', 'integer'],
-
-            'archive_sub_kegiatan_id' => ['nullable', 'integer'],
-
-            'archive_document_type_id' => ['nullable', 'integer'],
-
-            'archive_date' => ['nullable', 'date'],
-
             'archive_year' => ['nullable', 'integer', 'min:1900', 'max:2100'],
 
-            'archive_access_level' => ['required', 'in:public,internal,restricted'],
+            /*
+            |--------------------------------------------------------------------------
+            | PEMILIK / PENGAJU
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_user_id' => ['nullable', 'integer'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | KLASIFIKASI
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_unit_id' => ['nullable', 'integer', 'exists:sadarin_unit,unit_id'],
+
+            'archive_sub_kegiatan_id' => ['nullable', 'integer', 'exists:sadarin_sub_kegiatan,sub_kegiatan_id'],
+
+            'archive_document_type_id' => ['nullable', 'integer', 'exists:sadarin_document_type,document_type_id'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | GOOGLE DRIVE
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_drive_url' => ['nullable', 'url', 'max:2048'],
+
+            'archive_drive_folder_id' => ['nullable', 'string', 'max:255'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAK AKSES
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_access_level' => ['required', 'in:public,internal'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | TAG
+            |--------------------------------------------------------------------------
+            */
+
+            'tag_ids' => ['nullable', 'array'],
+
+            'tag_ids.*' => ['integer', 'exists:sadarin_tag,tag_id'],
         ]);
 
         /*
         |--------------------------------------------------------------------------
-        | STATUS
+        | STATUS AWAL
         |--------------------------------------------------------------------------
         */
 
@@ -106,19 +176,53 @@ class SadarinArchiveController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | USER PEMBUAT
+        | USER PEMILIK / PENGAJU
         |--------------------------------------------------------------------------
+        |
+        | SADARIN menggunakan user dari SAMPERIN.
+        |
+        | Untuk sementara ID user diambil dari auth().
+        |
         */
 
-        $validated['archive_created_by'] = auth()->id();
+        if (empty($validated['archive_user_id'])) {
+            $validated['archive_user_id'] = auth()->id();
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | SIMPAN
+        | TAG
+        |--------------------------------------------------------------------------
+        |
+        | tag_ids bukan kolom pada sadarin_archive.
+        |
+        */
+
+        $tagIds = $validated['tag_ids'] ?? [];
+
+        unset($validated['tag_ids']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | SIMPAN ARSIP
         |--------------------------------------------------------------------------
         */
 
-        $archive = SadarinArchive::create($validated);
+        $archive = DB::transaction(function () use ($validated, $tagIds) {
+            $archive = SadarinArchive::create($validated);
+
+            /*
+            |--------------------------------------------------------------------------
+            | SIMPAN TAG
+            |--------------------------------------------------------------------------
+            */
+
+            if (!empty($tagIds)) {
+                $archive->tags()->sync(array_unique($tagIds));
+            }
+
+            return $archive;
+        });
 
         return redirect()->route('sadarin.admin.archive.show', $archive->archive_id)->with('success', 'Arsip berhasil dibuat.');
     }
@@ -133,34 +237,10 @@ class SadarinArchiveController extends Controller
     {
         $archive = SadarinArchive::query()
             ->with([
-                /*
-                |--------------------------------------------------------------------------
-                | ARSIP
-                |--------------------------------------------------------------------------
-                */
-
                 'unit',
-                'program',
-                'kegiatan',
-                'subKegiatan',
                 'documentType',
-
-            /*
-                |--------------------------------------------------------------------------
-                | BERKAS
-                |--------------------------------------------------------------------------
-                |
-                | tags langsung menghasilkan SadarinTag.
-                |
-                | JANGAN:
-                | files.tags.tag
-                |
-                | Gunakan:
-                | files.tags
-                |
-                */
-
-            'files.tags',
+                'subKegiatan.kegiatan.program',
+                'tags',
             ])
             ->findOrFail($id);
 
@@ -177,25 +257,49 @@ class SadarinArchiveController extends Controller
 
     public function edit($id)
     {
-        $archive = SadarinArchive::findOrFail($id);
+        $archive = SadarinArchive::query()->with('tags')->findOrFail($id);
+
+        /*
+        |--------------------------------------------------------------------------
+        | UNIT
+        |--------------------------------------------------------------------------
+        */
 
         $units = SadarinUnit::query()->where('unit_is_active', true)->orderBy('unit_name')->get();
 
+        /*
+        |--------------------------------------------------------------------------
+        | PROGRAM
+        |--------------------------------------------------------------------------
+        |
+        | Hanya digunakan untuk pilihan pada form.
+        |
+        */
+
         $programs = SadarinProgram::query()->where('program_is_active', true)->orderBy('program_name')->get();
 
-        $kegiatans = SadarinKegiatan::query()->where('kegiatan_is_active', true)->orderBy('kegiatan_name')->get();
-
-        $subKegiatans = SadarinSubKegiatan::query()->where('sub_kegiatan_is_active', true)->orderBy('sub_kegiatan_name')->get();
+        /*
+        |--------------------------------------------------------------------------
+        | JENIS DOKUMEN
+        |--------------------------------------------------------------------------
+        */
 
         $documentTypes = SadarinDocumentType::query()->where('document_type_is_active', true)->orderBy('document_type_name')->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | TAG
+        |--------------------------------------------------------------------------
+        */
+
+        $tags = SadarinTag::query()->where('tag_is_active', true)->orderBy('tag_name')->get();
 
         return view('admin.arsip.edit', [
             'archive' => $archive,
             'units' => $units,
             'programs' => $programs,
-            'kegiatans' => $kegiatans,
-            'subKegiatans' => $subKegiatans,
             'documentTypes' => $documentTypes,
+            'tags' => $tags,
         ]);
     }
 
@@ -210,34 +314,92 @@ class SadarinArchiveController extends Controller
         $archive = SadarinArchive::findOrFail($id);
 
         $validated = $request->validate([
+            /*
+            |--------------------------------------------------------------------------
+            | INFORMASI ARSIP
+            |--------------------------------------------------------------------------
+            */
+
             'archive_title' => ['required', 'string', 'max:255'],
 
             'archive_description' => ['nullable', 'string'],
 
-            'archive_unit_id' => ['nullable', 'integer'],
-
-            'archive_program_id' => ['nullable', 'integer'],
-
-            'archive_kegiatan_id' => ['nullable', 'integer'],
-
-            'archive_sub_kegiatan_id' => ['nullable', 'integer'],
-
-            'archive_document_type_id' => ['nullable', 'integer'],
-
-            'archive_date' => ['nullable', 'date'],
-
             'archive_year' => ['nullable', 'integer', 'min:1900', 'max:2100'],
 
-            'archive_access_level' => ['required', 'in:public,internal,restricted'],
+            /*
+            |--------------------------------------------------------------------------
+            | PEMILIK / PENGAJU
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_user_id' => ['nullable', 'integer'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | KLASIFIKASI
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_unit_id' => ['nullable', 'integer', 'exists:sadarin_unit,unit_id'],
+
+            'archive_sub_kegiatan_id' => ['nullable', 'integer', 'exists:sadarin_sub_kegiatan,sub_kegiatan_id'],
+
+            'archive_document_type_id' => ['nullable', 'integer', 'exists:sadarin_document_type,document_type_id'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | GOOGLE DRIVE
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_drive_url' => ['nullable', 'url', 'max:2048'],
+
+            'archive_drive_folder_id' => ['nullable', 'string', 'max:255'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAK AKSES
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_access_level' => ['required', 'in:public,internal'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | STATUS
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_status' => ['nullable', 'in:draft,pending,verified,rejected'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | ALASAN PENOLAKAN
+            |--------------------------------------------------------------------------
+            */
+
+            'archive_rejection_reason' => ['nullable', 'string'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | TAG
+            |--------------------------------------------------------------------------
+            */
+
+            'tag_ids' => ['nullable', 'array'],
+
+            'tag_ids.*' => ['integer', 'exists:sadarin_tag,tag_id'],
         ]);
 
         /*
         |--------------------------------------------------------------------------
-        | USER UPDATE
+        | TAG
         |--------------------------------------------------------------------------
         */
 
-        $validated['archive_updated_by'] = auth()->id();
+        $tagIds = $validated['tag_ids'] ?? [];
+
+        unset($validated['tag_ids']);
 
         /*
         |--------------------------------------------------------------------------
@@ -245,7 +407,17 @@ class SadarinArchiveController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $archive->update($validated);
+        DB::transaction(function () use ($archive, $validated, $tagIds) {
+            $archive->update($validated);
+
+            /*
+            |--------------------------------------------------------------------------
+            | SYNC TAG
+            |--------------------------------------------------------------------------
+            */
+
+            $archive->tags()->sync(array_unique($tagIds));
+        });
 
         return redirect()->route('sadarin.admin.archive.show', $archive->archive_id)->with('success', 'Arsip berhasil diperbarui.');
     }
@@ -260,7 +432,23 @@ class SadarinArchiveController extends Controller
     {
         $archive = SadarinArchive::findOrFail($id);
 
-        $archive->delete();
+        DB::transaction(function () use ($archive) {
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS RELASI TAG
+            |--------------------------------------------------------------------------
+            */
+
+            $archive->tags()->detach();
+
+            /*
+            |--------------------------------------------------------------------------
+            | HAPUS ARSIP
+            |--------------------------------------------------------------------------
+            */
+
+            $archive->delete();
+        });
 
         return redirect()->route('sadarin.admin.archive.index')->with('success', 'Arsip berhasil dihapus.');
     }
@@ -297,142 +485,5 @@ class SadarinArchiveController extends Controller
             ->get(['sub_kegiatan_id', 'sub_kegiatan_code', 'sub_kegiatan_name']);
 
         return response()->json($subKegiatans);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FILE - CREATE
-    |--------------------------------------------------------------------------
-    */
-
-    public function fileCreate(SadarinArchive $archive)
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | MASTER TAG
-        |--------------------------------------------------------------------------
-        |
-        | Tag dipilih ketika membuat BERKAS.
-        |
-        */
-
-        $tags = SadarinTag::query()->where('tag_is_active', true)->orderBy('tag_name')->get();
-
-        return view('admin.arsip.file-create', [
-            'archive' => $archive,
-            'tags' => $tags,
-        ]);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FILE - STORE
-    |--------------------------------------------------------------------------
-    */
-
-    public function fileStore(Request $request, SadarinArchive $archive)
-    {
-        $validated = $request->validate([
-            'archive_file_original_name' => ['required', 'string', 'max:255'],
-
-            'archive_file_drive_file_id' => ['required', 'string', 'max:255'],
-
-            'archive_file_drive_url' => ['required', 'url', 'max:2048'],
-
-            'archive_file_is_primary' => ['nullable', 'boolean'],
-
-            /*
-            |--------------------------------------------------------------------------
-            | TAG
-            |--------------------------------------------------------------------------
-            */
-
-            'tag_ids' => ['nullable', 'array'],
-
-            'tag_ids.*' => ['integer', 'exists:sadarin_tag,tag_id'],
-        ]);
-
-        DB::transaction(function () use ($request, $validated, $archive) {
-            /*
-            |--------------------------------------------------------------------------
-            | PRIMARY BERKAS
-            |--------------------------------------------------------------------------
-            */
-
-            if ($request->boolean('archive_file_is_primary')) {
-                SadarinArchiveFile::query()
-                    ->where('archive_file_archive_id', $archive->archive_id)
-                    ->update([
-                        'archive_file_is_primary' => false,
-                    ]);
-            }
-
-            /*
-            |--------------------------------------------------------------------------
-            | BUAT BERKAS
-            |--------------------------------------------------------------------------
-            */
-
-            $file = SadarinArchiveFile::create([
-                'archive_file_archive_id' => $archive->archive_id,
-
-                'archive_file_original_name' => $validated['archive_file_original_name'],
-
-                'archive_file_drive_file_id' => $validated['archive_file_drive_file_id'],
-
-                'archive_file_drive_url' => $validated['archive_file_drive_url'],
-
-                'archive_file_is_primary' => $request->boolean('archive_file_is_primary'),
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | SIMPAN TAG BERKAS
-            |--------------------------------------------------------------------------
-            */
-
-            if (!empty($validated['tag_ids'])) {
-                foreach (array_unique($validated['tag_ids']) as $tagId) {
-                    SadarinArchiveFileTag::create([
-                        'archive_file_tag_archive_file_id' => $file->archive_file_id,
-
-                        'archive_file_tag_tag_id' => $tagId,
-                    ]);
-                }
-            }
-        });
-
-        return redirect()->route('sadarin.admin.archive.show', $archive->archive_id)->with('success', 'Berkas berhasil ditambahkan.');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | FILE - DESTROY
-    |--------------------------------------------------------------------------
-    */
-
-    public function fileDestroy(SadarinArchive $archive, SadarinArchiveFile $file)
-    {
-        abort_unless($file->archive_file_archive_id == $archive->archive_id, 404);
-
-        DB::transaction(function () use ($file) {
-            /*
-                |--------------------------------------------------------------------------
-                | HAPUS TAG BERKAS
-                |--------------------------------------------------------------------------
-                */
-
-            SadarinArchiveFileTag::query()->where('archive_file_tag_archive_file_id', $file->archive_file_id)->delete();
-
-            /*
-                |--------------------------------------------------------------------------
-                | HAPUS BERKAS
-                |--------------------------------------------------------------------------
-                */
-
-            $file->delete();
-        });
-
-        return redirect()->route('sadarin.admin.archive.show', $archive->archive_id)->with('success', 'Berkas berhasil dihapus.');
     }
 }

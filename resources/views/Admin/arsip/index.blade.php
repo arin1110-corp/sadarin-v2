@@ -19,8 +19,9 @@
                 <div class="flex items-center gap-3">
 
                     <div
-                        class="flex h-11 w-11 items-center justify-center rounded-xl
-                               bg-blue-50 text-blue-600">
+                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl
+                               bg-[oklch(95%_0.025_325.661)]
+                               text-[oklch(29.3%_0.136_325.661)]">
 
                         <i class="bi bi-archive-fill text-xl"></i>
 
@@ -42,6 +43,8 @@
 
             </div>
 
+
+            {{-- TAMBAH ARSIP --}}
 
             <a href="{{ route('sadarin.admin.archive.create') }}"
                 class="inline-flex items-center justify-center gap-2 rounded-xl
@@ -113,11 +116,14 @@
         {{-- SEARCH --}}
         {{-- ========================================================= --}}
 
-        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div class="rounded-2xl border border-slate-200
+                   bg-white p-4 shadow-sm">
 
             <form method="GET" action="{{ route('sadarin.admin.archive.index') }}">
 
                 <div class="flex flex-col gap-3 sm:flex-row">
+
+                    {{-- SEARCH INPUT --}}
 
                     <div class="relative flex-1">
 
@@ -143,6 +149,8 @@
                     </div>
 
 
+                    {{-- CARI --}}
+
                     <button type="submit"
                         class="inline-flex items-center justify-center gap-2
                                rounded-xl bg-slate-800 px-5 py-2.5
@@ -155,6 +163,8 @@
 
                     </button>
 
+
+                    {{-- RESET --}}
 
                     @if ($search)
                         <a href="{{ route('sadarin.admin.archive.index') }}"
@@ -186,11 +196,17 @@
 
             <div class="overflow-x-auto">
 
-                <table class="min-w-[1100px] w-full">
+                <table class="min-w-[1150px] w-full">
+
+                    {{-- =================================================
+                        TABLE HEADER
+                    ================================================== --}}
 
                     <thead class="border-b border-slate-100 bg-slate-50">
 
                         <tr>
+
+                            {{-- NO --}}
 
                             <th
                                 class="w-16 px-5 py-3 text-left text-xs
@@ -201,6 +217,9 @@
 
                             </th>
 
+
+                            {{-- ARSIP --}}
+
                             <th
                                 class="px-5 py-3 text-left text-xs
                                        font-semibold uppercase tracking-wide
@@ -210,32 +229,44 @@
 
                             </th>
 
-                            <th
-                                class="px-5 py-3 text-left text-xs
-                                       font-semibold uppercase tracking-wide
-                                       text-slate-500">
 
-                                Unit
-
-                            </th>
+                            {{-- KLASIFIKASI --}}
 
                             <th
                                 class="px-5 py-3 text-left text-xs
                                        font-semibold uppercase tracking-wide
                                        text-slate-500">
 
-                                Jenis Dokumen
+                                Klasifikasi
 
                             </th>
+
+
+                            {{-- TAG --}}
 
                             <th
                                 class="px-5 py-3 text-left text-xs
                                        font-semibold uppercase tracking-wide
                                        text-slate-500">
 
-                                Tanggal
+                                Tag
 
                             </th>
+
+
+                            {{-- TAHUN --}}
+
+                            <th
+                                class="px-5 py-3 text-left text-xs
+                                       font-semibold uppercase tracking-wide
+                                       text-slate-500">
+
+                                Tahun
+
+                            </th>
+
+
+                            {{-- AKSES --}}
 
                             <th
                                 class="px-5 py-3 text-left text-xs
@@ -246,6 +277,9 @@
 
                             </th>
 
+
+                            {{-- STATUS --}}
+
                             <th
                                 class="px-5 py-3 text-left text-xs
                                        font-semibold uppercase tracking-wide
@@ -254,6 +288,9 @@
                                 Status
 
                             </th>
+
+
+                            {{-- AKSI --}}
 
                             <th
                                 class="w-32 px-5 py-3 text-center text-xs
@@ -269,12 +306,19 @@
                     </thead>
 
 
+                    {{-- =================================================
+                        TABLE BODY
+                    ================================================== --}}
+
                     <tbody class="divide-y divide-slate-100">
 
                         @forelse ($archives as $archive)
+
                             <tr class="transition hover:bg-slate-50">
 
-                                {{-- NO --}}
+                                {{-- =================================================
+                                    NO
+                                ================================================== --}}
 
                                 <td class="px-5 py-4 text-sm text-slate-400">
 
@@ -283,22 +327,29 @@
                                 </td>
 
 
-                                {{-- ARSIP --}}
+                                {{-- =================================================
+                                    ARSIP
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
                                     <div class="flex items-start gap-3">
 
+                                        {{-- ICON --}}
+
                                         <div
                                             class="flex h-10 w-10 shrink-0
                                                    items-center justify-center
-                                                   rounded-xl bg-blue-50
-                                                   text-blue-600">
+                                                   rounded-xl
+                                                   bg-[oklch(95%_0.025_325.661)]
+                                                   text-[oklch(29.3%_0.136_325.661)]">
 
-                                            <i class="bi bi-file-earmark-text-fill"></i>
+                                            <i class="bi bi-archive-fill"></i>
 
                                         </div>
 
+
+                                        {{-- INFO --}}
 
                                         <div class="min-w-0">
 
@@ -321,12 +372,36 @@
                                             @endif
 
 
-                                            @if ($archive->archive_year)
-                                                <div class="mt-1 text-xs text-slate-400">
+                                            {{-- UID --}}
 
-                                                    <i class="bi bi-calendar3 mr-1"></i>
+                                            @if ($archive->archive_uid)
+                                                <div
+                                                    class="mt-1 text-[10px]
+                                                           text-slate-400">
 
-                                                    Tahun {{ $archive->archive_year }}
+                                                    {{ $archive->archive_uid }}
+
+                                                </div>
+                                            @endif
+
+
+                                            {{-- GOOGLE DRIVE --}}
+
+                                            @if ($archive->archive_drive_url)
+                                                <div class="mt-2">
+
+                                                    <a href="{{ $archive->archive_drive_url }}" target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="inline-flex items-center gap-1.5
+                                                               text-xs font-medium
+                                                               text-[oklch(29.3%_0.136_325.661)]
+                                                               hover:underline">
+
+                                                        <i class="bi bi-google"></i>
+
+                                                        Google Drive
+
+                                                    </a>
 
                                                 </div>
                                             @endif
@@ -338,60 +413,182 @@
                                 </td>
 
 
-                                {{-- UNIT --}}
+                                {{-- =================================================
+                                    KLASIFIKASI
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
-                                    @if ($archive->unit)
-                                        <span
-                                            class="inline-flex items-center rounded-lg
-                                                   bg-blue-50 px-2.5 py-1
-                                                   text-xs font-semibold
-                                                   text-blue-700">
+                                    <div class="space-y-1.5">
 
-                                            {{ $archive->unit->unit_name }}
+                                        {{-- UNIT --}}
 
-                                        </span>
-                                    @else
-                                        <span class="text-xs text-slate-400">
-                                            -
-                                        </span>
-                                    @endif
+                                        @if ($archive->unit)
+                                            <div
+                                                class="flex items-center gap-1.5
+                                                       text-xs text-slate-600">
+
+                                                <i
+                                                    class="bi bi-building
+                                                           text-blue-500">
+                                                </i>
+
+                                                <span class="max-w-[210px] truncate">
+
+                                                    {{ $archive->unit->unit_name }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+
+                                        {{-- PROGRAM --}}
+
+                                        @if ($archive->subKegiatan && $archive->subKegiatan->kegiatan && $archive->subKegiatan->kegiatan->program)
+                                            <div
+                                                class="flex items-center gap-1.5
+                                                       text-xs text-slate-500">
+
+                                                <i
+                                                    class="bi bi-diagram-3
+                                                           text-emerald-500">
+                                                </i>
+
+                                                <span class="max-w-[210px] truncate">
+
+                                                    {{ $archive->subKegiatan->kegiatan->program->program_name }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+
+                                        {{-- KEGIATAN --}}
+
+                                        @if ($archive->subKegiatan && $archive->subKegiatan->kegiatan)
+                                            <div
+                                                class="flex items-center gap-1.5
+                                                       text-xs text-slate-500">
+
+                                                <i
+                                                    class="bi bi-diagram-2
+                                                           text-indigo-500">
+                                                </i>
+
+                                                <span class="max-w-[210px] truncate">
+
+                                                    {{ $archive->subKegiatan->kegiatan->kegiatan_name }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+
+                                        {{-- SUB KEGIATAN --}}
+
+                                        @if ($archive->subKegiatan)
+                                            <div
+                                                class="flex items-center gap-1.5
+                                                       text-xs text-slate-500">
+
+                                                <i
+                                                    class="bi bi-diagram-3-fill
+                                                           text-orange-500">
+                                                </i>
+
+                                                <span class="max-w-[210px] truncate">
+
+                                                    {{ $archive->subKegiatan->sub_kegiatan_name }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+
+                                        {{-- DOCUMENT TYPE --}}
+
+                                        @if ($archive->documentType)
+                                            <div class="pt-1">
+
+                                                <span
+                                                    class="inline-flex items-center
+                                                           rounded-lg
+                                                           bg-red-50
+                                                           px-2.5 py-1
+                                                           text-xs font-semibold
+                                                           text-red-700">
+
+                                                    <i
+                                                        class="bi bi-file-earmark-text
+                                                               mr-1.5">
+                                                    </i>
+
+                                                    {{ $archive->documentType->document_type_name }}
+
+                                                </span>
+
+                                            </div>
+                                        @endif
+
+
+                                        {{-- EMPTY --}}
+
+                                        @if (!$archive->unit && !$archive->subKegiatan && !$archive->documentType)
+                                            <span class="text-xs text-slate-400">
+                                                -
+                                            </span>
+                                        @endif
+
+                                    </div>
 
                                 </td>
 
 
-                                {{-- JENIS DOKUMEN --}}
+                                {{-- =================================================
+                                    TAG
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
-                                    @if ($archive->documentType)
-                                        <span
-                                            class="inline-flex items-center rounded-lg
-                                                   bg-violet-50 px-2.5 py-1
-                                                   text-xs font-semibold
-                                                   text-violet-700">
+                                    @if ($archive->tags->count())
+                                        <div
+                                            class="flex max-w-[220px]
+                                                   flex-wrap gap-1.5">
 
-                                            {{ $archive->documentType->document_type_name }}
+                                            @foreach ($archive->tags->take(4) as $tag)
+                                                <span
+                                                    class="inline-flex items-center
+                                                           rounded-full
+                                                           bg-amber-50
+                                                           px-2.5 py-1
+                                                           text-[10px]
+                                                           font-medium
+                                                           text-amber-700">
 
-                                        </span>
-                                    @else
-                                        <span class="text-xs text-slate-400">
-                                            -
-                                        </span>
-                                    @endif
+                                                    #{{ $tag->tag_name }}
 
-                                </td>
+                                                </span>
+                                            @endforeach
 
 
-                                {{-- TANGGAL --}}
+                                            @if ($archive->tags->count() > 4)
+                                                <span
+                                                    class="inline-flex items-center
+                                                           rounded-full
+                                                           bg-slate-100
+                                                           px-2.5 py-1
+                                                           text-[10px]
+                                                           font-medium
+                                                           text-slate-500">
 
-                                <td class="whitespace-nowrap px-5 py-4">
+                                                    +{{ $archive->tags->count() - 4 }}
 
-                                    @if ($archive->archive_date)
-                                        <div class="text-sm font-medium text-slate-700">
-
-                                            {{ $archive->archive_date->format('d M Y') }}
+                                                </span>
+                                            @endif
 
                                         </div>
                                     @else
@@ -403,7 +600,35 @@
                                 </td>
 
 
-                                {{-- AKSES --}}
+                                {{-- =================================================
+                                    TAHUN
+                                ================================================== --}}
+
+                                <td class="whitespace-nowrap px-5 py-4">
+
+                                    @if ($archive->archive_year)
+                                        <div
+                                            class="flex items-center gap-1.5
+                                                   text-sm font-medium
+                                                   text-slate-700">
+
+                                            <i class="bi bi-calendar3 text-slate-400"></i>
+
+                                            {{ $archive->archive_year }}
+
+                                        </div>
+                                    @else
+                                        <span class="text-xs text-slate-400">
+                                            -
+                                        </span>
+                                    @endif
+
+                                </td>
+
+
+                                {{-- =================================================
+                                    AKSES
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
@@ -414,8 +639,6 @@
 
                                             'internal' => 'bg-blue-50 text-blue-700',
 
-                                            'restricted' => 'bg-red-50 text-red-700',
-
                                             default => 'bg-slate-100 text-slate-600',
                                         };
 
@@ -424,8 +647,6 @@
 
                                             'internal' => 'Internal',
 
-                                            'restricted' => 'Terbatas',
-
                                             default => ucfirst($archive->archive_access_level),
                                         };
 
@@ -433,8 +654,9 @@
 
 
                                     <span
-                                        class="inline-flex items-center rounded-lg
-                                               px-2.5 py-1 text-xs font-semibold
+                                        class="inline-flex items-center
+                                               rounded-lg px-2.5 py-1
+                                               text-xs font-semibold
                                                {{ $accessClass }}">
 
                                         {{ $accessLabel }}
@@ -444,7 +666,9 @@
                                 </td>
 
 
-                                {{-- STATUS --}}
+                                {{-- =================================================
+                                    STATUS
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
@@ -478,8 +702,9 @@
 
 
                                     <span
-                                        class="inline-flex items-center rounded-lg
-                                               px-2.5 py-1 text-xs font-semibold
+                                        class="inline-flex items-center
+                                               rounded-lg px-2.5 py-1
+                                               text-xs font-semibold
                                                {{ $statusClass }}">
 
                                         {{ $statusLabel }}
@@ -489,11 +714,17 @@
                                 </td>
 
 
-                                {{-- AKSI --}}
+                                {{-- =================================================
+                                    AKSI
+                                ================================================== --}}
 
                                 <td class="px-5 py-4">
 
-                                    <div class="flex items-center justify-center gap-1">
+                                    <div
+                                        class="flex items-center
+                                               justify-center gap-1">
+
+                                        {{-- SHOW --}}
 
                                         <a href="{{ route('sadarin.admin.archive.show', $archive->archive_id) }}"
                                             title="Lihat"
@@ -507,6 +738,8 @@
                                         </a>
 
 
+                                        {{-- EDIT --}}
+
                                         <a href="{{ route('sadarin.admin.archive.edit', $archive->archive_id) }}"
                                             title="Edit"
                                             class="flex h-9 w-9 items-center
@@ -519,10 +752,13 @@
                                         </a>
 
 
+                                        {{-- DELETE --}}
+
                                         <form action="{{ route('sadarin.admin.archive.destroy', $archive->archive_id) }}"
                                             method="POST" onsubmit="return confirm('Yakin ingin menghapus arsip ini?')">
 
                                             @csrf
+
                                             @method('DELETE')
 
                                             <button type="submit" title="Hapus"
@@ -545,6 +781,10 @@
 
                         @empty
 
+                            {{-- =================================================
+                                EMPTY
+                            ================================================== --}}
+
                             <tr>
 
                                 <td colspan="8" class="px-5 py-16 text-center">
@@ -560,7 +800,9 @@
                                     </div>
 
 
-                                    <div class="mt-4 text-sm font-semibold text-slate-700">
+                                    <div
+                                        class="mt-4 text-sm font-semibold
+                                               text-slate-700">
 
                                         Belum ada arsip
 
@@ -575,12 +817,12 @@
 
 
                                     <a href="{{ route('sadarin.admin.archive.create') }}"
-                                        class="mt-4 inline-flex items-center gap-2
-                                               rounded-xl
+                                        class="mt-4 inline-flex items-center
+                                               gap-2 rounded-xl
                                                bg-[oklch(29.3%_0.136_325.661)]
                                                px-4 py-2 text-xs
                                                font-semibold text-white
-                                               hover:opacity-90">
+                                               transition hover:opacity-90">
 
                                         <i class="bi bi-plus-lg"></i>
 
@@ -591,6 +833,7 @@
                                 </td>
 
                             </tr>
+
                         @endforelse
 
                     </tbody>
@@ -600,11 +843,13 @@
             </div>
 
 
+            {{-- ========================================================= --}}
             {{-- PAGINATION --}}
+            {{-- ========================================================= --}}
 
             @if ($archives->hasPages())
-                <div class="flex justify-center border-t border-slate-100
-                           px-5 py-4">
+                <div class="flex justify-center border-t
+                           border-slate-100 px-5 py-4">
 
                     {{ $archives->links() }}
 

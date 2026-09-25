@@ -4,11 +4,10 @@ namespace App\Models;
 
 use App\Traits\SadarinUid;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SadarinArchive extends Model
 {
-    use SadarinUid, SoftDeletes;
+    use SadarinUid;
 
     protected $table = 'sadarin_archive';
 
@@ -22,39 +21,60 @@ class SadarinArchive extends Model
 
     const UPDATED_AT = 'archive_updated_at';
 
-    const DELETED_AT = 'archive_deleted_at';
-
     protected $fillable = [
-        // Identitas
-        'archive_uid',
-        'archive_title',
-        'archive_description',
+        // ============================================================
+        // IDENTITAS
+        // ============================================================
 
-        // Klasifikasi
+        'archive_uid',
+
+        // ============================================================
+        // PEMILIK / PENGAJU
+        // ============================================================
+
+        'archive_user_id',
+
+        // ============================================================
+        // KLASIFIKASI
+        // ============================================================
+
         'archive_unit_id',
-        'archive_program_id',
-        'archive_kegiatan_id',
         'archive_sub_kegiatan_id',
         'archive_document_type_id',
 
-        // Informasi
-        'archive_date',
+        // ============================================================
+        // INFORMASI ARSIP
+        // ============================================================
+
+        'archive_title',
+        'archive_description',
         'archive_year',
 
-        // Hak Akses
+        // ============================================================
+        // LINK GOOGLE DRIVE
+        // ============================================================
+
+        'archive_drive_url',
+        'archive_drive_folder_id',
+
+        // ============================================================
+        // HAK AKSES
+        // ============================================================
+
         'archive_access_level',
 
-        // Status
-        'archive_status',
+        // ============================================================
+        // STATUS
+        // ============================================================
 
-        // User
-        'archive_created_by',
-        'archive_updated_by',
+        'archive_status',
+        'archive_rejection_reason',
     ];
 
     protected $casts = [
-        'archive_date' => 'date',
         'archive_year' => 'integer',
+        'archive_created_at' => 'datetime',
+        'archive_updated_at' => 'datetime',
     ];
 
     /*
@@ -63,33 +83,47 @@ class SadarinArchive extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function files()
-    {
-        return $this->hasMany(SadarinArchiveFile::class, 'archive_file_archive_id', 'archive_id');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | UNIT
+    |--------------------------------------------------------------------------
+    */
 
     public function unit()
     {
         return $this->belongsTo(SadarinUnit::class, 'archive_unit_id', 'unit_id');
     }
 
-    public function program()
-    {
-        return $this->belongsTo(SadarinProgram::class, 'archive_program_id', 'program_id');
-    }
-
-    public function kegiatan()
-    {
-        return $this->belongsTo(SadarinKegiatan::class, 'archive_kegiatan_id', 'kegiatan_id');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | SUB KEGIATAN
+    |--------------------------------------------------------------------------
+    */
 
     public function subKegiatan()
     {
         return $this->belongsTo(SadarinSubKegiatan::class, 'archive_sub_kegiatan_id', 'sub_kegiatan_id');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | JENIS DOKUMEN
+    |--------------------------------------------------------------------------
+    */
+
     public function documentType()
     {
         return $this->belongsTo(SadarinDocumentType::class, 'archive_document_type_id', 'document_type_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | TAGS
+    |--------------------------------------------------------------------------
+    */
+
+    public function tags()
+    {
+        return $this->belongsToMany(SadarinTag::class, 'sadarin_archive_tag', 'archive_id', 'tag_id');
     }
 }
