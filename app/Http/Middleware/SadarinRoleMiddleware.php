@@ -35,7 +35,7 @@ class SadarinRoleMiddleware
         */
 
         if (!$activeRole || !in_array($activeRole, $roles, true)) {
-            return redirect()->route('sadarin.home')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+            return redirect()->route('sadarin.login')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
         }
 
         return $next($request);

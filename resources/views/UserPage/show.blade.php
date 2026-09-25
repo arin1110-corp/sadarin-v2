@@ -62,7 +62,6 @@
                                     Arsip
                                 </p>
 
-
                                 <h1
                                     class="mt-1 break-words text-xl font-bold leading-tight tracking-tight text-slate-950 sm:text-2xl lg:text-3xl">
 
@@ -71,49 +70,39 @@
                                 </h1>
 
 
-                                {{-- =================================================
-                                    BADGES
-                                ================================================== --}}
+                                {{-- BADGES --}}
 
                                 <div class="mt-3 flex flex-wrap items-center gap-1.5 sm:mt-4 sm:gap-2">
 
                                     {{-- UNIT --}}
 
                                     @if ($archive->unit)
-
                                         <span
                                             class="inline-flex max-w-full items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1.5 text-[11px] font-medium text-blue-700 sm:px-3 sm:text-xs">
 
                                             <i class="bi bi-building shrink-0"></i>
 
                                             <span class="max-w-[220px] truncate sm:max-w-none">
-
                                                 {{ $archive->unit->unit_name }}
-
                                             </span>
 
                                         </span>
-
                                     @endif
 
 
                                     {{-- DOCUMENT TYPE --}}
 
                                     @if ($archive->documentType)
-
                                         <span
                                             class="inline-flex max-w-full items-center gap-1.5 rounded-full bg-sadarin-50 px-2.5 py-1.5 text-[11px] font-medium text-sadarin-700 sm:px-3 sm:text-xs">
 
                                             <i class="bi bi-file-earmark-text shrink-0"></i>
 
                                             <span class="max-w-[220px] truncate sm:max-w-none">
-
                                                 {{ $archive->documentType->document_type_name }}
-
                                             </span>
 
                                         </span>
-
                                     @endif
 
 
@@ -122,7 +111,8 @@
                                     <span
                                         class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 sm:px-3 sm:text-xs">
 
-                                        <i class="bi bi-{{ ($archive->archive_access_level ?? 'internal') === 'public' ? 'globe2' : 'lock' }}"></i>
+                                        <i
+                                            class="bi bi-{{ ($archive->archive_access_level ?? 'internal') === 'public' ? 'globe2' : 'lock' }}"></i>
 
                                         {{ ucfirst($archive->archive_access_level ?? 'internal') }}
 
@@ -131,9 +121,7 @@
                                 </div>
 
 
-                                {{-- =================================================
-                                    PROGRAM / KEGIATAN / SUB KEGIATAN
-                                ================================================== --}}
+                                {{-- PROGRAM / KEGIATAN / SUB KEGIATAN --}}
 
                                 @if ($archive->subKegiatan)
 
@@ -143,7 +131,6 @@
                                             Klasifikasi Program dan Kegiatan
                                         </p>
 
-
                                         <div class="mt-3 space-y-2">
 
                                             {{-- PROGRAM --}}
@@ -152,7 +139,8 @@
 
                                                 <div class="flex items-start gap-2 text-xs sm:text-sm">
 
-                                                    <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                                                    <div
+                                                        class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
 
                                                         <i class="bi bi-diagram-3"></i>
 
@@ -160,17 +148,16 @@
 
                                                     <div class="min-w-0">
 
-                                                        <p class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                                        <p
+                                                            class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
                                                             Program
                                                         </p>
 
                                                         <p class="font-semibold text-slate-700">
 
                                                             @if (!empty($archive->subKegiatan->kegiatan->program->program_code))
-
                                                                 {{ $archive->subKegiatan->kegiatan->program->program_code }}
                                                                 -
-
                                                             @endif
 
                                                             {{ $archive->subKegiatan->kegiatan->program->program_name }}
@@ -190,7 +177,8 @@
 
                                                 <div class="flex items-start gap-2 text-xs sm:text-sm">
 
-                                                    <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                                    <div
+                                                        class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
 
                                                         <i class="bi bi-list-task"></i>
 
@@ -198,17 +186,16 @@
 
                                                     <div class="min-w-0">
 
-                                                        <p class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                                        <p
+                                                            class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
                                                             Kegiatan
                                                         </p>
 
                                                         <p class="font-semibold text-slate-700">
 
                                                             @if (!empty($archive->subKegiatan->kegiatan->kegiatan_code))
-
                                                                 {{ $archive->subKegiatan->kegiatan->kegiatan_code }}
                                                                 -
-
                                                             @endif
 
                                                             {{ $archive->subKegiatan->kegiatan->kegiatan_name }}
@@ -226,7 +213,8 @@
 
                                             <div class="flex items-start gap-2 text-xs sm:text-sm">
 
-                                                <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                                                <div
+                                                    class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
 
                                                     <i class="bi bi-diagram-2"></i>
 
@@ -234,17 +222,16 @@
 
                                                 <div class="min-w-0">
 
-                                                    <p class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+                                                    <p
+                                                        class="text-[10px] font-medium uppercase tracking-wide text-slate-400">
                                                         Sub Kegiatan
                                                     </p>
 
                                                     <p class="font-semibold text-slate-700">
 
                                                         @if (!empty($archive->subKegiatan->sub_kegiatan_code))
-
                                                             {{ $archive->subKegiatan->sub_kegiatan_code }}
                                                             -
-
                                                         @endif
 
                                                         {{ $archive->subKegiatan->sub_kegiatan_name }}
@@ -273,7 +260,8 @@
                             <span
                                 class="inline-flex items-center gap-1.5 rounded-full bg-sadarin-50 px-3 py-1.5 text-[11px] font-semibold text-sadarin-700 sm:text-xs">
 
-                                <i class="bi bi-{{ ($archive->archive_access_level ?? 'internal') === 'public' ? 'globe2' : 'lock' }}"></i>
+                                <i
+                                    class="bi bi-{{ ($archive->archive_access_level ?? 'internal') === 'public' ? 'globe2' : 'lock' }}"></i>
 
                                 {{ ucfirst($archive->archive_access_level ?? 'internal') }}
 
@@ -294,6 +282,7 @@
 
             <div class="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[220px_minmax(0,1fr)]">
 
+
                 {{-- =====================================================
                     SIDEBAR
                 ====================================================== --}}
@@ -302,7 +291,7 @@
 
                     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                        <div class="border-b border-slate-100 px-4 py-3.5 sm:px-4 sm:py-4">
+                        <div class="border-b border-slate-100 px-4 py-3.5 sm:py-4">
 
                             <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                 Sumber Berkas
@@ -328,9 +317,7 @@
                                         <i class="bi bi-folder2-open text-sadarin-500"></i>
 
                                         <span class="text-sm font-bold text-slate-700">
-
                                             {{ $driveFiles->count() }}
-
                                         </span>
 
                                         <span class="text-xs text-slate-400">
@@ -365,17 +352,10 @@
                             </div>
 
 
-                            {{-- DRIVE --}}
+                            {{-- BUKA DRIVE --}}
 
-                            @if ($currentFolderUrl)
-
-                                <a href="{{ route('sadarin.user.archive.drive.open', [
-                                    'archiveId' => $archive->archive_id,
-                                    'url' => $currentFolderUrl,
-                                    'object_type' => 'drive_folder',
-                                    'object_id' => $currentFolderId,
-                                    'action' => 'open_folder_drive',
-                                ]) }}"
+                            @if ($archive->archive_drive_url)
+                                <a href="{{ $archive->archive_drive_url }}" target="_blank" rel="noopener noreferrer"
                                     class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-600 transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700">
 
                                     <i class="bi bi-google"></i>
@@ -383,7 +363,6 @@
                                     Buka di Google Drive
 
                                 </a>
-
                             @endif
 
                         </div>
@@ -399,77 +378,108 @@
 
                 <section class="min-w-0">
 
-                    {{-- FOLDER HEADER --}}
 
-                    <div class="mb-4">
+                    {{-- =================================================
+                        CEK LINK FILE LANGSUNG
+                    ================================================== --}}
 
-                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    @php
 
-                            <div class="min-w-0">
+                        $archiveDriveUrl = trim((string) ($archive->archive_drive_url ?? ''));
 
-                                <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-600">
-                                    Berkas
-                                </p>
+                        $isDirectDriveFile =
+                            str_contains($archiveDriveUrl, 'drive.google.com/file/') ||
+                            str_contains($archiveDriveUrl, 'docs.google.com/document/') ||
+                            str_contains($archiveDriveUrl, 'docs.google.com/spreadsheets/') ||
+                            str_contains($archiveDriveUrl, 'docs.google.com/presentation/');
+                    @endphp
 
-                                <h2
-                                    class="mt-1 flex min-w-0 items-center gap-1.5 text-lg font-bold text-slate-950 sm:text-xl">
 
-                                    <i class="bi bi-folder2-open shrink-0 text-sadarin-500"></i>
+                    {{-- =================================================
+                        DIRECT FILE
+                    ================================================== --}}
 
-                                    <span class="truncate">
-                                        {{ $currentFolderName }}
-                                    </span>
+                    @if ($isDirectDriveFile)
 
-                                </h2>
+                        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-                                <p class="mt-1 text-xs text-slate-400 sm:text-sm">
+                            {{-- HEADER --}}
 
-                                    {{ $driveFiles->count() }}
+                            <div class="border-b border-slate-100 px-4 py-4 sm:px-5">
 
-                                    {{ $driveFiles->count() === 1 ? 'item' : 'item' }}
+                                <div class="flex items-center gap-3">
 
-                                    tersedia
+                                    <div
+                                        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sadarin-50 text-sadarin-600">
 
-                                </p>
+                                        <i class="bi bi-file-earmark-text-fill text-lg"></i>
+
+                                    </div>
+
+                                    <div class="min-w-0">
+
+                                        <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-600">
+                                            Berkas Arsip
+                                        </p>
+
+                                        <h2 class="mt-0.5 truncate text-base font-bold text-slate-900 sm:text-lg">
+                                            {{ $archive->archive_title }}
+                                        </h2>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
 
-                            {{-- FOLDER SEBELUMNYA --}}
+                            {{-- CONTENT --}}
 
-                            @if ($currentFolderId !== $rootFolderId)
+                            <div class="p-5 sm:p-8">
 
-                                @php
+                                <div
+                                    class="mx-auto max-w-xl rounded-2xl border border-slate-200 bg-slate-50 px-5 py-10 text-center sm:px-8 sm:py-14">
 
-                                    $parentFolderId = !empty($currentFolderParents)
-                                        ? $currentFolderParents[0]
-                                        : $rootFolderId;
+                                    <div
+                                        class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-sadarin-50 text-sadarin-600">
 
-                                @endphp
+                                        <i class="bi bi-file-earmark-text-fill text-3xl"></i>
 
-                                <a href="{{ route('sadarin.user.archive.files', [
-                                    'archiveId' => $archive->archive_id,
-                                    'folder' => $parentFolderId,
-                                ]) }}"
-                                    class="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700 sm:w-auto">
+                                    </div>
 
-                                    <i class="bi bi-arrow-left"></i>
 
-                                    Folder Sebelumnya
+                                    <h3 class="mt-5 text-base font-bold text-slate-800 sm:text-lg">
+                                        Berkas tersedia di Google Drive
+                                    </h3>
 
-                                </a>
 
-                            @endif
+                                    <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+                                        Arsip ini tersimpan sebagai satu berkas di Google Drive.
+                                    </p>
+
+
+                                    {{-- DIRECT LINK --}}
+
+                                    <a href="{{ $archiveDriveUrl }}" target="_blank" rel="noopener noreferrer"
+                                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-sadarin-700 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-sadarin-800">
+
+                                        <i class="bi bi-box-arrow-up-right"></i>
+
+                                        Buka Berkas
+
+                                    </a>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
-                    </div>
 
-
-                    {{-- ERROR --}}
-
-                    @if ($driveError)
-
+                        {{-- =================================================
+                        ERROR
+                    ================================================== --}}
+                    @elseif ($driveError)
                         <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-4 sm:px-5 sm:py-5">
 
                             <div class="flex items-start gap-3 sm:gap-4">
@@ -497,11 +507,77 @@
 
                         </div>
 
-                    @else
 
                         {{-- =================================================
-                            ISI FOLDER
-                        ================================================== --}}
+                        FOLDER
+                    ================================================== --}}
+                    @else
+                        {{-- FOLDER HEADER --}}
+
+                        <div class="mb-4">
+
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+                                <div class="min-w-0">
+
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-600">
+                                        Berkas
+                                    </p>
+
+                                    <h2
+                                        class="mt-1 flex min-w-0 items-center gap-1.5 text-lg font-bold text-slate-950 sm:text-xl">
+
+                                        <i class="bi bi-folder2-open shrink-0 text-sadarin-500"></i>
+
+                                        <span class="truncate">
+                                            {{ $currentFolderName }}
+                                        </span>
+
+                                    </h2>
+
+                                    <p class="mt-1 text-xs text-slate-400 sm:text-sm">
+
+                                        {{ $driveFiles->count() }}
+
+                                        {{ $driveFiles->count() === 1 ? 'item' : 'item' }}
+
+                                        tersedia
+
+                                    </p>
+
+                                </div>
+
+
+                                {{-- FOLDER SEBELUMNYA --}}
+
+                                @if ($currentFolderId !== $rootFolderId)
+                                    @php
+
+                                        $parentFolderId = !empty($currentFolderParents)
+                                            ? $currentFolderParents[0]
+                                            : $rootFolderId;
+
+                                    @endphp
+
+                                    <a href="{{ route('sadarin.user.archive.files', [
+                                        'archiveId' => $archive->archive_id,
+                                        'folder' => $parentFolderId,
+                                    ]) }}"
+                                        class="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700 sm:w-auto">
+
+                                        <i class="bi bi-arrow-left"></i>
+
+                                        Folder Sebelumnya
+
+                                    </a>
+                                @endif
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- ISI FOLDER --}}
 
                         @if ($driveFiles->count() > 0)
 
@@ -534,35 +610,31 @@
                                 {{-- ITEMS --}}
 
                                 @foreach ($driveFiles as $item)
-
                                     @php
 
-                                        $isFolder =
-                                            $item->getMimeType() ===
-                                            'application/vnd.google-apps.folder';
+                                        $isFolder = $item->getMimeType() === 'application/vnd.google-apps.folder';
 
-                                        $itemUrl =
-                                            $item->getWebViewLink();
+                                        $itemUrl = trim((string) $item->getWebViewLink());
 
-                                        $itemName =
-                                            $item->getName();
+                                        $itemName = $item->getName();
 
-                                        $itemSize =
-                                            $item->getSize();
+                                        $itemSize = $item->getSize();
 
-                                        $modifiedTime =
-                                            $item->getModifiedTime();
-
+                                        $modifiedTime = $item->getModifiedTime();
                                     @endphp
 
 
                                     <div
                                         class="group border-b border-slate-100 px-4 py-4 transition last:border-b-0 hover:bg-slate-50 sm:px-5">
 
-                                        {{-- DESKTOP --}}
+
+                                        {{-- =================================================
+                                            DESKTOP
+                                        ================================================== --}}
 
                                         <div
                                             class="hidden gap-4 md:grid md:grid-cols-[minmax(0,1fr)_130px_100px_150px] md:items-center">
+
 
                                             {{-- NAME --}}
 
@@ -601,13 +673,9 @@
                                             <div class="text-xs text-slate-500">
 
                                                 @if ($modifiedTime)
-
                                                     {{ \Carbon\Carbon::parse($modifiedTime)->translatedFormat('d M Y') }}
-
                                                 @else
-
                                                     —
-
                                                 @endif
 
                                             </div>
@@ -618,40 +686,27 @@
                                             <div class="text-xs text-slate-500">
 
                                                 @if ($isFolder)
-
                                                     —
-
                                                 @elseif ($itemSize)
-
                                                     @php
 
                                                         $bytes = (int) $itemSize;
 
                                                         if ($bytes >= 1073741824) {
-                                                            $sizeText =
-                                                                number_format($bytes / 1073741824, 2) .
-                                                                ' GB';
+                                                            $sizeText = number_format($bytes / 1073741824, 2) . ' GB';
                                                         } elseif ($bytes >= 1048576) {
-                                                            $sizeText =
-                                                                number_format($bytes / 1048576, 2) .
-                                                                ' MB';
+                                                            $sizeText = number_format($bytes / 1048576, 2) . ' MB';
                                                         } elseif ($bytes >= 1024) {
-                                                            $sizeText =
-                                                                number_format($bytes / 1024, 2) .
-                                                                ' KB';
+                                                            $sizeText = number_format($bytes / 1024, 2) . ' KB';
                                                         } else {
-                                                            $sizeText =
-                                                                $bytes . ' B';
+                                                            $sizeText = $bytes . ' B';
                                                         }
 
                                                     @endphp
 
                                                     {{ $sizeText }}
-
                                                 @else
-
                                                     —
-
                                                 @endif
 
                                             </div>
@@ -662,6 +717,7 @@
                                             <div class="flex items-center justify-end gap-2">
 
                                                 @if ($isFolder)
+                                                    {{-- BUKA FOLDER --}}
 
                                                     <a href="{{ route('sadarin.user.archive.files', [
                                                         'archiveId' => $archive->archive_id,
@@ -675,34 +731,24 @@
 
                                                     </a>
 
-                                                    @if ($itemUrl)
 
-                                                        <a href="{{ route('sadarin.user.archive.drive.open', [
-                                                            'archiveId' => $archive->archive_id,
-                                                            'url' => $itemUrl,
-                                                            'object_type' => 'drive_folder',
-                                                            'object_id' => $item->getId(),
-                                                            'action' => 'open_folder_drive',
-                                                        ]) }}"
+                                                    {{-- GOOGLE DRIVE --}}
+
+                                                    @if ($itemUrl)
+                                                        <a href="{{ $itemUrl }}" target="_blank"
+                                                            rel="noopener noreferrer"
                                                             class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:border-sadarin-200 hover:bg-sadarin-50 hover:text-sadarin-700">
 
                                                             <i class="bi bi-box-arrow-up-right"></i>
 
                                                         </a>
-
                                                     @endif
-
                                                 @else
+                                                    {{-- FILE LANGSUNG KE GOOGLE DRIVE --}}
 
                                                     @if ($itemUrl)
-
-                                                        <a href="{{ route('sadarin.user.archive.drive.open', [
-                                                            'archiveId' => $archive->archive_id,
-                                                            'url' => $itemUrl,
-                                                            'object_type' => 'drive_file',
-                                                            'object_id' => $item->getId(),
-                                                            'action' => 'open_file',
-                                                        ]) }}"
+                                                        <a href="{{ $itemUrl }}" target="_blank"
+                                                            rel="noopener noreferrer"
                                                             class="inline-flex items-center gap-1.5 rounded-xl bg-sadarin-700 px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-sadarin-800">
 
                                                             <i class="bi bi-box-arrow-up-right"></i>
@@ -710,9 +756,7 @@
                                                             Buka Berkas
 
                                                         </a>
-
                                                     @else
-
                                                         <span
                                                             class="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-400">
 
@@ -721,9 +765,7 @@
                                                             Link tidak tersedia
 
                                                         </span>
-
                                                     @endif
-
                                                 @endif
 
                                             </div>
@@ -731,7 +773,9 @@
                                         </div>
 
 
-                                        {{-- MOBILE --}}
+                                        {{-- =================================================
+                                            MOBILE
+                                        ================================================== --}}
 
                                         <div class="md:hidden">
 
@@ -748,7 +792,9 @@
                                                 <div class="min-w-0 flex-1">
 
                                                     <p class="break-words text-sm font-semibold leading-5 text-slate-700">
+
                                                         {{ $itemName }}
+
                                                     </p>
 
                                                     <p class="mt-1 text-[11px] text-slate-400">
@@ -765,13 +811,9 @@
                                                             <i class="bi bi-calendar3"></i>
 
                                                             @if ($modifiedTime)
-
                                                                 {{ \Carbon\Carbon::parse($modifiedTime)->translatedFormat('d M Y') }}
-
                                                             @else
-
                                                                 —
-
                                                             @endif
 
                                                         </span>
@@ -781,18 +823,12 @@
                                                             <i class="bi bi-hdd"></i>
 
                                                             @if ($isFolder)
-
                                                                 —
-
                                                             @elseif ($itemSize)
-
                                                                 {{ number_format($itemSize / 1024, 2) }}
                                                                 KB
-
                                                             @else
-
                                                                 —
-
                                                             @endif
 
                                                         </span>
@@ -809,6 +845,7 @@
                                             <div class="mt-3 flex gap-2">
 
                                                 @if ($isFolder)
+                                                    {{-- BUKA FOLDER --}}
 
                                                     <a href="{{ route('sadarin.user.archive.files', [
                                                         'archiveId' => $archive->archive_id,
@@ -822,34 +859,24 @@
 
                                                     </a>
 
-                                                    @if ($itemUrl)
 
-                                                        <a href="{{ route('sadarin.user.archive.drive.open', [
-                                                            'archiveId' => $archive->archive_id,
-                                                            'url' => $itemUrl,
-                                                            'object_type' => 'drive_folder',
-                                                            'object_id' => $item->getId(),
-                                                            'action' => 'open_folder_drive',
-                                                        ]) }}"
+                                                    {{-- GOOGLE DRIVE --}}
+
+                                                    @if ($itemUrl)
+                                                        <a href="{{ $itemUrl }}" target="_blank"
+                                                            rel="noopener noreferrer"
                                                             class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500">
 
                                                             <i class="bi bi-box-arrow-up-right"></i>
 
                                                         </a>
-
                                                     @endif
-
                                                 @else
+                                                    {{-- FILE LANGSUNG --}}
 
                                                     @if ($itemUrl)
-
-                                                        <a href="{{ route('sadarin.user.archive.drive.open', [
-                                                            'archiveId' => $archive->archive_id,
-                                                            'url' => $itemUrl,
-                                                            'object_type' => 'drive_file',
-                                                            'object_id' => $item->getId(),
-                                                            'action' => 'open_file',
-                                                        ]) }}"
+                                                        <a href="{{ $itemUrl }}" target="_blank"
+                                                            rel="noopener noreferrer"
                                                             class="inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-sadarin-700 px-3 py-2.5 text-[11px] font-semibold text-white">
 
                                                             <i class="bi bi-box-arrow-up-right"></i>
@@ -857,18 +884,14 @@
                                                             Buka Berkas
 
                                                         </a>
-
                                                     @else
-
                                                         <span
                                                             class="inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2.5 text-[11px] font-semibold text-slate-400">
 
                                                             Link tidak tersedia
 
                                                         </span>
-
                                                     @endif
-
                                                 @endif
 
                                             </div>
@@ -876,13 +899,10 @@
                                         </div>
 
                                     </div>
-
                                 @endforeach
 
                             </div>
-
                         @else
-
                             {{-- EMPTY --}}
 
                             <div
@@ -900,7 +920,9 @@
                                 </h3>
 
                                 <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+
                                     Tidak ada file atau folder yang tersedia di dalam folder ini.
+
                                 </p>
 
                             </div>
@@ -916,7 +938,9 @@
         </main>
 
 
-        {{-- FOOTER --}}
+        {{-- =========================================================
+            FOOTER
+        ========================================================== --}}
 
         <footer class="border-t border-slate-200 bg-white">
 

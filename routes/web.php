@@ -328,7 +328,9 @@ Route::prefix('sadarin')
             ->name('archive.')
             ->controller(SadarinArchiveController::class)
             ->group(function () {
-                Route::get('/', 'index')->name('index');
+
+
+            Route::get('/', 'index')->name('index');
 
             Route::get('/create', 'create')->name('create');
 
@@ -368,8 +370,35 @@ Route::prefix('sadarin')
 
             Route::put('/{id}', 'update')->name('update');
 
-                    Route::delete('/{id}', 'destroy')->name('destroy');
-                });
+            Route::delete('/{id}', 'destroy')->name('destroy');
+
+            /*
+|--------------------------------------------------------------------------
+| VERIFIKASI ARSIP
+|--------------------------------------------------------------------------
+*/
+
+            Route::get('/arsip/{id}/verifikasi', [SadarinArchiveController::class, 'verif'])
+                ->name('verify');
+
+            Route::post('/arsip/{id}/verifikasi', [SadarinArchiveController::class, 'processVerify'])
+                ->name('processVerify');
+
+            Route::get('/arsip/verifikasi', [SadarinArchiveController::class, 'verification'])
+                ->name('verification');
+
+            /*
+|--------------------------------------------------------------------------
+| END ROUTE ARSIP
+|--------------------------------------------------------------------------
+*/
+        });
+
+            /*
+|--------------------------------------------------------------------------
+| END ROUTE ARSIP
+|--------------------------------------------------------------------------
+*/
         });
 
     /*

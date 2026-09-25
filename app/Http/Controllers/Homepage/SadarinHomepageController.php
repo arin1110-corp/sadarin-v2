@@ -449,35 +449,65 @@ class SadarinHomepageController extends Controller
     |--------------------------------------------------------------------------
     | ARSIP
     |--------------------------------------------------------------------------
-    |
-    | Program dan kegiatan mengikuti relasi:
-    |
-    | Archive
-    |   -> subKegiatan
-    |       -> kegiatan
-    |           -> program
-    |
     */
 
         $archive = SadarinArchive::query()
-            ->with([
-                'unit',
-                'documentType',
-                'subKegiatan.kegiatan.program',
-                'tags',
-            ])
+            ->with(['unit', 'documentType', 'subKegiatan.kegiatan.program', 'tags'])
             ->findOrFail($archiveId);
 
         /*
     |--------------------------------------------------------------------------
-    | ROOT FOLDER
+    | ROOT DRIVE
     |--------------------------------------------------------------------------
     |
-    | Folder utama Google Drive disimpan langsung pada archive.
+    | archive_drive_folder_id dapat berisi:
+    |
+    | 1. ID folder
+    | 2. URL folder
+    | 3. ID file
+    | 4. URL file
     |
     */
 
-        $rootFolderId = trim((string) $archive->archive_drive_folder_id);
+        $rootValue = trim((string) $archive->archive_drive_folder_id);
+
+        /*
+    |--------------------------------------------------------------------------
+    | EXTRACT GOOGLE DRIVE ID
+    |--------------------------------------------------------------------------
+    */
+
+        $rootFolderId = $rootValue;
+
+        if (filter_var($rootValue, FILTER_VALIDATE_URL)) {
+            $parsedUrl = parse_url($rootValue);
+
+            $path = $parsedUrl['path'] ?? '';
+
+            /*
+        | /file/d/ID/view
+        */
+
+            if (preg_match('#/file/d/([^/]+)#', $path, $matches)) {
+                $rootFolderId = $matches[1];
+            }
+            /*
+        | /folders/ID
+        */ elseif (preg_match('#/folders/([^/]+)#', $path, $matches)) {
+                $rootFolderId = $matches[1];
+            }
+            /*
+        | ?id=ID
+        */ elseif (!empty($parsedUrl['query'])) {
+                parse_str($parsedUrl['query'], $query);
+
+                if (!empty($query['id'])) {
+                    $rootFolderId = $query['id'];
+                }
+            }
+        }
+
+        $rootFolderId = trim((string) $rootFolderId);
 
         /*
     |--------------------------------------------------------------------------
@@ -487,15 +517,15 @@ class SadarinHomepageController extends Controller
 
         $hasFolderParameter = $request->filled('folder');
 
-        $currentFolderId = trim(
-            $request->query('folder', $rootFolderId)
-        );
+        $currentFolderId = trim($request->query('folder', $rootFolderId));
 
         /*
     |--------------------------------------------------------------------------
     | DEFAULT
     |--------------------------------------------------------------------------
     */
+
+        $driveFile = null;
 
         $driveFiles = collect();
 
@@ -513,26 +543,18 @@ class SadarinHomepageController extends Controller
     |--------------------------------------------------------------------------
     */
 
-        $archiveDriveUrl = route(
-            'sadarin.user.archive.show',
-            $archive->archive_id
-        );
+        $archiveDriveUrl = route('sadarin.user.archive.show', $archive->archive_id);
 
         /*
     |--------------------------------------------------------------------------
-    | JIKA FOLDER DRIVE BELUM TERSEDIA
+    | DRIVE BELUM TERSEDIA
     |--------------------------------------------------------------------------
     */
 
         if ($rootFolderId === '') {
-            SadarinAccessLogService::user(
-                action: 'archive.files.view',
-                archiveId: $archive->archive_id,
-                objectType: 'archive',
-                objectId: $archive->archive_id
-            );
+            SadarinAccessLogService::user(action: 'archive.files.view', archiveId: $archive->archive_id, objectType: 'archive', objectId: $archive->archive_id);
 
-            return view('UserPage.archive-files', [
+            return view('UserPage.show', [
                 'archive' => $archive,
 
                 'driveFile' => null,
@@ -551,22 +573,8 @@ class SadarinHomepageController extends Controller
 
                 'archiveDriveUrl' => $archiveDriveUrl,
 
-                'driveError' => 'Folder Google Drive belum tersedia pada arsip ini.',
+                'driveError' => 'Berkas Google Drive belum tersedia pada arsip ini.',
             ]);
-        }
-
-        /*
-    |--------------------------------------------------------------------------
-    | VALIDASI FOLDER
-    |--------------------------------------------------------------------------
-    |
-    | Jika user tidak mengirim ?folder= maka yang dibuka adalah
-    | folder utama arsip.
-    |
-    */
-
-        if ($currentFolderId === '') {
-            $currentFolderId = $rootFolderId;
         }
 
         /*
@@ -576,19 +584,9 @@ class SadarinHomepageController extends Controller
     */
 
         if (!$hasFolderParameter) {
-            SadarinAccessLogService::user(
-                action: 'archive.files.view',
-                archiveId: $archive->archive_id,
-                objectType: 'archive',
-                objectId: $archive->archive_id
-            );
+            SadarinAccessLogService::user(action: 'archive.files.view', archiveId: $archive->archive_id, objectType: 'archive', objectId: $archive->archive_id);
         } else {
-            SadarinAccessLogService::user(
-                action: 'folder.view',
-                archiveId: $archive->archive_id,
-                objectType: 'drive_folder',
-                objectId: $currentFolderId
-            );
+            SadarinAccessLogService::user(action: 'folder.view', archiveId: $archive->archive_id, objectType: 'drive_folder', objectId: $currentFolderId);
         }
 
         /*
@@ -614,9 +612,7 @@ class SadarinHomepageController extends Controller
         |--------------------------------------------------------------------------
         */
 
-            $client->setAuthConfig(
-                config('services.google_drive.credentials')
-            );
+            $client->setAuthConfig(config('services.google_drive.credentials'));
 
             /*
         |--------------------------------------------------------------------------
@@ -636,79 +632,121 @@ class SadarinHomepageController extends Controller
 
             /*
         |--------------------------------------------------------------------------
-        | INFORMASI FOLDER
+        | AMBIL OBJECT GOOGLE DRIVE
         |--------------------------------------------------------------------------
         */
 
-            $currentFolder = $service->files->get(
-                $currentFolderId,
-                [
-                    'fields' => 'id,name,mimeType,webViewLink,parents',
-                ]
-            );
-
-            /*
-        |--------------------------------------------------------------------------
-        | VALIDASI BAHWA YANG DIBUKA MEMANG FOLDER
-        |--------------------------------------------------------------------------
-        */
-
-            if ($currentFolder->getMimeType() !== 'application/vnd.google-apps.folder') {
-                throw new \RuntimeException(
-                    'Objek Google Drive yang diminta bukan folder.'
-                );
-            }
-
-            /*
-        |--------------------------------------------------------------------------
-        | NAMA FOLDER
-        |--------------------------------------------------------------------------
-        */
-
-            $currentFolderName = $currentFolder->getName()
-                ?: $archive->archive_title;
-
-            /*
-        |--------------------------------------------------------------------------
-        | LINK FOLDER
-        |--------------------------------------------------------------------------
-        */
-
-            $currentFolderUrl = $currentFolder->getWebViewLink();
-
-            /*
-        |--------------------------------------------------------------------------
-        | PARENT FOLDER
-        |--------------------------------------------------------------------------
-        */
-
-            $currentFolderParents = $currentFolder->getParents() ?? [];
-
-            /*
-        |--------------------------------------------------------------------------
-        | BACA ISI FOLDER
-        |--------------------------------------------------------------------------
-        */
-
-            $response = $service->files->listFiles([
-                'q' => "'" . $currentFolderId . "' in parents and trashed = false",
-
-                'pageSize' => 1000,
-
-                'fields' => 'files(id,name,mimeType,size,modifiedTime,webViewLink,parents)',
-
-                'orderBy' => 'folder,name',
+            $currentObject = $service->files->get($currentFolderId, [
+                'fields' => 'id,name,mimeType,size,modifiedTime,webViewLink,parents',
             ]);
 
             /*
         |--------------------------------------------------------------------------
-        | COLLECTION
+        | CEK APAKAH FOLDER
         |--------------------------------------------------------------------------
         */
 
-            $driveFiles = collect(
-                $response->getFiles()
-            );
+            $isFolder = $currentObject->getMimeType() === 'application/vnd.google-apps.folder';
+
+            /*
+        |--------------------------------------------------------------------------
+        | JIKA FILE
+        |--------------------------------------------------------------------------
+        |
+        | Root arsip ternyata langsung menunjuk ke file.
+        |
+        */
+
+            if (!$isFolder) {
+                /*
+            | File hanya boleh muncul sebagai
+            | root arsip, bukan sebagai ?folder=
+            */
+
+                if ($hasFolderParameter) {
+                    throw new \RuntimeException('Objek Google Drive yang diminta bukan folder.');
+                }
+
+                /*
+            |--------------------------------------------------------------------------
+            | SIMPAN FILE
+            |--------------------------------------------------------------------------
+            */
+
+                $driveFile = $currentObject;
+
+                /*
+            |--------------------------------------------------------------------------
+            | NAMA FILE
+            |--------------------------------------------------------------------------
+            */
+
+                $currentFolderName = $currentObject->getName() ?: $archive->archive_title;
+
+                /*
+            |--------------------------------------------------------------------------
+            | URL FILE
+            |--------------------------------------------------------------------------
+            */
+
+                $currentFolderUrl = $currentObject->getWebViewLink();
+
+                /*
+            |--------------------------------------------------------------------------
+            | TIDAK ADA CHILD FILE
+            |--------------------------------------------------------------------------
+            */
+
+                $driveFiles = collect();
+            } else {
+                /*
+            |--------------------------------------------------------------------------
+            | FOLDER
+            |--------------------------------------------------------------------------
+            */
+
+                $currentFolderName = $currentObject->getName() ?: $archive->archive_title;
+
+                /*
+            |--------------------------------------------------------------------------
+            | LINK FOLDER
+            |--------------------------------------------------------------------------
+            */
+
+                $currentFolderUrl = $currentObject->getWebViewLink();
+
+                /*
+            |--------------------------------------------------------------------------
+            | PARENT FOLDER
+            |--------------------------------------------------------------------------
+            */
+
+                $currentFolderParents = $currentObject->getParents() ?? [];
+
+                /*
+            |--------------------------------------------------------------------------
+            | BACA ISI FOLDER
+            |--------------------------------------------------------------------------
+            */
+
+                $response = $service->files->listFiles([
+                    'q' => "'" . $currentFolderId . "' in parents and trashed = false",
+
+                    'pageSize' => 1000,
+
+                    'fields' => 'files(id,name,mimeType,size,modifiedTime,webViewLink,parents)',
+
+                    'orderBy' => 'folder,name',
+                ]);
+
+                /*
+            |--------------------------------------------------------------------------
+            | COLLECTION
+            |--------------------------------------------------------------------------
+            */
+
+                $driveFiles = collect($response->getFiles());
+            }
 
             /*
         |--------------------------------------------------------------------------
@@ -726,11 +764,11 @@ class SadarinHomepageController extends Controller
 
             report($e);
 
+            $driveFile = null;
+
             $driveFiles = collect();
 
-            $driveError =
-                'Folder Google Drive tidak dapat dibaca. ' .
-                $e->getMessage();
+            $driveError = 'Google Drive tidak dapat dibaca. ' . $e->getMessage();
         }
 
         /*
@@ -739,10 +777,20 @@ class SadarinHomepageController extends Controller
     |--------------------------------------------------------------------------
     */
 
-        return view('UserPage.archive-files', [
+        return view('UserPage.show', [
             'archive' => $archive,
 
-            'driveFile' => null,
+            /*
+        | Jika root adalah file,
+        | object Google Drive masuk ke sini.
+        */
+
+            'driveFile' => $driveFile,
+
+            /*
+        | Jika root adalah folder,
+        | isi folder masuk ke sini.
+        */
 
             'driveFiles' => $driveFiles,
 
@@ -768,99 +816,27 @@ class SadarinHomepageController extends Controller
      */
     public function openDrive(Request $request, $archiveId)
     {
-        /*
-    |--------------------------------------------------------------------------
-    | ARSIP
-    |--------------------------------------------------------------------------
-    */
-
         $archive = SadarinArchive::findOrFail($archiveId);
-
-
-        /*
-    |--------------------------------------------------------------------------
-    | URL
-    |--------------------------------------------------------------------------
-    */
 
         $url = $request->input('url');
 
-
-        /*
-    |--------------------------------------------------------------------------
-    | VALIDASI URL
-    |--------------------------------------------------------------------------
-    */
-
-        if (
-            !$url ||
-            !filter_var($url, FILTER_VALIDATE_URL)
-        ) {
+        if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
             abort(404);
         }
 
-
-        /*
-    |--------------------------------------------------------------------------
-    | CEGAH URL SEMBARANG
-    |--------------------------------------------------------------------------
-    */
-
         $host = parse_url($url, PHP_URL_HOST);
 
-        $allowedHosts = [
-            'drive.google.com',
-            'docs.google.com',
-            'sheets.google.com',
-            'slides.google.com',
-        ];
+        $allowedHosts = ['drive.google.com', 'docs.google.com', 'sheets.google.com', 'slides.google.com'];
 
         if (!in_array($host, $allowedHosts, true)) {
             abort(403);
         }
 
+        $objectType = $request->input('object_type', 'drive_file');
+        $objectId = $request->input('object_id');
+        $action = $request->input('action', 'open_drive');
 
-        /*
-    |--------------------------------------------------------------------------
-    | DATA OBJEK
-    |--------------------------------------------------------------------------
-    */
-
-        $objectType =
-            $request->input(
-                'object_type',
-                'drive_file'
-            );
-
-        $objectId =
-            $request->input('object_id');
-
-        $action =
-            $request->input(
-                'action',
-                'open_drive'
-            );
-
-
-        /*
-    |--------------------------------------------------------------------------
-    | ACCESS LOG
-    |--------------------------------------------------------------------------
-    */
-
-        SadarinAccessLogService::user(
-            action: $action,
-            archiveId: $archive->archive_id,
-            objectType: $objectType,
-            objectId: $objectId
-        );
-
-
-        /*
-    |--------------------------------------------------------------------------
-    | REDIRECT
-    |--------------------------------------------------------------------------
-    */
+        SadarinAccessLogService::user(action: $action, archiveId: $archive->archive_id, objectType: $objectType, objectId: $objectId);
 
         return redirect()->away($url);
     }

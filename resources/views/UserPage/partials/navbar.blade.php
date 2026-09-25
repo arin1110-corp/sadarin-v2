@@ -25,42 +25,6 @@
             DESKTOP NAVIGATION
         ============================================================= --}}
 
-        <nav class="hidden items-center gap-7 md:flex">
-
-            <a
-                href="{{ route('sadarin.user.archive.index') }}"
-                class="text-sm font-semibold text-sadarin-600 transition hover:text-sadarin-700"
-            >
-                Beranda
-            </a>
-
-
-            <a
-                href="#arsip"
-                class="text-sm font-medium text-navy-500 transition hover:text-sadarin-600"
-            >
-                Arsip
-            </a>
-
-
-            <a
-                href="#klasifikasi"
-                class="text-sm font-medium text-navy-500 transition hover:text-sadarin-600"
-            >
-                Klasifikasi
-            </a>
-
-
-            <a
-                href="#terbaru"
-                class="text-sm font-medium text-navy-500 transition hover:text-sadarin-600"
-            >
-                Terbaru
-            </a>
-
-        </nav>
-
-
         {{-- ============================================================
             USER AREA
         ============================================================= --}}
@@ -287,43 +251,6 @@
 
 
                         {{-- =================================================
-                            PROFILE / USER
-                        ================================================== --}}
-
-                        <div class="border-t border-slate-100 p-2">
-
-                            <a
-                                href="#"
-                                class="flex items-center gap-3 rounded-xl px-3 py-3 transition hover:bg-slate-50"
-                            >
-
-                                <div
-                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500"
-                                >
-
-                                    <i class="bi bi-person"></i>
-
-                                </div>
-
-
-                                <div>
-
-                                    <p class="text-sm font-semibold text-slate-700">
-                                        Profil
-                                    </p>
-
-                                    <p class="text-[11px] text-slate-400">
-                                        Informasi akun
-                                    </p>
-
-                                </div>
-
-                            </a>
-
-                        </div>
-
-
-                        {{-- =================================================
                             LOGOUT
                         ================================================== --}}
 
@@ -405,73 +332,6 @@
     >
 
         <div class="space-y-1 px-5 py-4">
-
-            {{-- BERANDA --}}
-            <a
-                href="{{ route('sadarin.user.archive.index') }}"
-                class="block rounded-lg bg-sadarin-50 px-4 py-3 text-sm font-semibold text-sadarin-600"
-            >
-
-                <span class="flex items-center gap-3">
-
-                    <i class="bi bi-house"></i>
-
-                    Beranda
-
-                </span>
-
-            </a>
-
-
-            {{-- ARSIP --}}
-            <a
-                href="#arsip"
-                class="block rounded-lg px-4 py-3 text-sm text-navy-500 transition hover:bg-slate-50"
-            >
-
-                <span class="flex items-center gap-3">
-
-                    <i class="bi bi-archive"></i>
-
-                    Arsip
-
-                </span>
-
-            </a>
-
-
-            {{-- KLASIFIKASI --}}
-            <a
-                href="#klasifikasi"
-                class="block rounded-lg px-4 py-3 text-sm text-navy-500 transition hover:bg-slate-50"
-            >
-
-                <span class="flex items-center gap-3">
-
-                    <i class="bi bi-diagram-3"></i>
-
-                    Klasifikasi
-
-                </span>
-
-            </a>
-
-
-            {{-- TERBARU --}}
-            <a
-                href="#terbaru"
-                class="block rounded-lg px-4 py-3 text-sm text-navy-500 transition hover:bg-slate-50"
-            >
-
-                <span class="flex items-center gap-3">
-
-                    <i class="bi bi-clock-history"></i>
-
-                    Arsip Terbaru
-
-                </span>
-
-            </a>
 
 
             <div class="my-3 border-t border-slate-100"></div>

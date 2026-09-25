@@ -48,13 +48,25 @@
             {{-- Arsip --}}
             <a href="{{ route('sadarin.admin.archive.index') }}"
                 class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
-    {{ request()->routeIs('sadarin.admin.archive.*')
+    {{ request()->routeIs(
+        'sadarin.admin.archive.index',
+        'sadarin.admin.archive.create',
+        'sadarin.admin.archive.edit',
+        'sadarin.admin.archive.show',
+    )
         ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
         : 'text-slate-600 hover:bg-slate-100' }}">
 
                 <span
                     class="flex h-9 w-9 items-center justify-center rounded-lg
-        {{ request()->routeIs('sadarin.admin.archive.*') ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600' }}">
+        {{ request()->routeIs(
+            'sadarin.admin.archive.index',
+            'sadarin.admin.archive.create',
+            'sadarin.admin.archive.edit',
+            'sadarin.admin.archive.show',
+        )
+            ? 'bg-white/15 text-white'
+            : 'bg-blue-50 text-blue-600' }}">
 
                     <i class="bi bi-archive-fill text-base"></i>
 
@@ -63,23 +75,30 @@
                 <span class="flex-1">Arsip</span>
 
             </a>
-
-
             {{-- Verifikasi --}}
-            <a href="#"
-                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600">
+            <a href="{{ route('sadarin.admin.archive.verification') }}"
+                class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition
+    {{ request()->routeIs('sadarin.admin.archive.verification', 'sadarin.admin.archive.verify')
+        ? 'bg-[oklch(29.3%_0.136_325.661)] text-white shadow-sm'
+        : 'text-slate-600 hover:bg-slate-100' }}">
 
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                <span
+                    class="flex h-9 w-9 items-center justify-center rounded-lg
+        {{ request()->routeIs('sadarin.admin.archive.verification', 'sadarin.admin.archive.verify')
+            ? 'bg-white/15 text-white'
+            : 'bg-amber-50 text-amber-600' }}">
+
                     <i class="bi bi-shield-check text-base"></i>
+
                 </span>
 
                 <span class="flex-1">Verifikasi</span>
 
                 <span class="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
-                    32
+                    {{ \App\Models\SadarinArchive::where('archive_status', 'draft')->count() }}
                 </span>
-            </a>
 
+            </a>
         </nav>
 
 

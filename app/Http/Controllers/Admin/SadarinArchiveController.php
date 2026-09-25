@@ -123,7 +123,7 @@ class SadarinArchiveController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'archive_user_id' => ['nullable', 'integer'],
+            'archive_user_id' => ['nullable', 'string', 'max:255'],
 
             /*
             |--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ class SadarinArchiveController extends Controller
         */
 
         if (empty($validated['archive_user_id'])) {
-            $validated['archive_user_id'] = auth()->id();
+            $validated['archive_user_id'] = session('sadarin_user_nama');
         }
 
         /*
@@ -236,12 +236,7 @@ class SadarinArchiveController extends Controller
     public function show($id)
     {
         $archive = SadarinArchive::query()
-            ->with([
-                'unit',
-                'documentType',
-                'subKegiatan.kegiatan.program',
-                'tags',
-            ])
+            ->with(['unit', 'documentType', 'subKegiatan.kegiatan.program', 'tags'])
             ->findOrFail($id);
 
         return view('admin.arsip.show', [
@@ -332,7 +327,7 @@ class SadarinArchiveController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            'archive_user_id' => ['nullable', 'integer'],
+            'archive_user_id' => ['nullable', 'string', 'max:255',],
 
             /*
             |--------------------------------------------------------------------------
@@ -485,5 +480,126 @@ class SadarinArchiveController extends Controller
             ->get(['sub_kegiatan_id', 'sub_kegiatan_code', 'sub_kegiatan_name']);
 
         return response()->json($subKegiatans);
+    }
+    public function verif($id)
+    {
+        $archive = SadarinArchive::query()
+            ->with([
+                'unit',
+                'documentType',
+                'subKegiatan.kegiatan.program',
+                'tags',
+            ])
+            ->findOrFail($id);
+
+        return view('admin.arsip.verification.verif', [
+            'archive' => $archive,
+        ]);
+    }
+    /*
+|--------------------------------------------------------------------------
+| VERIFIKASI ARSIP
+|--------------------------------------------------------------------------
+*/
+
+    public function verify($id)
+    {
+        $archive = SadarinArchive::query()
+            ->with([
+                'unit',
+                'documentType',
+                'subKegiatan.kegiatan.program',
+                'tags',
+            ])
+            ->findOrFail($id);
+
+        return view('admin.arsip.verifikasi', [
+            'archive' => $archive,
+        ]);
+    }
+
+
+    /*
+|--------------------------------------------------------------------------
+| PROSES VERIFIKASI
+|--------------------------------------------------------------------------
+*/
+
+    public function processVerify(Request $request, $id)
+    {
+        $archive = SadarinArchive::findOrFail($id);
+
+        $validated = $request->validate([
+            'action' => ['required', 'in:verified,rejected'],
+            'archive_rejection_reason' => ['nullable', 'string'],
+        ]);
+
+        if ($validated['action'] === 'verified') {
+
+            $archive->update([
+                'archive_status' => 'verified',
+                'archive_rejection_reason' => null,
+            ]);
+
+            return redirect()
+                ->route('sadarin.admin.archive.verification')
+                ->with('success', 'Arsip berhasil diverifikasi.');
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | DITOLAK
+    |--------------------------------------------------------------------------
+    */
+
+        if (empty($validated['archive_rejection_reason'])) {
+            return back()
+                ->withErrors([
+                    'archive_rejection_reason' => 'Alasan penolakan wajib diisi.',
+                ])
+                ->withInput();
+        }
+
+        $archive->update([
+            'archive_status' => 'rejected',
+            'archive_rejection_reason' => $validated['archive_rejection_reason'],
+        ]);
+
+        return redirect()
+            ->route('sadarin.admin.archive.verification')
+            ->with('success', 'Arsip berhasil ditolak.');
+    }
+    /*
+|--------------------------------------------------------------------------
+| VERIFICATION
+|--------------------------------------------------------------------------
+*/
+
+    public function verification(Request $request)
+    {
+        $search = trim($request->search);
+
+        $archives = SadarinArchive::query()
+            ->with([
+                'unit',
+                'documentType',
+                'subKegiatan.kegiatan.program',
+                'tags',
+            ])
+            ->where('archive_status', 'draft')
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('archive_title', 'like', "%{$search}%")
+                        ->orWhere('archive_description', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc('archive_created_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.arsip.verification.index', [
+            'archives' => $archives,
+            'search' => $search,
+        ]);
     }
 }
