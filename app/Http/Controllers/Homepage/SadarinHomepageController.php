@@ -259,7 +259,7 @@ class SadarinHomepageController extends Controller
         |
         */
 
-        $archives = $query->orderByDesc('archive_created_at')->paginate(12)->withQueryString();
+        $archives = $query->orderByDesc('archive_created_at')->paginate(9)->withQueryString();
 
         /*
         |--------------------------------------------------------------------------
