@@ -31,6 +31,6 @@ class SadarinOtpMail extends Mailable
     {
         return $this
             ->subject('Kode OTP Login SADARIN')
-            ->view('emails.sadarin-otp');
+            ->view('emails.sadarin.otp');
     }
 }

@@ -4,7 +4,9 @@
 
 @section('content')
 
-    {{-- Page Heading --}}
+    {{-- ============================================================
+        PAGE HEADING
+    ============================================================ --}}
     <div class="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 
         <div>
@@ -25,8 +27,10 @@
 
         <div class="flex items-center gap-2">
 
-            <button type="button"
-                class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm hover:bg-slate-50">
+            {{-- Export --}}
+            <button
+                type="button"
+                class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50">
 
                 <i class="bi bi-download"></i>
 
@@ -36,7 +40,10 @@
 
             </button>
 
-            <a href="#"
+
+            {{-- Tambah Arsip --}}
+            <a
+                href="{{ route('sadarin.admin.archive.create') }}"
                 class="inline-flex items-center gap-2 rounded-xl bg-[oklch(29.3%_0.136_325.661)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-[oklch(29.3%_0.136_325.661)]/20 transition hover:opacity-90">
 
                 <i class="bi bi-plus-lg"></i>
@@ -52,36 +59,48 @@
     </div>
 
 
-    {{-- Statistic Cards --}}
+    {{-- ============================================================
+        STATISTIC CARDS
+    ============================================================ --}}
     <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
 
-        {{-- Total Arsip --}}
+        {{-- TOTAL ARSIP --}}
         <div class="stat-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
             <div class="flex items-start justify-between">
 
                 <div>
+
                     <p class="text-sm font-medium text-slate-500">
                         Total Arsip
                     </p>
 
                     <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-                        1.248
+                        {{ number_format($totalArsip, 0, ',', '.') }}
                     </p>
 
-                    <div class="mt-3 flex items-center gap-1.5 text-xs font-medium text-emerald-600">
-                        <i class="bi bi-arrow-up-right"></i>
-                        <span>8,2%</span>
+                    <div class="mt-3 flex items-center gap-1.5 text-xs font-medium text-blue-600">
+
+                        <i class="bi bi-archive"></i>
+
+                        <span>
+                            {{ number_format($arsipBulanIni, 0, ',', '.') }}
+                        </span>
+
                         <span class="font-normal text-slate-400">
                             bulan ini
                         </span>
+
                     </div>
+
                 </div>
 
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+
                     <i class="bi bi-archive-fill text-xl"></i>
+
                 </div>
 
             </div>
@@ -89,29 +108,38 @@
         </div>
 
 
-        {{-- Pending --}}
+        {{-- MENUNGGU VERIFIKASI --}}
         <div class="stat-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
             <div class="flex items-start justify-between">
 
                 <div>
+
                     <p class="text-sm font-medium text-slate-500">
                         Menunggu Verifikasi
                     </p>
 
                     <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-                        32
+                        {{ number_format($menungguVerifikasi, 0, ',', '.') }}
                     </p>
 
                     <div class="mt-3 flex items-center gap-1.5 text-xs font-medium text-amber-600">
+
                         <i class="bi bi-clock"></i>
-                        <span>Perlu ditinjau</span>
+
+                        <span>
+                            Perlu ditinjau
+                        </span>
+
                     </div>
+
                 </div>
 
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+
                     <i class="bi bi-hourglass-split text-xl"></i>
+
                 </div>
 
             </div>
@@ -119,32 +147,42 @@
         </div>
 
 
-        {{-- Verified --}}
+        {{-- TERVERIFIKASI --}}
         <div class="stat-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
             <div class="flex items-start justify-between">
 
                 <div>
+
                     <p class="text-sm font-medium text-slate-500">
                         Terverifikasi
                     </p>
 
                     <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-                        1.180
+                        {{ number_format($terverifikasi, 0, ',', '.') }}
                     </p>
 
                     <div class="mt-3 flex items-center gap-1.5 text-xs font-medium text-emerald-600">
+
                         <i class="bi bi-check-circle"></i>
-                        <span>94,6%</span>
+
+                        <span>
+                            {{ $persentaseTerverifikasi }}%
+                        </span>
+
                         <span class="font-normal text-slate-400">
                             dari total
                         </span>
+
                     </div>
+
                 </div>
 
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+
                     <i class="bi bi-patch-check-fill text-xl"></i>
+
                 </div>
 
             </div>
@@ -152,29 +190,38 @@
         </div>
 
 
-        {{-- Rejected --}}
+        {{-- DIKEMBALIKAN --}}
         <div class="stat-card rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
             <div class="flex items-start justify-between">
 
                 <div>
+
                     <p class="text-sm font-medium text-slate-500">
                         Dikembalikan
                     </p>
 
                     <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">
-                        36
+                        {{ number_format($dikembalikan, 0, ',', '.') }}
                     </p>
 
                     <div class="mt-3 flex items-center gap-1.5 text-xs font-medium text-rose-600">
+
                         <i class="bi bi-arrow-return-left"></i>
-                        <span>Perlu perbaikan</span>
+
+                        <span>
+                            Perlu perbaikan
+                        </span>
+
                     </div>
+
                 </div>
 
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+
                     <i class="bi bi-file-earmark-x-fill text-xl"></i>
+
                 </div>
 
             </div>
@@ -184,16 +231,21 @@
     </div>
 
 
-    {{-- Main Grid --}}
+    {{-- ============================================================
+        MAIN GRID
+    ============================================================ --}}
     <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
 
-        {{-- Arsip Terbaru --}}
+        {{-- ========================================================
+            ARSIP TERBARU
+        ========================================================= --}}
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
 
             <div class="flex items-center justify-between border-b border-slate-100 px-5 py-5">
 
                 <div>
+
                     <h3 class="font-bold text-slate-900">
                         Arsip Terbaru
                     </h3>
@@ -201,10 +253,16 @@
                     <p class="mt-1 text-xs text-slate-400">
                         Arsip yang baru ditambahkan ke sistem
                     </p>
+
                 </div>
 
-                <a href="#" class="text-sm font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
+
+                <a
+                    href="{{ route('sadarin.admin.archive.index') }}"
+                    class="text-sm font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
+
                     Lihat semua
+
                 </a>
 
             </div>
@@ -212,151 +270,133 @@
 
             <div class="divide-y divide-slate-100">
 
+                @forelse ($arsipTerbaru as $arsip)
 
-                {{-- Item --}}
-                <div class="flex items-center gap-4 px-5 py-4">
+                    <a
+                        href="{{ route('sadarin.admin.archive.show', $arsip->archive_id) }}"
+                        class="flex items-center gap-4 px-5 py-4 transition hover:bg-slate-50">
 
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                        <i class="bi bi-file-earmark-text-fill text-lg"></i>
-                    </div>
+                        {{-- ICON --}}
+                        <div
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
 
-                    <div class="min-w-0 flex-1">
+                            <i class="bi bi-file-earmark-text-fill text-lg"></i>
 
-                        <p class="truncate text-sm font-semibold text-slate-800">
-                            Laporan Pelaksanaan Kegiatan
-                        </p>
-
-                        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
-                            <span>Program Kebudayaan</span>
-                            <span>•</span>
-                            <span>2026</span>
                         </div>
 
-                    </div>
 
-                    <span
-                        class="hidden rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600 sm:inline-flex">
-                        Terverifikasi
-                    </span>
+                        {{-- CONTENT --}}
+                        <div class="min-w-0 flex-1">
 
-                    <span class="hidden text-xs text-slate-400 md:block">
-                        5 menit lalu
-                    </span>
+                            <p class="truncate text-sm font-semibold text-slate-800">
 
-                </div>
+                                {{ $arsip->archive_title
+                                    ?? $arsip->archive_name
+                                    ?? 'Arsip tanpa judul' }}
+
+                            </p>
 
 
-                {{-- Item --}}
-                <div class="flex items-center gap-4 px-5 py-4">
+                            <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
 
-                    <div
-                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                        <i class="bi bi-file-earmark-pdf-fill text-lg"></i>
-                    </div>
+                                @if (!empty($arsip->archive_year))
+                                    <span>
+                                        {{ $arsip->archive_year }}
+                                    </span>
 
-                    <div class="min-w-0 flex-1">
+                                    <span>
+                                        •
+                                    </span>
+                                @endif
 
-                        <p class="truncate text-sm font-semibold text-slate-800">
-                            Dokumen Perencanaan Program
-                        </p>
+                                <span>
+                                    {{ optional($arsip->archive_created_at)->diffForHumans() }}
+                                </span>
 
-                        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
-                            <span>Dokumen Perencanaan</span>
-                            <span>•</span>
-                            <span>2026</span>
+                            </div>
+
                         </div>
 
-                    </div>
 
-                    <span
-                        class="hidden rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600 sm:inline-flex">
-                        Menunggu
-                    </span>
+                        {{-- STATUS --}}
+                        @php
 
-                    <span class="hidden text-xs text-slate-400 md:block">
-                        18 menit lalu
-                    </span>
+                            $status = $arsip->archive_status ?? null;
 
-                </div>
+                            $statusConfig = match ($status) {
+
+                                'verified' => [
+                                    'label' => 'Terverifikasi',
+                                    'class' => 'bg-emerald-50 text-emerald-600',
+                                ],
+
+                                'pending' => [
+                                    'label' => 'Menunggu',
+                                    'class' => 'bg-amber-50 text-amber-600',
+                                ],
+
+                                'returned' => [
+                                    'label' => 'Dikembalikan',
+                                    'class' => 'bg-rose-50 text-rose-600',
+                                ],
+
+                                default => [
+                                    'label' => ucfirst($status ?? 'Belum ditentukan'),
+                                    'class' => 'bg-slate-100 text-slate-600',
+                                ],
+
+                            };
+
+                        @endphp
 
 
-                {{-- Item --}}
-                <div class="flex items-center gap-4 px-5 py-4">
+                        <span
+                            class="hidden rounded-full px-2.5 py-1 text-[11px] font-semibold sm:inline-flex {{ $statusConfig['class'] }}">
 
-                    <div
-                        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
-                        <i class="bi bi-folder-fill text-lg"></i>
-                    </div>
+                            {{ $statusConfig['label'] }}
 
-                    <div class="min-w-0 flex-1">
+                        </span>
 
-                        <p class="truncate text-sm font-semibold text-slate-800">
-                            Berita Acara Kegiatan
-                        </p>
+                    </a>
 
-                        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
-                            <span>Administrasi Kegiatan</span>
-                            <span>•</span>
-                            <span>2026</span>
+                @empty
+
+                    {{-- EMPTY --}}
+                    <div class="px-5 py-12 text-center">
+
+                        <div
+                            class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+
+                            <i class="bi bi-archive text-xl"></i>
+
                         </div>
 
-                    </div>
-
-                    <span
-                        class="hidden rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-600 sm:inline-flex">
-                        Terverifikasi
-                    </span>
-
-                    <span class="hidden text-xs text-slate-400 md:block">
-                        1 jam lalu
-                    </span>
-
-                </div>
-
-
-                {{-- Item --}}
-                <div class="flex items-center gap-4 px-5 py-4">
-
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
-                        <i class="bi bi-file-earmark-richtext-fill text-lg"></i>
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-
-                        <p class="truncate text-sm font-semibold text-slate-800">
-                            Dokumentasi Kegiatan
+                        <p class="mt-4 text-sm font-semibold text-slate-700">
+                            Belum ada arsip
                         </p>
 
-                        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
-                            <span>Dokumentasi</span>
-                            <span>•</span>
-                            <span>2026</span>
-                        </div>
+                        <p class="mt-1 text-xs text-slate-400">
+                            Arsip yang ditambahkan akan muncul di sini.
+                        </p>
 
                     </div>
 
-                    <span
-                        class="hidden rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-semibold text-rose-600 sm:inline-flex">
-                        Dikembalikan
-                    </span>
-
-                    <span class="hidden text-xs text-slate-400 md:block">
-                        2 jam lalu
-                    </span>
-
-                </div>
+                @endforelse
 
             </div>
 
         </div>
 
 
-        {{-- Aktivitas Terbaru --}}
+        {{-- ========================================================
+            AKTIVITAS TERBARU
+        ========================================================= --}}
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
             <div class="flex items-center justify-between border-b border-slate-100 px-5 py-5">
 
                 <div>
+
                     <h3 class="font-bold text-slate-900">
                         Aktivitas Terbaru
                     </h3>
@@ -364,10 +404,16 @@
                     <p class="mt-1 text-xs text-slate-400">
                         Aktivitas pengguna sistem
                     </p>
+
                 </div>
 
-                <a href="#" class="text-sm font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
+
+                <a
+                    href="{{ route('sadarin.admin.access-log.index') }}"
+                    class="text-sm font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
+
                     Semua
+
                 </a>
 
             </div>
@@ -377,135 +423,68 @@
 
                 <div class="space-y-6">
 
+                    @forelse ($aktivitasTerbaru as $aktivitas)
 
-                    {{-- Activity --}}
-                    <div class="flex gap-3">
+                        <div class="flex gap-3">
 
-                        <div class="relative">
+                            {{-- ICON --}}
+                            <div
+                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
 
-                            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                                <i class="bi bi-upload text-sm"></i>
+                                <i class="bi bi-activity text-sm"></i>
+
+                            </div>
+
+
+                            <div class="min-w-0 flex-1">
+
+                                <p class="text-sm leading-5 text-slate-600">
+
+                                    <span class="font-semibold text-slate-800">
+
+                                        {{ $aktivitas->access_log_user_type
+                                            ?? 'Pengguna' }}
+
+                                    </span>
+
+                                    {{ $aktivitas->access_log_action
+                                        ?? 'melakukan aktivitas pada sistem.' }}
+
+                                </p>
+
+
+                                <p class="mt-1 text-xs text-slate-400">
+
+                                    {{ optional($aktivitas->access_log_created_at)->diffForHumans() }}
+
+                                </p>
+
                             </div>
 
                         </div>
 
-                        <div class="min-w-0 flex-1">
+                    @empty
 
-                            <p class="text-sm leading-5 text-slate-600">
-                                <span class="font-semibold text-slate-800">
-                                    Administrator
-                                </span>
-                                menambahkan arsip baru.
+                        <div class="py-8 text-center">
+
+                            <div
+                                class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+
+                                <i class="bi bi-clock-history"></i>
+
+                            </div>
+
+                            <p class="mt-3 text-sm font-semibold text-slate-700">
+                                Belum ada aktivitas
                             </p>
 
                             <p class="mt-1 text-xs text-slate-400">
-                                5 menit lalu
+                                Aktivitas sistem akan muncul di sini.
                             </p>
 
                         </div>
 
-                    </div>
-
-
-                    {{-- Activity --}}
-                    <div class="flex gap-3">
-
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                            <i class="bi bi-check-lg text-sm"></i>
-                        </div>
-
-                        <div class="min-w-0 flex-1">
-
-                            <p class="text-sm leading-5 text-slate-600">
-                                <span class="font-semibold text-slate-800">
-                                    Arsiparis
-                                </span>
-                                memverifikasi sebuah arsip.
-                            </p>
-
-                            <p class="mt-1 text-xs text-slate-400">
-                                18 menit lalu
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Activity --}}
-                    <div class="flex gap-3">
-
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-amber-600">
-                            <i class="bi bi-pencil-square text-sm"></i>
-                        </div>
-
-                        <div class="min-w-0 flex-1">
-
-                            <p class="text-sm leading-5 text-slate-600">
-                                <span class="font-semibold text-slate-800">
-                                    Pengguna Internal
-                                </span>
-                                memperbarui metadata arsip.
-                            </p>
-
-                            <p class="mt-1 text-xs text-slate-400">
-                                42 menit lalu
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Activity --}}
-                    <div class="flex gap-3">
-
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-violet-50 text-violet-600">
-                            <i class="bi bi-person-plus-fill text-sm"></i>
-                        </div>
-
-                        <div class="min-w-0 flex-1">
-
-                            <p class="text-sm leading-5 text-slate-600">
-                                <span class="font-semibold text-slate-800">
-                                    Administrator
-                                </span>
-                                menambahkan pengguna baru.
-                            </p>
-
-                            <p class="mt-1 text-xs text-slate-400">
-                                1 jam lalu
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    {{-- Activity --}}
-                    <div class="flex gap-3">
-
-                        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-rose-50 text-rose-600">
-                            <i class="bi bi-x-lg text-sm"></i>
-                        </div>
-
-                        <div class="min-w-0 flex-1">
-
-                            <p class="text-sm leading-5 text-slate-600">
-                                Sebuah arsip
-                                <span class="font-semibold text-slate-800">
-                                    dikembalikan
-                                </span>
-                                untuk diperbaiki.
-                            </p>
-
-                            <p class="mt-1 text-xs text-slate-400">
-                                2 jam lalu
-                            </p>
-
-                        </div>
-
-                    </div>
+                    @endforelse
 
                 </div>
 
@@ -516,24 +495,24 @@
     </div>
 
 
-    {{-- Classification --}}
+    {{-- ============================================================
+        KLASIFIKASI ARSIP
+    ============================================================ --}}
     <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 
         <div class="mb-5 flex items-center justify-between">
 
             <div>
+
                 <h3 class="font-bold text-slate-900">
                     Klasifikasi Arsip
                 </h3>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    Ringkasan arsip berdasarkan klasifikasi
+                    Ringkasan master yang digunakan untuk pengelompokan arsip
                 </p>
-            </div>
 
-            <a href="#" class="text-sm font-semibold text-[oklch(29.3%_0.136_325.661)] hover:underline">
-                Kelola klasifikasi
-            </a>
+            </div>
 
         </div>
 
@@ -541,12 +520,16 @@
         <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
 
 
-            {{-- Unit --}}
-            <a href="#"
+            {{-- UNIT --}}
+            <a
+                href="{{ route('sadarin.admin.master.unit.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-blue-100 hover:bg-blue-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+
                     <i class="bi bi-building-fill"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
@@ -554,18 +537,22 @@
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    12 unit
+                    {{ number_format($jumlahUnit, 0, ',', '.') }} unit
                 </p>
 
             </a>
 
 
-            {{-- Program --}}
-            <a href="#"
+            {{-- PROGRAM --}}
+            <a
+                href="{{ route('sadarin.admin.master.program.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-emerald-100 hover:bg-emerald-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+
                     <i class="bi bi-diagram-3-fill"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
@@ -573,18 +560,22 @@
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    8 program
+                    {{ number_format($jumlahProgram, 0, ',', '.') }} program
                 </p>
 
             </a>
 
 
-            {{-- Kegiatan --}}
-            <a href="#"
+            {{-- KEGIATAN --}}
+            <a
+                href="{{ route('sadarin.admin.master.kegiatan.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-indigo-100 hover:bg-indigo-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+
                     <i class="bi bi-list-check"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
@@ -592,18 +583,22 @@
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    24 kegiatan
+                    {{ number_format($jumlahKegiatan, 0, ',', '.') }} kegiatan
                 </p>
 
             </a>
 
 
-            {{-- Sub Kegiatan --}}
-            <a href="#"
+            {{-- SUB KEGIATAN --}}
+            <a
+                href="{{ route('sadarin.admin.master.sub-kegiatan.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-orange-100 hover:bg-orange-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+
                     <i class="bi bi-list-nested"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
@@ -611,37 +606,45 @@
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    47 sub kegiatan
+                    {{ number_format($jumlahSubKegiatan, 0, ',', '.') }} sub kegiatan
                 </p>
 
             </a>
 
 
-            {{-- Dokumen --}}
-            <a href="#"
+            {{-- JENIS DOKUMEN --}}
+            <a
+                href="{{ route('sadarin.admin.master.document-type.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-rose-100 hover:bg-rose-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+
                     <i class="bi bi-file-earmark-text-fill"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
-                    Dokumen
+                    Jenis Dokumen
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    18 jenis
+                    {{ number_format($jumlahJenisDokumen, 0, ',', '.') }} jenis
                 </p>
 
             </a>
 
 
-            {{-- Tag --}}
-            <a href="#"
+            {{-- TAG --}}
+            <a
+                href="{{ route('sadarin.admin.master.tag.index') }}"
                 class="group rounded-xl border border-slate-100 bg-slate-50 p-4 transition hover:border-amber-100 hover:bg-amber-50">
 
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+                <div
+                    class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+
                     <i class="bi bi-tags-fill"></i>
+
                 </div>
 
                 <p class="text-sm font-semibold text-slate-800">
@@ -649,10 +652,50 @@
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
-                    96 tag
+                    {{ number_format($jumlahTag, 0, ',', '.') }} tag
                 </p>
 
             </a>
+
+        </div>
+
+    </div>
+
+
+    {{-- ============================================================
+        FOOTER INFO
+    ============================================================ --}}
+    <div class="mt-6 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="flex h-9 w-9 items-center justify-center rounded-lg bg-[oklch(29.3%_0.136_325.661)]/10 text-[oklch(29.3%_0.136_325.661)]">
+
+                    <i class="bi bi-shield-check"></i>
+
+                </div>
+
+                <div>
+
+                    <p class="text-sm font-semibold text-slate-800">
+                        SADARIN
+                    </p>
+
+                    <p class="text-xs text-slate-400">
+                        Sistem Arsip Data dan Berkas Internal
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <p class="text-xs text-slate-400">
+                Data dashboard diperbarui berdasarkan data sistem.
+            </p>
 
         </div>
 
