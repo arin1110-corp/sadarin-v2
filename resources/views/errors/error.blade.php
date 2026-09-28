@@ -58,7 +58,7 @@
 
     <meta name="robots" content="noindex, nofollow">
 
-    <link rel="icon" href="{{ asset('image/logo-sadarin.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/images/logo-sadarin.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -566,7 +566,7 @@
                 LOGO SADARIN
             ========================================================= --}}
 
-            <img src="{{ asset('image/logo-sadarin.png') }}" class="sadarin-error-logo" alt="SADARIN">
+            <img src="{{ asset('assets/images/logo-sadarin.png') }}" class="sadarin-error-logo" alt="SADARIN">
 
 
             {{-- ========================================================
