@@ -69,6 +69,12 @@
 
                                 </h1>
 
+                                <h2>
+                                    <span class="text-sadarin-600">
+                                        {{ $archive->archive_number }}
+                                    </span>
+                                </h2>
+
 
                                 {{-- BADGES --}}
 
