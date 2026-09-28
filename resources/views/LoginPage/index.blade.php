@@ -1,6 +1,6 @@
 @extends('LoginPage.layouts.app')
 
-@section('title', 'Login Pegawai - SADARIN')
+@section('title', 'SADARIN')
 
 @section('content')
 
