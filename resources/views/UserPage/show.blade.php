@@ -70,7 +70,7 @@
                                 </h1>
 
                                 <h2>
-                                    <span class="text-sadarin-600">
+                                    <span class="class="mt-1 break-words text-xl font-bold leading-tight tracking-tight text-slate-950 sm:text-2xl lg:text-3xl">
                                         {{ $archive->archive_description }}
                                     </span>
                                 </h2>
