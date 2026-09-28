@@ -24,12 +24,12 @@ class SadarinRoleController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.role.index', compact('roles', 'search'));
+        return view('Admin.role.index', compact('roles', 'search'));
     }
 
     public function create()
     {
-        return view('admin.role.create');
+        return view('Admin.role.create');
     }
 
     public function store(Request $request)

@@ -143,7 +143,7 @@ class SadarinUserController extends Controller
             'query' => $request->query(),
         ]);
 
-        return view('admin.pengguna.index', compact('users', 'roles'));
+        return view('Admin.pengguna.index', compact('users', 'roles'));
     }
 
     /**
@@ -189,7 +189,7 @@ class SadarinUserController extends Controller
 
         $userRoleIds = SadarinUserRole::query()->where('user_role_samperin_user_id', $id)->pluck('user_role_role_id')->toArray();
 
-        return view('admin.pengguna.edit', compact('user', 'roles', 'userRoleIds'));
+        return view('Admin.pengguna.edit', compact('user', 'roles', 'userRoleIds'));
     }
 
     /**

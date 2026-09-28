@@ -36,7 +36,7 @@ class SadarinArchiveController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.arsip.index', [
+        return view('Admin.arsip.index', [
             'archives' => $archives,
             'search' => $search,
         ]);
@@ -88,7 +88,7 @@ class SadarinArchiveController extends Controller
 
         $tags = SadarinTag::query()->where('tag_is_active', true)->orderBy('tag_name')->get();
 
-        return view('admin.arsip.create', [
+        return view('Admin.arsip.create', [
             'units' => $units,
             'programs' => $programs,
             'documentTypes' => $documentTypes,
@@ -239,7 +239,7 @@ class SadarinArchiveController extends Controller
             ->with(['unit', 'documentType', 'subKegiatan.kegiatan.program', 'tags'])
             ->findOrFail($id);
 
-        return view('admin.arsip.show', [
+        return view('Admin.arsip.show', [
             'archive' => $archive,
         ]);
     }
@@ -289,7 +289,7 @@ class SadarinArchiveController extends Controller
 
         $tags = SadarinTag::query()->where('tag_is_active', true)->orderBy('tag_name')->get();
 
-        return view('admin.arsip.edit', [
+        return view('Admin.arsip.edit', [
             'archive' => $archive,
             'units' => $units,
             'programs' => $programs,
@@ -492,7 +492,7 @@ class SadarinArchiveController extends Controller
             ])
             ->findOrFail($id);
 
-        return view('admin.arsip.verification.verif', [
+        return view('Admin.arsip.verification.verif', [
             'archive' => $archive,
         ]);
     }
@@ -513,7 +513,7 @@ class SadarinArchiveController extends Controller
             ])
             ->findOrFail($id);
 
-        return view('admin.arsip.verifikasi', [
+        return view('Admin.arsip.verifikasi', [
             'archive' => $archive,
         ]);
     }
@@ -597,7 +597,7 @@ class SadarinArchiveController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.arsip.verification.index', [
+        return view('Admin.arsip.verification.index', [
             'archives' => $archives,
             'search' => $search,
         ]);

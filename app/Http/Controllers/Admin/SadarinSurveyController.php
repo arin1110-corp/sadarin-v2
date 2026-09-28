@@ -23,7 +23,7 @@ class SadarinSurveyController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.survey.index', [
+        return view('Admin.survey.index', [
             'surveys' => $surveys,
             'search' => $search,
         ]);
@@ -31,7 +31,7 @@ class SadarinSurveyController extends Controller
 
     public function create()
     {
-        return view('admin.survey.create');
+        return view('Admin.survey.create');
     }
 
     public function store(Request $request)
@@ -57,7 +57,7 @@ class SadarinSurveyController extends Controller
 
     public function edit(SadarinSurvey $survey)
     {
-        return view('admin.survey.edit', [
+        return view('Admin.survey.edit', [
             'survey' => $survey,
         ]);
     }
@@ -149,7 +149,7 @@ class SadarinSurveyController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.survey.responses', [
+        return view('Admin.survey.responses', [
             'survey' => $survey,
             'responses' => $responses,
             'totalResponse' => $totalResponse,

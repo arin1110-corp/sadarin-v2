@@ -263,7 +263,7 @@ class SadarinAccessLogController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('admin.access-log.index', [
+        return view('Admin.access-log.index', [
             'logs' => $logs,
 
             'search' => $search,

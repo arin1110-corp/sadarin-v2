@@ -26,12 +26,12 @@ class SadarinPermissionController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.permission.index', compact('permissions', 'search'));
+        return view('Admin.permission.index', compact('permissions', 'search'));
     }
 
     public function create()
     {
-        return view('admin.permission.create');
+        return view('Admin.permission.create');
     }
 
     public function store(Request $request)
@@ -80,7 +80,7 @@ class SadarinPermissionController extends Controller
     {
         $permission = SadarinPermission::findOrFail($id);
 
-        return view('admin.permission.edit', compact('permission'));
+        return view('Admin.permission.edit', compact('permission'));
     }
 
     public function update(Request $request, $id)

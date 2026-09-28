@@ -24,7 +24,7 @@ class SadarinRolePermissionController extends Controller
 
         $permissionIds = SadarinRolePermission::query()->where('role_permission_role_id', $roleId)->pluck('role_permission_permission_id')->toArray();
 
-        return view('admin.role.permission', [
+        return view('Admin.role.permission', [
             'role' => $role,
             'permissions' => $permissions,
             'permissionIds' => $permissionIds,
