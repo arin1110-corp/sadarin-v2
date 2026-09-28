@@ -22,7 +22,7 @@ return new class extends Migration {
             |
             */
 
-            $table->unsignedBigInteger('archive_user_id')->nullable();
+            $table->string('archive_user_id', 255)->nullable();
 
             /*
             |--------------------------------------------------------------------------
