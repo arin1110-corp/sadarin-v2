@@ -689,34 +689,73 @@
                         @endphp
 
 
-                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {{-- SEARCH TAG --}}
+
+                        <div class="relative mb-4">
+
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+
+                                <i class="bi bi-search text-slate-400"></i>
+
+                            </div>
+
+                            <input type="text" id="sadarinTagSearch" autocomplete="off" placeholder="Cari tag..."
+                                class="w-full rounded-xl border border-slate-200
+                           bg-slate-50 py-2.5 pl-10 pr-4
+                           text-sm text-slate-700 outline-none
+                           transition
+                           focus:border-[oklch(29.3%_0.136_325.661)]
+                           focus:bg-white
+                           focus:ring-2
+                           focus:ring-[oklch(29.3%_0.136_325.661)]/10">
+
+                        </div>
+
+
+                        {{-- TAG LIST --}}
+
+                        <div id="sadarinTagList" class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
 
                             @foreach ($tags as $tag)
                                 <label
-                                    class="flex cursor-pointer items-center gap-3 rounded-xl
-                                           border border-slate-200 bg-slate-50 px-4 py-3
-                                           transition hover:border-amber-200 hover:bg-amber-50">
+                                    class="sadarin-tag-item flex cursor-pointer items-center gap-3 rounded-xl
+                               border border-slate-200 bg-slate-50 px-4 py-3
+                               transition hover:border-amber-200 hover:bg-amber-50"
+                                    data-tag-name="{{ strtolower($tag->tag_name) }}">
 
                                     <input type="checkbox" name="tag_ids[]" value="{{ $tag->tag_id }}"
                                         {{ in_array($tag->tag_id, $selectedTagIds) ? 'checked' : '' }}
                                         class="h-4 w-4 rounded border-slate-300
-                                               text-amber-600
-                                               focus:ring-amber-500">
+                                   text-amber-600
+                                   focus:ring-amber-500">
 
                                     <span class="text-sm text-slate-700">
-
                                         #{{ $tag->tag_name }}
-
                                     </span>
 
                                 </label>
                             @endforeach
 
                         </div>
+
+
+                        {{-- EMPTY SEARCH RESULT --}}
+
+                        <div id="sadarinTagEmpty"
+                            class="hidden rounded-xl border border-dashed border-slate-200
+                       bg-slate-50 px-4 py-6 text-center">
+
+                            <i class="bi bi-search text-xl text-slate-400"></i>
+
+                            <p class="mt-2 text-xs text-slate-400">
+                                Tag tidak ditemukan.
+                            </p>
+
+                        </div>
                     @else
                         <div
                             class="rounded-xl border border-dashed border-slate-200
-                                   bg-slate-50 px-4 py-6 text-center">
+                       bg-slate-50 px-4 py-6 text-center">
 
                             <i class="bi bi-tags text-xl text-slate-400"></i>
 
@@ -862,6 +901,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            /* =========================================================
+             * ELEMENT PROGRAM
+             * ========================================================= */
+
             const programYes = document.getElementById('programYes');
             const programNo = document.getElementById('programNo');
 
@@ -876,22 +919,18 @@
             const subKegiatanSelect = document.getElementById('archive_sub_kegiatan_id');
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | NILAI AWAL
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * NILAI AWAL
+             * ========================================================= */
 
             const oldProgram = @json($oldProgram);
             const oldKegiatan = @json($oldKegiatan);
             const oldSubKegiatan = @json($oldSubKegiatan);
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | BUTTON STYLE
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * BUTTON STYLE
+             * ========================================================= */
 
             function setProgramButton(active) {
 
@@ -916,13 +955,15 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | RESET SUB KEGIATAN
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * RESET SUB KEGIATAN
+             * ========================================================= */
 
             function resetSubKegiatan() {
+
+                if (!subKegiatanSelect || !subKegiatanWrapper) {
+                    return;
+                }
 
                 subKegiatanSelect.innerHTML =
                     '<option value="">-- Pilih Sub Kegiatan --</option>';
@@ -932,13 +973,15 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | RESET KEGIATAN
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * RESET KEGIATAN
+             * ========================================================= */
 
             function resetKegiatan() {
+
+                if (!kegiatanSelect || !kegiatanWrapper) {
+                    return;
+                }
 
                 kegiatanSelect.innerHTML =
                     '<option value="">-- Pilih Kegiatan --</option>';
@@ -950,13 +993,14 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | LOAD KEGIATAN
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * LOAD KEGIATAN
+             * ========================================================= */
 
-            async function loadKegiatan(programId, selectedKegiatanId = null) {
+            async function loadKegiatan(
+                programId,
+                selectedKegiatanId = null
+            ) {
 
                 resetKegiatan();
 
@@ -1001,7 +1045,8 @@
 
                         if (
                             selectedKegiatanId &&
-                            String(selectedKegiatanId) === String(item.kegiatan_id)
+                            String(selectedKegiatanId) ===
+                            String(item.kegiatan_id)
                         ) {
                             option.selected = true;
                         }
@@ -1032,13 +1077,14 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | LOAD SUB KEGIATAN
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * LOAD SUB KEGIATAN
+             * ========================================================= */
 
-            async function loadSubKegiatan(kegiatanId, selectedSubKegiatanId = null) {
+            async function loadSubKegiatan(
+                kegiatanId,
+                selectedSubKegiatanId = null
+            ) {
 
                 resetSubKegiatan();
 
@@ -1083,7 +1129,8 @@
 
                         if (
                             selectedSubKegiatanId &&
-                            String(selectedSubKegiatanId) === String(item.sub_kegiatan_id)
+                            String(selectedSubKegiatanId) ===
+                            String(item.sub_kegiatan_id)
                         ) {
                             option.selected = true;
                         }
@@ -1104,71 +1151,77 @@
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | PROGRAM YA
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * PROGRAM YA
+             * ========================================================= */
 
-            programYes.addEventListener('click', function() {
+            if (programYes) {
 
-                programSection.classList.remove('hidden');
+                programYes.addEventListener('click', function() {
 
-                setProgramButton(true);
+                    programSection.classList.remove('hidden');
 
-            });
+                    setProgramButton(true);
 
+                });
 
-            /*
-            |--------------------------------------------------------------------------
-            | PROGRAM TIDAK
-            |--------------------------------------------------------------------------
-            */
-
-            programNo.addEventListener('click', function() {
-
-                programSection.classList.add('hidden');
-
-                programSelect.value = '';
-
-                resetKegiatan();
-
-                setProgramButton(false);
-
-            });
+            }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | PROGRAM BERUBAH
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * PROGRAM TIDAK
+             * ========================================================= */
 
-            programSelect.addEventListener('change', function() {
+            if (programNo) {
 
-                loadKegiatan(this.value);
+                programNo.addEventListener('click', function() {
 
-            });
+                    programSection.classList.add('hidden');
 
+                    programSelect.value = '';
 
-            /*
-            |--------------------------------------------------------------------------
-            | KEGIATAN BERUBAH
-            |--------------------------------------------------------------------------
-            */
+                    resetKegiatan();
 
-            kegiatanSelect.addEventListener('change', function() {
+                    setProgramButton(false);
 
-                loadSubKegiatan(this.value);
+                });
 
-            });
+            }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | INITIAL STATE
-            |--------------------------------------------------------------------------
-            */
+            /* =========================================================
+             * PROGRAM BERUBAH
+             * ========================================================= */
+
+            if (programSelect) {
+
+                programSelect.addEventListener('change', function() {
+
+                    loadKegiatan(this.value);
+
+                });
+
+            }
+
+
+            /* =========================================================
+             * KEGIATAN BERUBAH
+             * ========================================================= */
+
+            if (kegiatanSelect) {
+
+                kegiatanSelect.addEventListener('change', function() {
+
+                    loadSubKegiatan(this.value);
+
+                });
+
+            }
+
+
+            /* =========================================================
+             * INITIAL PROGRAM STATE
+             * ========================================================= */
 
             if (oldProgram) {
 
@@ -1186,6 +1239,66 @@
             } else {
 
                 setProgramButton(false);
+
+            }
+
+
+            /* =========================================================
+             * SEARCH TAG
+             * ========================================================= */
+
+            const searchInput =
+                document.getElementById('sadarinTagSearch');
+
+            const tagItems =
+                document.querySelectorAll('.sadarin-tag-item');
+
+            const emptyMessage =
+                document.getElementById('sadarinTagEmpty');
+
+
+            if (searchInput && tagItems.length) {
+
+                searchInput.addEventListener('input', function() {
+
+                    const keyword =
+                        this.value
+                        .toLowerCase()
+                        .trim();
+
+                    let visibleCount = 0;
+
+
+                    tagItems.forEach(function(item) {
+
+                        const tagName =
+                            item.dataset.tagName || '';
+
+                        const match =
+                            tagName.includes(keyword);
+
+                        item.classList.toggle(
+                            'hidden',
+                            !match
+                        );
+
+                        if (match) {
+                            visibleCount++;
+                        }
+
+                    });
+
+
+                    if (emptyMessage) {
+
+                        emptyMessage.classList.toggle(
+                            'hidden',
+                            visibleCount !== 0
+                        );
+
+                    }
+
+                });
 
             }
 

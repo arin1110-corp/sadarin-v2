@@ -601,6 +601,7 @@
 
             <div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
+                {{-- HEADER --}}
                 <div class="border-b border-slate-100 px-5 py-4">
 
                     <div class="flex items-center gap-3">
@@ -609,42 +610,78 @@
                             <i class="bi bi-tags-fill"></i>
                         </div>
 
-                        <div>
+                        <div class="min-w-0">
 
                             <h2 class="text-sm font-bold text-slate-800">
                                 Tag Arsip
                             </h2>
 
                             <p class="text-xs text-slate-400">
-                                Tambahkan tag untuk mempermudah pencarian dan pengelompokan arsip.
+                                Pilih satu atau beberapa tag untuk arsip.
                             </p>
 
                         </div>
+
+                        <span
+                            class="ml-auto shrink-0 rounded-lg bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">
+                            {{ $tags->count() }} Tag
+                        </span>
 
                     </div>
 
                 </div>
 
 
+                {{-- CONTENT --}}
                 <div class="p-5">
 
                     @if ($tags->count())
 
-                        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {{-- SEARCH TAG --}}
+                        <div class="relative mb-4">
 
-                            @foreach ($tags as $tag)
-                                <label
-                                    class="flex cursor-pointer items-center gap-3 rounded-xl
-                                           border border-slate-200 bg-slate-50 px-4 py-3
-                                           transition hover:border-amber-200 hover:bg-amber-50">
+                            <i
+                                class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            </i>
+
+                            <input type="text" id="sadarinTagSearch" placeholder="Cari tag..." autocomplete="off"
+                                class="h-10 w-full rounded-xl border border-slate-200
+                           bg-slate-50 pl-9 pr-4
+                           text-sm text-slate-700
+                           outline-none transition
+                           placeholder:text-slate-400
+                           focus:border-amber-300
+                           focus:bg-white
+                           focus:ring-2
+                           focus:ring-amber-100">
+
+                        </div>
+
+
+                        {{-- TAG LIST --}}
+                        <div id="sadarinTagList" class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+
+                            @foreach ($tags as $index => $tag)
+                                <label data-tag-name="{{ strtolower($tag->tag_name) }}"
+                                    data-tag-index="{{ $index }}"
+                                    class="sadarin-tag-item
+                               {{ $index >= 12 ? 'hidden sadarin-tag-extra' : '' }}
+                               flex cursor-pointer items-center gap-3
+                               rounded-xl border border-slate-200
+                               bg-slate-50 px-4 py-3
+                               transition
+                               hover:border-amber-200
+                               hover:bg-amber-50">
 
                                     <input type="checkbox" name="tag_ids[]" value="{{ $tag->tag_id }}"
                                         {{ in_array($tag->tag_id, old('tag_ids', [])) ? 'checked' : '' }}
-                                        class="h-4 w-4 rounded border-slate-300
-                                               text-amber-600
-                                               focus:ring-amber-500">
+                                        class="sadarin-tag-checkbox
+                                   h-4 w-4 rounded
+                                   border-slate-300
+                                   text-amber-600
+                                   focus:ring-amber-500">
 
-                                    <span class="text-sm text-slate-700">
+                                    <span class="min-w-0 truncate text-sm text-slate-700">
                                         #{{ $tag->tag_name }}
                                     </span>
 
@@ -652,12 +689,66 @@
                             @endforeach
 
                         </div>
+
+
+                        {{-- EMPTY SEARCH --}}
+                        <div id="sadarinTagEmpty"
+                            class="hidden rounded-xl border border-dashed border-slate-200
+                       bg-slate-50 px-4 py-6 text-center">
+
+                            <i class="bi bi-search text-xl text-slate-400"></i>
+
+                            <p class="mt-2 text-xs text-slate-400">
+                                Tag tidak ditemukan.
+                            </p>
+
+                        </div>
+
+
+                        {{-- SHOW MORE --}}
+                        @if ($tags->count() > 12)
+                            <div class="mt-4 border-t border-slate-100 pt-3 text-center">
+
+                                <button type="button" id="sadarinTagToggle"
+                                    class="inline-flex items-center gap-2
+                               rounded-lg px-3 py-2
+                               text-xs font-semibold
+                               text-amber-600
+                               transition
+                               hover:bg-amber-50">
+
+                                    <span id="sadarinTagToggleText">
+                                        Tampilkan semua {{ $tags->count() }} tag
+                                    </span>
+
+                                    <i id="sadarinTagToggleIcon" class="bi bi-chevron-down"></i>
+
+                                </button>
+
+                            </div>
+                        @endif
+
+
+                        {{-- SELECTED INFO --}}
+                        <div class="mt-3 flex items-center justify-between">
+
+                            <span class="text-[11px] text-slate-400">
+                                Tag terpilih:
+                            </span>
+
+                            <span id="sadarinTagSelectedCount"
+                                class="rounded-md bg-amber-50 px-2 py-0.5
+                           text-[10px] font-bold text-amber-600">
+                                0
+                            </span>
+
+                        </div>
                     @else
                         <div
                             class="rounded-xl border border-dashed border-slate-200
-                                    bg-slate-50 px-4 py-6 text-center">
+                       bg-slate-50 px-4 py-8 text-center">
 
-                            <i class="bi bi-tags text-xl text-slate-400"></i>
+                            <i class="bi bi-tags text-2xl text-slate-400"></i>
 
                             <p class="mt-2 text-xs text-slate-400">
                                 Belum ada tag aktif.
@@ -1114,6 +1205,227 @@
                 setProgramButton(false);
 
             }
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const searchInput = document.getElementById('sadarinTagSearch');
+            const tagItems = document.querySelectorAll('.sadarin-tag-item');
+            const emptyMessage = document.getElementById('sadarinTagEmpty');
+
+            const toggleButton = document.getElementById('sadarinTagToggle');
+            const toggleText = document.getElementById('sadarinTagToggleText');
+            const toggleIcon = document.getElementById('sadarinTagToggleIcon');
+
+            const selectedCount = document.getElementById('sadarinTagSelectedCount');
+
+            let showAll = false;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE JUMLAH TAG TERPILIH
+            |--------------------------------------------------------------------------
+            */
+
+            function updateSelectedCount() {
+
+                if (!selectedCount) {
+                    return;
+                }
+
+                const checked = document.querySelectorAll(
+                    '.sadarin-tag-checkbox:checked'
+                );
+
+                selectedCount.textContent = checked.length;
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | UPDATE TAMPILAN TAG
+            |--------------------------------------------------------------------------
+            */
+
+            function updateTagVisibility() {
+
+                if (!searchInput) {
+                    return;
+                }
+
+                const keyword = searchInput.value
+                    .toLowerCase()
+                    .trim();
+
+                let visibleCount = 0;
+
+                tagItems.forEach(function(item) {
+
+                    const tagName = item.dataset.tagName || '';
+
+                    const match = tagName.includes(keyword);
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | SAAT SEARCH
+                    |--------------------------------------------------------------------------
+                    | Semua tag yang cocok ditampilkan.
+                    */
+
+                    if (keyword !== '') {
+
+                        item.classList.toggle('hidden', !match);
+
+                        if (match) {
+                            visibleCount++;
+                        }
+
+                        return;
+                    }
+
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | TANPA SEARCH
+                    |--------------------------------------------------------------------------
+                    | Hanya 12 tag pertama jika belum klik tampilkan semua.
+                    */
+
+                    const index = parseInt(
+                        item.dataset.tagIndex || 0
+                    );
+
+                    if (showAll || index < 12) {
+
+                        item.classList.remove('hidden');
+
+                        visibleCount++;
+
+                    } else {
+
+                        item.classList.add('hidden');
+
+                    }
+
+                });
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | EMPTY SEARCH
+                |--------------------------------------------------------------------------
+                */
+
+                if (emptyMessage) {
+
+                    emptyMessage.classList.toggle(
+                        'hidden',
+                        visibleCount !== 0
+                    );
+
+                }
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | TOGGLE TAMPILKAN SEMUA
+            |--------------------------------------------------------------------------
+            */
+
+            if (toggleButton) {
+
+                toggleButton.addEventListener('click', function() {
+
+                    showAll = !showAll;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Kalau sedang search
+                    |--------------------------------------------------------------------------
+                    | Jangan ubah hasil search.
+                    */
+
+                    if (searchInput && searchInput.value.trim() !== '') {
+                        return;
+                    }
+
+
+                    if (showAll) {
+
+                        toggleText.textContent =
+                            'Sembunyikan sebagian';
+
+                        toggleIcon.className =
+                            'bi bi-chevron-up';
+
+                    } else {
+
+                        toggleText.textContent =
+                            'Tampilkan semua {{ $tags->count() }} tag';
+
+                        toggleIcon.className =
+                            'bi bi-chevron-down';
+
+                    }
+
+                    updateTagVisibility();
+
+                });
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | SEARCH
+            |--------------------------------------------------------------------------
+            */
+
+            if (searchInput) {
+
+                searchInput.addEventListener('input', function() {
+
+                    updateTagVisibility();
+
+                });
+
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | CHECKBOX CHANGE
+            |--------------------------------------------------------------------------
+            */
+
+            document.querySelectorAll(
+                '.sadarin-tag-checkbox'
+            ).forEach(function(checkbox) {
+
+                checkbox.addEventListener('change', function() {
+
+                    updateSelectedCount();
+
+                });
+
+            });
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | INITIAL
+            |--------------------------------------------------------------------------
+            */
+
+            updateTagVisibility();
+
+            updateSelectedCount();
 
         });
     </script>
