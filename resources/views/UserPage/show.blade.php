@@ -71,7 +71,7 @@
 
                                 <h2>
                                     <span class="text-sadarin-600">
-                                        {{ $archive->archive_number }}
+                                        {{ $archive->archive_description }}
                                     </span>
                                 </h2>
 
