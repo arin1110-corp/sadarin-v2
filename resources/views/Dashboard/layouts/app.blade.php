@@ -90,13 +90,13 @@
     </div>
 
     {{-- Sidebar --}}
-    @include('dashboard.partials.sidebar')
+    @include('Dashboard.partials.sidebar')
 
     {{-- Main --}}
     <div class="admin-main min-h-screen">
 
         {{-- Header --}}
-        @include('dashboard.partials.header')
+        @include('Dashboard.partials.header')
 
         {{-- Page Content --}}
         <main class="p-4 sm:p-6 lg:p-8">

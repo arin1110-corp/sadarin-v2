@@ -104,6 +104,6 @@ class SadarinAdminController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return view('dashboard.index', compact('totalArsip', 'menungguVerifikasi', 'terverifikasi', 'dikembalikan', 'persentaseTerverifikasi', 'arsipTerbaru', 'aktivitasTerbaru', 'jumlahUnit', 'jumlahProgram', 'jumlahKegiatan', 'jumlahSubKegiatan', 'jumlahJenisDokumen', 'jumlahTag', 'arsipBulanIni'));
+        return view('Dashboard.index', compact('totalArsip', 'menungguVerifikasi', 'terverifikasi', 'dikembalikan', 'persentaseTerverifikasi', 'arsipTerbaru', 'aktivitasTerbaru', 'jumlahUnit', 'jumlahProgram', 'jumlahKegiatan', 'jumlahSubKegiatan', 'jumlahJenisDokumen', 'jumlahTag', 'arsipBulanIni'));
     }
 }
