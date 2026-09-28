@@ -1,4 +1,4 @@
-@extends('dashboard.layouts.app')
+@extends('Dashboard.layouts.app')
 
 @section('title', 'SADARIN - Dashboard')
 
