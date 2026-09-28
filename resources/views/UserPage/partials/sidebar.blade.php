@@ -12,21 +12,13 @@
 
         <div class="border-b border-slate-100 px-4 py-4">
 
-            <div class="flex items-center justify-between">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-500">
+                Filter Arsip
+            </p>
 
-                <div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-wider text-sadarin-500">
-                        Filter Arsip
-                    </p>
-
-                    <h2 class="mt-0.5 text-lg font-bold text-slate-900">
-                        Klasifikasi
-                    </h2>
-
-                </div>
-
-            </div>
+            <h2 class="mt-0.5 text-lg font-bold text-slate-900">
+                Klasifikasi
+            </h2>
 
         </div>
 
@@ -39,34 +31,17 @@
 
             <form method="GET" action="{{ route('sadarin.user.archive.index') }}">
 
-                {{-- pertahankan filter --}}
-                @if (request('unit'))
-                    <input type="hidden" name="unit" value="{{ request('unit') }}">
-                @endif
-
-                @if (request('program'))
-                    <input type="hidden" name="program" value="{{ request('program') }}">
-                @endif
-
-                @if (request('kegiatan'))
-                    <input type="hidden" name="kegiatan" value="{{ request('kegiatan') }}">
-                @endif
-
-                @if (request('sub_kegiatan'))
-                    <input type="hidden" name="sub_kegiatan" value="{{ request('sub_kegiatan') }}">
-                @endif
-
-                @if (request('document_type'))
-                    <input type="hidden" name="document_type" value="{{ request('document_type') }}">
-                @endif
-
-                @if (request('tag'))
-                    <input type="hidden" name="tag" value="{{ request('tag') }}">
-                @endif
+                {{-- Pertahankan filter yang sedang aktif --}}
+                @foreach (['unit', 'program', 'kegiatan', 'sub_kegiatan', 'document_type', 'tag'] as $filter)
+                    @if (request($filter))
+                        <input type="hidden" name="{{ $filter }}" value="{{ request($filter) }}">
+                    @endif
+                @endforeach
 
                 <div class="relative">
 
-                    <i class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                    <i
+                        class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">
                     </i>
 
                     <input type="text" name="q" value="{{ $search ?? request('q') }}"
@@ -106,9 +81,7 @@
 
                     <span
                         class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-sadarin-600 shadow-sm">
-
                         <i class="bi bi-archive"></i>
-
                     </span>
 
                     <span class="text-sm font-semibold">
@@ -147,15 +120,14 @@
 
                     </span>
 
-                    <i id="icon-unit" class="bi bi-chevron-up text-xs text-slate-500">
-                    </i>
+                    <i id="icon-unit" class="bi bi-chevron-up text-xs text-slate-500"></i>
 
                 </button>
 
 
-                <div id="filter-unit" class="mt-2 space-y-1">
+                <div id="filter-unit" class="mt-2 max-h-52 space-y-1 overflow-y-auto pr-1">
 
-                    @foreach ($units->take(5) as $unit)
+                    @foreach ($units as $unit)
                         <a href="{{ route(
                             'sadarin.user.archive.index',
                             array_merge(request()->query(), [
@@ -170,7 +142,7 @@
                             <span class="flex min-w-0 items-center gap-2">
 
                                 <span
-                                    class="h-4 w-4 shrink-0 rounded border
+                                    class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
                                     {{ (string) request('unit') === (string) $unit->unit_id
                                         ? 'border-sadarin-600 bg-sadarin-600'
                                         : 'border-slate-300 bg-white' }}">
@@ -189,16 +161,6 @@
 
                         </a>
                     @endforeach
-
-
-                    @if ($units->count() > 5)
-                        <button type="button"
-                            class="px-3 pt-1 text-xs font-medium text-sadarin-600 hover:text-sadarin-800">
-
-                            Tampilkan {{ $units->count() - 5 }} lainnya...
-
-                        </button>
-                    @endif
 
                 </div>
 
@@ -228,15 +190,14 @@
 
                     </span>
 
-                    <i id="icon-program" class="bi bi-chevron-up text-xs text-slate-500">
-                    </i>
+                    <i id="icon-program" class="bi bi-chevron-up text-xs text-slate-500"></i>
 
                 </button>
 
 
-                <div id="filter-program" class="mt-2 space-y-1">
+                <div id="filter-program" class="mt-2 max-h-52 space-y-1 overflow-y-auto pr-1">
 
-                    @foreach ($programs->take(5) as $program)
+                    @foreach ($programs as $program)
                         <a href="{{ route(
                             'sadarin.user.archive.index',
                             array_merge(request()->query(), [
@@ -251,7 +212,7 @@
                             <span class="flex min-w-0 items-center gap-2">
 
                                 <span
-                                    class="h-4 w-4 shrink-0 rounded border
+                                    class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
                                     {{ (string) request('program') === (string) $program->program_id
                                         ? 'border-sadarin-600 bg-sadarin-600'
                                         : 'border-slate-300 bg-white' }}">
@@ -271,16 +232,6 @@
                         </a>
                     @endforeach
 
-
-                    @if ($programs->count() > 5)
-                        <button type="button"
-                            class="px-3 pt-1 text-xs font-medium text-sadarin-600 hover:text-sadarin-800">
-
-                            Tampilkan {{ $programs->count() - 5 }} lainnya...
-
-                        </button>
-                    @endif
-
                 </div>
 
             </div>
@@ -297,7 +248,7 @@
 
                     <span class="flex items-center gap-3">
 
-                        <i class="bi bi-diagram-3 text-sadarin-600"></i>
+                        <i class="bi bi-list-check text-sadarin-600"></i>
 
                         <span class="text-sm font-bold text-slate-800">
                             Kegiatan
@@ -309,15 +260,14 @@
 
                     </span>
 
-                    <i id="icon-kegiatan" class="bi bi-chevron-up text-xs text-slate-500">
-                    </i>
+                    <i id="icon-kegiatan" class="bi bi-chevron-up text-xs text-slate-500"></i>
 
                 </button>
 
 
-                <div id="filter-kegiatan" class="mt-2 space-y-1">
+                <div id="filter-kegiatan" class="mt-2 max-h-52 space-y-1 overflow-y-auto pr-1">
 
-                    @foreach ($kegiatans->take(5) as $kegiatan)
+                    @foreach ($kegiatans as $kegiatan)
                         <a href="{{ route(
                             'sadarin.user.archive.index',
                             array_merge(request()->query(), [
@@ -332,7 +282,7 @@
                             <span class="flex min-w-0 items-center gap-2">
 
                                 <span
-                                    class="h-4 w-4 shrink-0 rounded border
+                                    class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
                                     {{ (string) request('kegiatan') === (string) $kegiatan->kegiatan_id
                                         ? 'border-sadarin-600 bg-sadarin-600'
                                         : 'border-slate-300 bg-white' }}">
@@ -351,16 +301,6 @@
 
                         </a>
                     @endforeach
-
-
-                    @if ($kegiatans->count() > 5)
-                        <button type="button"
-                            class="px-3 pt-1 text-xs font-medium text-sadarin-600 hover:text-sadarin-800">
-
-                            Tampilkan {{ $kegiatans->count() - 5 }} lainnya...
-
-                        </button>
-                    @endif
 
                 </div>
 
@@ -390,26 +330,37 @@
 
                     </span>
 
-                    <i id="icon-sub-kegiatan" class="bi bi-chevron-down text-xs text-slate-500">
-                    </i>
+                    <i id="icon-sub-kegiatan" class="bi bi-chevron-down text-xs text-slate-500"></i>
 
                 </button>
 
 
-                <div id="filter-sub-kegiatan" class="mt-2 hidden space-y-1">
+                <div id="filter-sub-kegiatan" class="mt-2 hidden max-h-52 space-y-1 overflow-y-auto pr-1">
 
-                    @foreach ($subKegiatans->take(5) as $subKegiatan)
+                    @foreach ($subKegiatans as $subKegiatan)
                         <a href="{{ route(
                             'sadarin.user.archive.index',
                             array_merge(request()->query(), [
                                 'sub_kegiatan' => $subKegiatan->sub_kegiatan_id,
                             ]),
                         ) }}"
-                            class="flex items-center justify-between rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-50">
+                            class="flex items-center justify-between rounded-lg px-3 py-2 transition
+                            {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
+                                ? 'bg-sadarin-50 text-sadarin-700'
+                                : 'text-slate-600 hover:bg-slate-50' }}">
 
                             <span class="flex min-w-0 items-center gap-2">
 
-                                <span class="h-4 w-4 shrink-0 rounded border border-slate-300 bg-white">
+                                <span
+                                    class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
+                                    {{ (string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id
+                                        ? 'border-sadarin-600 bg-sadarin-600'
+                                        : 'border-slate-300 bg-white' }}">
+
+                                    @if ((string) request('sub_kegiatan') === (string) $subKegiatan->sub_kegiatan_id)
+                                        <i class="bi bi-check text-[10px] text-white"></i>
+                                    @endif
+
                                 </span>
 
                                 <span class="truncate text-xs">
@@ -427,8 +378,8 @@
 
 
             {{-- =====================================================
-                JENIS DOKUMEN
-            ====================================================== --}}
+    JENIS DOKUMEN
+====================================================== --}}
 
             <div class="border-b border-slate-100 py-3">
 
@@ -449,32 +400,89 @@
 
                     </span>
 
-                    <i id="icon-document-type" class="bi bi-chevron-down text-xs text-slate-500">
+                    <i id="icon-document-type" class="bi bi-chevron-up text-xs text-slate-500">
                     </i>
 
                 </button>
 
 
-                <div id="filter-document-type" class="mt-2 hidden space-y-1">
+                <div id="filter-document-type" class="mt-2">
 
-                    @foreach ($documentTypes->take(5) as $documentType)
-                        <a href="{{ route(
-                            'sadarin.user.archive.index',
-                            array_merge(request()->query(), [
-                                'document_type' => $documentType->document_type_id,
-                            ]),
-                        ) }}"
-                            class="flex items-center gap-2 rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-50">
+                    {{-- Search Jenis Dokumen --}}
+                    <div class="relative mb-2 px-1">
 
-                            <span class="h-4 w-4 shrink-0 rounded border border-slate-300 bg-white">
-                            </span>
+                        <i
+                            class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">
+                        </i>
 
-                            <span class="truncate text-xs">
-                                {{ $documentType->document_type_name }}
-                            </span>
+                        <input type="text" id="sadarinDocumentTypeSearch" placeholder="Cari jenis dokumen..."
+                            class="h-8 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-3 text-[11px] text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sadarin-300 focus:bg-white focus:ring-1 focus:ring-sadarin-100">
 
-                        </a>
-                    @endforeach
+                    </div>
+
+
+                    {{-- List Jenis Dokumen --}}
+                    <div id="sadarinDocumentTypeList" class="max-h-[260px] space-y-0.5 overflow-y-auto pr-1">
+
+                        @forelse ($documentTypes as $documentType)
+                            <a href="{{ route(
+                                'sadarin.user.archive.index',
+                                array_merge(request()->query(), [
+                                    'document_type' => $documentType->document_type_id,
+                                ]),
+                            ) }}"
+                                data-document-type-name="{{ strtolower($documentType->document_type_name) }}"
+                                class="sadarin-document-type-item flex items-center gap-2 rounded-lg px-3 py-2 transition
+                    {{ (string) request('document_type') === (string) $documentType->document_type_id
+                        ? 'bg-sadarin-50 text-sadarin-700'
+                        : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                <span
+                                    class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
+                        {{ (string) request('document_type') === (string) $documentType->document_type_id
+                            ? 'border-sadarin-600 bg-sadarin-600'
+                            : 'border-slate-300 bg-white' }}">
+
+                                    @if ((string) request('document_type') === (string) $documentType->document_type_id)
+                                        <i class="bi bi-check text-[10px] text-white"></i>
+                                    @endif
+
+                                </span>
+
+                                <span class="truncate text-xs">
+                                    {{ $documentType->document_type_name }}
+                                </span>
+
+                            </a>
+
+                        @empty
+
+                            <div class="px-3 py-4 text-center">
+
+                                <i class="bi bi-file-earmark-x text-xl text-slate-300"></i>
+
+                                <p class="mt-1 text-[11px] text-slate-400">
+                                    Belum ada jenis dokumen
+                                </p>
+
+                            </div>
+                        @endforelse
+
+                    </div>
+
+
+                    {{-- Tidak ditemukan --}}
+                    @if ($documentTypes->count() > 0)
+                        <div id="sadarinDocumentTypeEmpty" class="hidden px-3 py-4 text-center">
+
+                            <i class="bi bi-search text-lg text-slate-300"></i>
+
+                            <p class="mt-1 text-[11px] text-slate-400">
+                                Jenis dokumen tidak ditemukan
+                            </p>
+
+                        </div>
+                    @endif
 
                 </div>
 
@@ -492,7 +500,7 @@
 
                     <span class="flex items-center gap-3">
 
-                        <i class="bi bi-tag text-sadarin-600"></i>
+                        <i class="bi bi-tags text-sadarin-600"></i>
 
                         <span class="text-sm font-bold text-slate-800">
                             Tag
@@ -504,57 +512,98 @@
 
                     </span>
 
-                    <i id="icon-tag" class="bi bi-chevron-up text-xs text-slate-500">
-                    </i>
+                    <i id="icon-tag" class="bi bi-chevron-up text-xs text-slate-500"></i>
 
                 </button>
 
 
-                <div id="filter-tag" class="mt-2 space-y-1">
+                {{-- =================================================
+                    TAG SEARCH
+                ================================================== --}}
 
-                    @foreach ($tags->take(5) as $tag)
-                        <a href="{{ route(
-                            'sadarin.user.archive.index',
-                            array_merge(request()->query(), [
-                                'tag' => $tag->tag_id,
-                            ]),
-                        ) }}"
-                            class="flex items-center justify-between rounded-lg px-3 py-2 transition
-                            {{ (string) request('tag') === (string) $tag->tag_id
-                                ? 'bg-sadarin-50 text-sadarin-700'
-                                : 'text-slate-600 hover:bg-slate-50' }}">
+                <div id="filter-tag" class="mt-2">
 
-                            <span class="flex min-w-0 items-center gap-2">
+                    <div class="relative mb-2 px-1">
 
-                                <span
-                                    class="h-4 w-4 shrink-0 rounded border
-                                    {{ (string) request('tag') === (string) $tag->tag_id
-                                        ? 'border-sadarin-600 bg-sadarin-600'
-                                        : 'border-slate-300 bg-white' }}">
+                        <i
+                            class="bi bi-search pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[11px] text-slate-400">
+                        </i>
 
-                                    @if ((string) request('tag') === (string) $tag->tag_id)
-                                        <i class="bi bi-check text-[10px] text-white"></i>
-                                    @endif
+                        <input type="text" id="sadarinTagSearch" placeholder="Cari tag..."
+                            class="h-8 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-3 text-[11px] text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sadarin-300 focus:bg-white focus:ring-1 focus:ring-sadarin-100">
+
+                    </div>
+
+
+                    {{-- =================================================
+                        TAG LIST
+                    ================================================== --}}
+
+                    <div id="sadarinTagList" class="max-h-[260px] space-y-0.5 overflow-y-auto pr-1">
+
+                        @forelse ($tags as $tag)
+                            <a href="{{ route(
+                                'sadarin.user.archive.index',
+                                array_merge(request()->query(), [
+                                    'tag' => $tag->tag_id,
+                                ]),
+                            ) }}"
+                                data-tag-name="{{ strtolower($tag->tag_name) }}"
+                                class="sadarin-tag-item flex items-center justify-between rounded-lg px-3 py-2 transition
+                                {{ (string) request('tag') === (string) $tag->tag_id
+                                    ? 'bg-sadarin-50 text-sadarin-700'
+                                    : 'text-slate-600 hover:bg-slate-50' }}">
+
+                                <span class="flex min-w-0 items-center gap-2">
+
+                                    <span
+                                        class="flex h-4 w-4 shrink-0 items-center justify-center rounded border
+                                        {{ (string) request('tag') === (string) $tag->tag_id
+                                            ? 'border-sadarin-600 bg-sadarin-600'
+                                            : 'border-slate-300 bg-white' }}">
+
+                                        @if ((string) request('tag') === (string) $tag->tag_id)
+                                            <i class="bi bi-check text-[10px] text-white"></i>
+                                        @endif
+
+                                    </span>
+
+                                    <span class="truncate text-xs">
+                                        #{{ $tag->tag_name }}
+                                    </span>
 
                                 </span>
 
-                                <span class="truncate text-xs">
-                                    #{{ $tag->tag_name }}
-                                </span>
+                            </a>
 
-                            </span>
+                        @empty
 
-                        </a>
-                    @endforeach
+                            <div class="px-3 py-4 text-center">
+
+                                <i class="bi bi-tags text-xl text-slate-300"></i>
+
+                                <p class="mt-1 text-[11px] text-slate-400">
+                                    Belum ada tag
+                                </p>
+
+                            </div>
+                        @endforelse
+
+                    </div>
 
 
-                    @if ($tags->count() > 5)
-                        <button type="button"
-                            class="px-3 pt-1 text-xs font-medium text-sadarin-600 hover:text-sadarin-800">
+                    {{-- Jumlah hasil pencarian tag --}}
 
-                            Tampilkan {{ $tags->count() - 5 }} lainnya...
+                    @if ($tags->count() > 0)
+                        <div id="sadarinTagEmpty" class="hidden px-3 py-4 text-center">
 
-                        </button>
+                            <i class="bi bi-search text-lg text-slate-300"></i>
+
+                            <p class="mt-1 text-[11px] text-slate-400">
+                                Tag tidak ditemukan
+                            </p>
+
+                        </div>
                     @endif
 
                 </div>
@@ -591,6 +640,11 @@
 ================================================================ --}}
 
 <script>
+    /**
+     * ================================================================
+     * TOGGLE FILTER SECTION
+     * ================================================================
+     */
     function toggleSadarinFilter(name) {
 
         const content = document.getElementById('filter-' + name);
@@ -602,9 +656,92 @@
 
         const isHidden = content.classList.contains('hidden');
 
-        content.classList.toggle('hidden');
+        if (isHidden) {
+            content.classList.remove('hidden');
 
-        icon.classList.toggle('bi-chevron-down', !isHidden);
-        icon.classList.toggle('bi-chevron-up', isHidden);
+            icon.classList.remove('bi-chevron-down');
+            icon.classList.add('bi-chevron-up');
+
+        } else {
+            content.classList.add('hidden');
+
+            icon.classList.remove('bi-chevron-up');
+            icon.classList.add('bi-chevron-down');
+        }
     }
+
+
+    /**
+     * ================================================================
+     * SEARCH TAG
+     * ================================================================
+     *
+     * Pencarian tag dilakukan langsung di browser.
+     * Tidak reload halaman.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const searchInput = document.getElementById('sadarinTagSearch');
+        const tagItems = document.querySelectorAll('.sadarin-tag-item');
+        const emptyMessage = document.getElementById('sadarinTagEmpty');
+
+        if (!searchInput || !tagItems.length) {
+            return;
+        }
+
+        searchInput.addEventListener('input', function() {
+
+            const keyword = this.value
+                .toLowerCase()
+                .trim();
+
+            let visibleCount = 0;
+
+            tagItems.forEach(function(item) {
+
+                const tagName = (
+                        item.dataset.tagName ||
+                        item.textContent ||
+                        ''
+                    )
+                    .toLowerCase()
+                    .trim();
+
+                const match = keyword === '' || tagName.includes(keyword);
+
+                if (match) {
+
+                    item.classList.remove('hidden');
+
+                    visibleCount++;
+
+                } else {
+
+                    item.classList.add('hidden');
+
+                }
+
+            });
+
+
+            /**
+             * Pesan ketika tag tidak ditemukan
+             */
+            if (emptyMessage) {
+
+                if (visibleCount === 0) {
+
+                    emptyMessage.classList.remove('hidden');
+
+                } else {
+
+                    emptyMessage.classList.add('hidden');
+
+                }
+
+            }
+
+        });
+
+    });
 </script>
