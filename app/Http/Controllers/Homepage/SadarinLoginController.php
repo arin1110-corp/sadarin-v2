@@ -3,45 +3,16 @@
 namespace App\Http\Controllers\Homepage;
 
 use App\Http\Controllers\Controller;
-use App\Mail\SadarinOtpMail;
-use App\Models\SadarinOtp;
 use App\Models\SadarinUserRole;
 use App\Services\SadarinAccessLogService;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class SadarinLoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | KONFIGURASI KEAMANAN OTP
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Masa berlaku OTP.
-     */
-    private const OTP_EXPIRE_MINUTES = 10;
-
-    /**
-     * Maksimal percobaan OTP.
-     */
-    private const OTP_MAX_ATTEMPTS = 5;
-
-    /**
-     * Cooldown pembuatan OTP baru.
-     *
-     * User tidak dapat meminta OTP baru untuk identifier
-     * yang sama selama 4 jam.
-     */
-    private const OTP_COOLDOWN_HOURS = 4;
-
     /*
     |--------------------------------------------------------------------------
     | LOGIN PAGE
@@ -106,24 +77,37 @@ class SadarinLoginController extends Controller
                 ->asJson()
                 ->timeout(15)
                 ->post($apiUrl, [
-                    'nip' => $identifier,
-
+                'nip' => $identifier,
                 'password' => $request->password,
                 ]);
         } catch (ConnectionException $e) {
+            /*
+            |--------------------------------------------------------------------------
+            | API TIDAK DAPAT DIHUBUNGI
+            |--------------------------------------------------------------------------
+            */
+
             Log::error('SADARIN gagal terhubung ke API SAMPERIN.', [
                 'url' => $apiUrl,
-
                 'error' => $e->getMessage(),
             ]);
+
+            SadarinAccessLogService::log(action: 'login.failed', userType: 'user');
 
             return back()->withInput($request->only('nip'))->with('error', 'Server SAMPERIN tidak dapat dihubungi. Silakan coba lagi.');
         } catch (\Throwable $e) {
+            /*
+            |--------------------------------------------------------------------------
+            | ERROR API
+            |--------------------------------------------------------------------------
+            */
+
             Log::error('SADARIN error saat login SAMPERIN.', [
                 'url' => $apiUrl,
-
                 'error' => $e->getMessage(),
             ]);
+
+            SadarinAccessLogService::log(action: 'login.failed', userType: 'user');
 
             return back()->withInput($request->only('nip'))->with('error', 'Terjadi kesalahan saat memproses login.');
         }
@@ -140,6 +124,12 @@ class SadarinLoginController extends Controller
             return back()->withInput($request->only('nip'))->with('error', 'NIP/NIK atau password salah.');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | PARSE RESPONSE
+        |--------------------------------------------------------------------------
+        */
+
         $result = $response->json();
 
         /*
@@ -149,14 +139,27 @@ class SadarinLoginController extends Controller
         */
 
         if (!isset($result['status']) || $result['status'] !== true || !isset($result['data'])) {
+            Log::warning('Response login SAMPERIN tidak valid.', [
+                'identifier' => $identifier,
+                'response' => $result,
+            ]);
+
+            SadarinAccessLogService::log(action: 'login.failed', userType: 'user');
+
             return back()->withInput($request->only('nip'))->with('error', 'Data login dari SAMPERIN tidak valid.');
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATA PEGAWAI
+        |--------------------------------------------------------------------------
+        */
 
         $pegawai = $result['data'];
 
         /*
         |--------------------------------------------------------------------------
-        | DATA PEGAWAI
+        | AMBIL DATA UTAMA
         |--------------------------------------------------------------------------
         */
 
@@ -179,6 +182,8 @@ class SadarinLoginController extends Controller
                 'identifier' => $identifier,
             ]);
 
+            SadarinAccessLogService::log(action: 'login.failed', userType: 'user');
+
             return back()->withInput($request->only('nip'))->with('error', 'Data pegawai tidak lengkap. Silakan hubungi administrator.');
         }
 
@@ -199,165 +204,13 @@ class SadarinLoginController extends Controller
         if ($roleData->isEmpty()) {
             Log::warning('Pegawai belum memiliki role SADARIN.', [
                 'samperin_user_id' => $samperinUserId,
-
                 'nip' => $nip,
             ]);
 
+            SadarinAccessLogService::log(action: 'login.no_role', userType: 'user', samperinUserId: $samperinUserId);
+
             return back()->withInput($request->only('nip'))->with('error', 'Akun Anda belum memiliki hak akses SADARIN. Silakan hubungi administrator.');
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK EMAIL
-        |--------------------------------------------------------------------------
-        */
-
-        if (!$email) {
-            return back()->withInput($request->only('nip'))->with('error', 'Email pegawai belum tersedia. OTP tidak dapat dikirim.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDASI EMAIL
-        |--------------------------------------------------------------------------
-        */
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Log::warning('Email pegawai tidak valid untuk OTP SADARIN.', [
-                'samperin_user_id' => $samperinUserId,
-
-                'email' => $email,
-            ]);
-
-            return back()->withInput($request->only('nip'))->with('error', 'Email pegawai tidak valid. Silakan hubungi administrator.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK COOLDOWN OTP 4 JAM
-        |--------------------------------------------------------------------------
-        |
-        | Jangan langsung delete OTP lama.
-        |
-        | Kita cek kapan OTP terakhir dibuat.
-        |
-        */
-
-        $lastOtp = SadarinOtp::query()->where('otp_identifier', $identifier)->where('otp_type', 'internal')->latest('otp_created_at')->first();
-
-        /*
-        |--------------------------------------------------------------------------
-        | JIKA MASIH DALAM COOLDOWN
-        |--------------------------------------------------------------------------
-        */
-
-        if ($lastOtp) {
-            $cooldownUntil = $lastOtp->otp_created_at ? $lastOtp->otp_created_at->copy()->addHours(self::OTP_COOLDOWN_HOURS) : null;
-
-            if ($cooldownUntil && now()->lessThan($cooldownUntil)) {
-                $remainingSeconds = now()->diffInSeconds($cooldownUntil);
-
-                $remainingHours = intdiv($remainingSeconds, 3600);
-
-                $remainingMinutes = intdiv($remainingSeconds % 3600, 60);
-
-                /*
-                |--------------------------------------------------------------------------
-                | LOG SECURITY EVENT
-                |--------------------------------------------------------------------------
-                */
-
-                Log::warning('SADARIN OTP cooldown aktif.', [
-                    'identifier' => $identifier,
-
-                    'otp_id' => $lastOtp->otp_id,
-
-                    'cooldown_until' => $cooldownUntil,
-
-                    'ip' => $request->ip(),
-                ]);
-
-                /*
-                |--------------------------------------------------------------------------
-                | ACCESS LOG
-                |--------------------------------------------------------------------------
-                */
-
-                SadarinAccessLogService::log(action: 'otp.cooldown', userType: 'user', samperinUserId: $samperinUserId);
-
-                /*
-                |--------------------------------------------------------------------------
-                | PESAN KE USER
-                |--------------------------------------------------------------------------
-                */
-
-                if ($remainingHours > 0) {
-                    $message = sprintf('Permintaan OTP terlalu sering. Silakan coba kembali dalam %d jam %d menit.', $remainingHours, $remainingMinutes);
-                } else {
-                    $message = sprintf('Permintaan OTP terlalu sering. Silakan coba kembali dalam %d menit.', max(1, $remainingMinutes));
-                }
-
-                return back()->withInput($request->only('nip'))->with('error', $message);
-            }
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | HAPUS OTP LAMA YANG SUDAH TIDAK DIPERLUKAN
-        |--------------------------------------------------------------------------
-        |
-        | OTP lama tidak dipakai lagi setelah kita membuat OTP baru.
-        |
-        | Yang dihapus hanya OTP yang:
-        |
-        | - belum diverifikasi
-        | - sudah expired
-        |
-        */
-
-        SadarinOtp::query()->where('otp_identifier', $identifier)->where('otp_type', 'internal')->whereNull('otp_verified_at')->where('otp_expires_at', '<', now())->delete();
-
-        /*
-        |--------------------------------------------------------------------------
-        | GENERATE OTP
-        |--------------------------------------------------------------------------
-        */
-
-        $otpCode = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        /*
-        |--------------------------------------------------------------------------
-        | SIMPAN OTP
-        |--------------------------------------------------------------------------
-        */
-
-        $otp = SadarinOtp::create([
-            'otp_uid' => (string) Str::uuid(),
-
-            'otp_identifier' => $identifier,
-
-            'otp_type' => 'internal',
-
-            /*
-            |--------------------------------------------------------------------------
-            | OTP HANYA DISIMPAN DALAM HASH
-            |--------------------------------------------------------------------------
-            */
-
-            'otp_code_hash' => Hash::make($otpCode),
-
-            'otp_expires_at' => now()->addMinutes(self::OTP_EXPIRE_MINUTES),
-
-            'otp_verified_at' => null,
-
-            'otp_last_attempt_at' => null,
-
-            'otp_attempt_count' => 0,
-
-            'otp_ip_address' => $request->ip(),
-
-            'otp_user_agent' => $request->userAgent(),
-        ]);
 
         /*
         |--------------------------------------------------------------------------
@@ -380,392 +233,41 @@ class SadarinLoginController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | PENDING LOGIN SESSION
+        | DATA USER SESSION
         |--------------------------------------------------------------------------
         */
 
-        session([
-            'sadarin_login_pending' => true,
+        $userData = [
+            'id' => $samperinUserId,
 
-            'sadarin_login_otp_id' => $otp->otp_id,
+            'nama' => $nama,
 
-            'sadarin_login_otp_uid' => $otp->otp_uid,
+            'nip' => $nip,
 
-            'sadarin_login_user' => [
-                'id' => $samperinUserId,
+            'email' => $email,
 
-                'nama' => $nama,
+            'jabatan' => $pegawai['jabatan'] ?? null,
 
-                'nip' => $nip,
+            'jabatan_id' => $pegawai['jabatan_id'] ?? null,
 
-                'email' => $email,
+            'bidang_id' => $pegawai['bidang_id'] ?? null,
 
-                'jabatan' => $pegawai['jabatan'] ?? null,
+            'bidang' => $pegawai['bidang'] ?? null,
 
-                'jabatan_id' => $pegawai['jabatan_id'] ?? null,
+            'eselon' => $pegawai['eselon'] ?? null,
 
-                'bidang_id' => $pegawai['bidang_id'] ?? null,
+            'hp' => $pegawai['hp'] ?? null,
 
-                'bidang' => $pegawai['bidang'] ?? null,
+            'pendidikan_jenjang' => $pegawai['pendidikan_jenjang'] ?? null,
 
-                'eselon' => $pegawai['eselon'] ?? null,
+            'pendidikan_jurusan' => $pegawai['pendidikan_jurusan'] ?? null,
 
-                'hp' => $pegawai['hp'] ?? null,
+            'golongan_nama' => $pegawai['golongan_nama'] ?? null,
 
-                'pendidikan_jenjang' => $pegawai['pendidikan_jenjang'] ?? null,
+            'golongan_pangkat' => $pegawai['golongan_pangkat'] ?? null,
 
-                'pendidikan_jurusan' => $pegawai['pendidikan_jurusan'] ?? null,
-
-                'golongan_nama' => $pegawai['golongan_nama'] ?? null,
-
-                'golongan_pangkat' => $pegawai['golongan_pangkat'] ?? null,
-
-                'jeniskerja' => $pegawai['jeniskerja'] ?? null,
-            ],
-
-            'sadarin_login_roles' => $roles,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | KIRIM OTP KE EMAIL VIA BREVO
-        |--------------------------------------------------------------------------
-        */
-
-        try {
-            Mail::to($email)->send(
-                new SadarinOtpMail(
-                    nama: $nama ?: 'Pengguna SADARIN',
-
-                    otp: $otpCode,
-                ),
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | LOG BERHASIL KIRIM
-            |--------------------------------------------------------------------------
-            |
-            | JANGAN LOG OTP.
-            |
-            */
-
-            Log::info('SADARIN OTP EMAIL SENT.', [
-                'identifier' => $identifier,
-
-                'email' => $email,
-
-                'otp_id' => $otp->otp_id,
-
-                'expires_at' => $otp->otp_expires_at,
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | ACCESS LOG
-            |--------------------------------------------------------------------------
-            */
-
-            SadarinAccessLogService::log(action: 'otp.sent', userType: 'user', samperinUserId: $samperinUserId);
-        } catch (\Throwable $e) {
-            /*
-            |--------------------------------------------------------------------------
-            | LOG ERROR
-            |--------------------------------------------------------------------------
-            */
-
-            Log::error('SADARIN GAGAL MENGIRIM OTP EMAIL.', [
-                'identifier' => $identifier,
-
-                'email' => $email,
-
-                'otp_id' => $otp->otp_id,
-
-                'error' => $e->getMessage(),
-            ]);
-
-            /*
-            |--------------------------------------------------------------------------
-            | HAPUS OTP
-            |--------------------------------------------------------------------------
-            */
-
-            $otp->delete();
-
-            /*
-            |--------------------------------------------------------------------------
-            | HAPUS SESSION PENDING
-            |--------------------------------------------------------------------------
-            */
-
-            session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
-
-            /*
-            |--------------------------------------------------------------------------
-            | KEMBALI KE LOGIN
-            |--------------------------------------------------------------------------
-            */
-
-            return back()->withInput($request->only('nip'))->with('error', 'Kode OTP gagal dikirim ke email. Silakan coba lagi.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | REDIRECT OTP
-        |--------------------------------------------------------------------------
-        */
-
-        return redirect()->route('sadarin.login.otp')->with('success', 'Kode OTP telah dikirim ke email Anda. Silakan periksa inbox atau folder spam.');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | SHOW OTP
-    |--------------------------------------------------------------------------
-    */
-
-    public function showOtp()
-    {
-        if (!session('sadarin_login_pending')) {
-            return redirect()->route('sadarin.login')->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK OTP MASIH VALID
-        |--------------------------------------------------------------------------
-        */
-
-        $otpId = session('sadarin_login_otp_id');
-
-        $otp = SadarinOtp::find($otpId);
-
-        if (!$otp) {
-            session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
-
-            return redirect()->route('sadarin.login')->with('error', 'Data OTP tidak ditemukan. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK EXPIRED
-        |--------------------------------------------------------------------------
-        */
-
-        if (!$otp->otp_expires_at || now()->greaterThan($otp->otp_expires_at)) {
-            return redirect()->route('sadarin.login')->with('error', 'Kode OTP telah kedaluwarsa. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK MAX ATTEMPT
-        |--------------------------------------------------------------------------
-        */
-
-        if ($otp->otp_attempt_count >= self::OTP_MAX_ATTEMPTS) {
-            return redirect()->route('sadarin.login')->with('error', 'Batas percobaan OTP telah tercapai. Silakan login kembali.');
-        }
-
-        $pegawai = session('sadarin_login_user');
-
-        return view('LoginPage.otp', [
-            'pegawai' => $pegawai,
-        ]);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | VERIFY OTP
-    |--------------------------------------------------------------------------
-    */
-
-    public function verifyOtp(Request $request)
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | CEK SESSION LOGIN
-        |--------------------------------------------------------------------------
-        */
-
-        if (!session('sadarin_login_pending')) {
-            return redirect()->route('sadarin.login')->with('error', 'Sesi login telah berakhir. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | VALIDASI OTP
-        |--------------------------------------------------------------------------
-        */
-
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'otp' => ['required', 'digits:6'],
-            ],
-            [
-                'otp.required' => 'Kode OTP wajib diisi.',
-
-                'otp.digits' => 'Kode OTP harus terdiri dari 6 angka.',
-            ],
-        );
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | AMBIL OTP DARI SESSION
-        |--------------------------------------------------------------------------
-        */
-
-        $otpId = session('sadarin_login_otp_id');
-
-        $otp = SadarinOtp::find($otpId);
-
-        /*
-        |--------------------------------------------------------------------------
-        | OTP TIDAK DITEMUKAN
-        |--------------------------------------------------------------------------
-        */
-
-        if (!$otp) {
-            session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
-
-            return redirect()->route('sadarin.login')->with('error', 'Data OTP tidak ditemukan. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | PASTIKAN OTP INTERNAL
-        |--------------------------------------------------------------------------
-        */
-
-        if ($otp->otp_type !== 'internal') {
-            Log::warning('Percobaan menggunakan OTP dengan tipe tidak sesuai.', [
-                'otp_id' => $otp->otp_id,
-
-                'otp_type' => $otp->otp_type,
-            ]);
-
-            session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
-
-            return redirect()->route('sadarin.login')->with('error', 'OTP tidak valid. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | OTP SUDAH DIGUNAKAN
-        |--------------------------------------------------------------------------
-        */
-
-        if ($otp->otp_verified_at) {
-            return back()->with('error', 'Kode OTP tersebut sudah digunakan.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | OTP EXPIRED
-        |--------------------------------------------------------------------------
-        */
-
-        if (!$otp->otp_expires_at || now()->greaterThan($otp->otp_expires_at)) {
-            return back()->with('error', 'Kode OTP telah kedaluwarsa. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | MAX ATTEMPT
-        |--------------------------------------------------------------------------
-        */
-
-        if ($otp->otp_attempt_count >= self::OTP_MAX_ATTEMPTS) {
-            return back()->with('error', 'Batas percobaan OTP telah tercapai. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | TAMBAH ATTEMPT
-        |--------------------------------------------------------------------------
-        */
-
-        $otp->increment('otp_attempt_count');
-
-        $otp->update([
-            'otp_last_attempt_at' => now(),
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | AMBIL DATA PEGAWAI
-        |--------------------------------------------------------------------------
-        */
-
-        $pegawai = session('sadarin_login_user');
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK OTP
-        |--------------------------------------------------------------------------
-        */
-
-        if (!Hash::check($request->otp, $otp->otp_code_hash)) {
-            SadarinAccessLogService::log(action: 'otp.failed', userType: 'user', samperinUserId: $pegawai['id'] ?? null);
-
-            $remaining = max(0, self::OTP_MAX_ATTEMPTS - $otp->otp_attempt_count);
-
-            /*
-            |--------------------------------------------------------------------------
-            | JIKA SUDAH HABIS
-            |--------------------------------------------------------------------------
-            */
-
-            if ($remaining <= 0) {
-                return back()->with('error', 'Kode OTP salah. Batas percobaan telah tercapai. Silakan login kembali.');
-            }
-
-            return back()->with('error', "Kode OTP salah. Sisa percobaan: {$remaining}.");
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | OTP BERHASIL
-        |--------------------------------------------------------------------------
-        */
-
-        $otp->update([
-            'otp_verified_at' => now(),
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | AMBIL ROLE
-        |--------------------------------------------------------------------------
-        */
-
-        $roles = session('sadarin_login_roles', []);
-
-        /*
-        |--------------------------------------------------------------------------
-        | CEK DATA LOGIN
-        |--------------------------------------------------------------------------
-        */
-
-        if (!$pegawai || empty($roles)) {
-            $request->session()->invalidate();
-
-            $request->session()->regenerateToken();
-
-            return redirect()->route('sadarin.login')->with('error', 'Data login tidak lengkap. Silakan login kembali.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | LOG OTP SUCCESS
-        |--------------------------------------------------------------------------
-        */
-
-        SadarinAccessLogService::log(action: 'otp.success', userType: 'user', samperinUserId: $pegawai['id']);
+            'jeniskerja' => $pegawai['jeniskerja'] ?? null,
+        ];
 
         /*
         |--------------------------------------------------------------------------
@@ -779,6 +281,9 @@ class SadarinLoginController extends Controller
         |--------------------------------------------------------------------------
         | REGENERATE SESSION
         |--------------------------------------------------------------------------
+        |
+        | Penting untuk mencegah session fixation.
+        |
         */
 
         $request->session()->regenerate();
@@ -790,19 +295,39 @@ class SadarinLoginController extends Controller
         */
 
         session([
+            /*
+            |--------------------------------------------------------------------------
+            | STATUS LOGIN
+            |--------------------------------------------------------------------------
+            */
+
             'sadarin_authenticated' => true,
 
-            'sadarin_user_id' => $pegawai['id'],
+            /*
+            |--------------------------------------------------------------------------
+            | DATA USER
+            |--------------------------------------------------------------------------
+            */
 
-            'sadarin_user_nip' => $pegawai['nip'],
+            'sadarin_user_id' => $userData['id'],
 
-            'sadarin_user_nama' => $pegawai['nama'],
+            'sadarin_user_nip' => $userData['nip'],
 
-            'sadarin_user_email' => $pegawai['email'],
+            'sadarin_user_nama' => $userData['nama'],
 
-            'sadarin_user_jabatan' => $pegawai['jabatan'],
+            'sadarin_user_email' => $userData['email'],
 
-            'sadarin_user_bidang' => $pegawai['bidang'],
+            'sadarin_user_jabatan' => $userData['jabatan'],
+
+            'sadarin_user_bidang' => $userData['bidang'],
+
+            /*
+            |--------------------------------------------------------------------------
+            | DATA LENGKAP PEGAWAI
+            |--------------------------------------------------------------------------
+            */
+
+            'sadarin_user' => $userData,
 
             /*
             |--------------------------------------------------------------------------
@@ -829,15 +354,7 @@ class SadarinLoginController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        SadarinAccessLogService::log(action: 'login.success', userType: $activeRole['name'], samperinUserId: $pegawai['id']);
-
-        /*
-        |--------------------------------------------------------------------------
-        | HAPUS PENDING LOGIN
-        |--------------------------------------------------------------------------
-        */
-
-        session()->forget(['sadarin_login_pending', 'sadarin_login_otp_id', 'sadarin_login_otp_uid', 'sadarin_login_user', 'sadarin_login_roles']);
+        SadarinAccessLogService::log(action: 'login.success', userType: $activeRole['name'], samperinUserId: $samperinUserId);
 
         /*
         |--------------------------------------------------------------------------
@@ -845,7 +362,7 @@ class SadarinLoginController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        return $this->redirectByRole($activeRole['name'], $pegawai['nama']);
+        return $this->redirectByRole($activeRole['name'], $nama);
     }
 
     /*
@@ -888,15 +405,27 @@ class SadarinLoginController extends Controller
             return back()->withErrors($validator);
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | ROLE ID
+        |--------------------------------------------------------------------------
+        */
+
         $roleId = (int) $request->role_id;
 
         /*
         |--------------------------------------------------------------------------
-        | AMBIL ROLE SESSION
+        | AMBIL ROLE DARI SESSION
         |--------------------------------------------------------------------------
         */
 
         $roles = session('sadarin_roles', []);
+
+        /*
+        |--------------------------------------------------------------------------
+        | CARI ROLE
+        |--------------------------------------------------------------------------
+        */
 
         $selectedRole = collect($roles)->firstWhere('id', $roleId);
 
@@ -907,6 +436,12 @@ class SadarinLoginController extends Controller
         */
 
         if (!$selectedRole) {
+            Log::warning('Percobaan switch ke role yang tidak dimiliki.', [
+                'user_id' => session('sadarin_user_id'),
+
+                'requested_role_id' => $roleId,
+            ]);
+
             return back()->with('error', 'Anda tidak memiliki akses ke role tersebut.');
         }
 
@@ -947,7 +482,19 @@ class SadarinLoginController extends Controller
 
     private function redirectByRole(string $roleName, ?string $nama = null)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | SUCCESS MESSAGE
+        |--------------------------------------------------------------------------
+        */
+
         $message = $nama ? 'Selamat datang, ' . $nama . '.' : null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | REDIRECT
+        |--------------------------------------------------------------------------
+        */
 
         return match ($roleName) {
             'Administrator' => redirect()->route('sadarin.admin.dashboard.index')->with('success', $message),
@@ -974,13 +521,15 @@ class SadarinLoginController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        SadarinAccessLogService::log(
-            action: 'logout',
+        if (session('sadarin_authenticated')) {
+            SadarinAccessLogService::log(
+                action: 'logout',
 
-            userType: session('sadarin_role_name'),
+                userType: session('sadarin_role_name'),
 
-            samperinUserId: session('sadarin_user_id'),
-        );
+                samperinUserId: session('sadarin_user_id'),
+            );
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -990,12 +539,19 @@ class SadarinLoginController extends Controller
 
         $request->session()->invalidate();
 
+        /*
+        |--------------------------------------------------------------------------
+        | REGENERATE CSRF TOKEN
+        |--------------------------------------------------------------------------
+        */
+
         $request->session()->regenerateToken();
 
         /*
         |--------------------------------------------------------------------------
         | REDIRECT
         |--------------------------------------------------------------------------
+
         */
 
         return redirect()->route('homepage')->with('success', 'Anda telah keluar dari SADARIN.');
