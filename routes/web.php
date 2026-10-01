@@ -422,7 +422,7 @@ Route::prefix('sadarin')
         | PENGGUNA INTERNAL
         |--------------------------------------------------------------------------
         */
-Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal, Pegawai Disbud'])
+Route::middleware(['sadarin.auth', 'sadarin.role:Pengguna Internal,Pegawai Disbud'])
     ->prefix('user')
     ->name('sadarin.user.')
     ->group(function () {
