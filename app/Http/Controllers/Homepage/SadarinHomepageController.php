@@ -517,7 +517,7 @@ class SadarinHomepageController extends Controller
         |
         */
 
-        if (session('sadarin_role_name') === 'Pegawai Disbud' && $archive->archive_access_level !== 'public') {
+        if (session('role_name') === 'Pegawai Disbud' && $archive->archive_access_level !== 'public') {
             abort(403, 'Anda tidak memiliki akses ke arsip ini.');
         }
 
