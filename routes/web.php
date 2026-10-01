@@ -239,11 +239,16 @@ Route::prefix('sadarin')
             ->name('pengguna.')
             ->middleware(['sadarin.auth', 'sadarin.role:Administrator'])
             ->group(function () {
-                Route::get('/', [SadarinUserController::class, 'index'])->name('index');
+
+
+            Route::get('/', [SadarinUserController::class, 'index'])->name('index');
 
             Route::get('/{id}/edit', [SadarinUserController::class, 'edit'])->name('edit');
 
                 Route::put('/{id}', [SadarinUserController::class, 'update'])->name('update');
+
+            Route::post('/assign-pegawai-disbud', [SadarinUserController::class, 'assignPegawaiDisbudToAll'])
+                ->name('assign-pegawai-disbud');
             });
 
         /*

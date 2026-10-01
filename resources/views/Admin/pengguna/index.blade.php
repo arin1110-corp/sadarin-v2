@@ -36,6 +36,27 @@
 
             </div>
 
+
+            {{-- ========================================================= --}}
+            {{-- TAMBAHKAN ROLE KE SEMUA PEGAWAI --}}
+            {{-- ========================================================= --}}
+
+            <form method="POST" action="{{ route('sadarin.admin.pengguna.assign-pegawai-disbud') }}"
+                onsubmit="return confirm('Tambahkan role Pegawai Disbud ke seluruh pegawai SAMPERIN?')">
+
+                @csrf
+
+                <button type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700">
+
+                    <i class="bi bi-person-check-fill"></i>
+
+                    Jadikan Semua Pegawai Disbud
+
+                </button>
+
+            </form>
+
         </div>
 
 
@@ -309,7 +330,7 @@
                                                             'Administrator' =>
                                                                 'bg-purple-50 text-purple-700 border-purple-100',
                                                             'Arsiparis' => 'bg-blue-50 text-blue-700 border-blue-100',
-                                                            'Pegawai' =>
+                                                            'Pegawai Disbud' =>
                                                                 'bg-emerald-50 text-emerald-700 border-emerald-100',
                                                         ];
 
