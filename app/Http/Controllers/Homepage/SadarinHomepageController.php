@@ -72,7 +72,7 @@ class SadarinHomepageController extends Controller
 
         $role = session('sadarin_role_name');
 
-        $isPegawai = $role === 'Pegawai';
+        $isPegawai = $role === 'Pegawai Disbud';
 
         /*
         |--------------------------------------------------------------------------
