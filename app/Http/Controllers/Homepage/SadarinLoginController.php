@@ -503,6 +503,8 @@ class SadarinLoginController extends Controller
 
             'Pengguna Internal' => redirect()->route('sadarin.user.archive.index')->with('success', $message),
 
+            'Pegawai Disbud' => redirect()->route('sadarin.user.archive.index')->with('success', $message),
+
             default => redirect()->route('sadarin.login')->with('error', 'Role akun tidak dikenali.'),
         };
     }

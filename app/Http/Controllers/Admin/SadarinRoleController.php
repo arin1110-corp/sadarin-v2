@@ -75,7 +75,7 @@ class SadarinRoleController extends Controller
     {
         $role = SadarinRole::findOrFail($id);
 
-        return view('admin.role.edit', compact('role'));
+        return view('Admin.role.edit', compact('role'));
     }
 
     public function update(Request $request, $id)
